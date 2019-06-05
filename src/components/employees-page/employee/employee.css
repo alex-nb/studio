@@ -1,0 +1,81 @@
+/*.employee {
+    padding: 5px;
+    margin-right: 8px;
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-radius: 8px;
+    position: relative;
+    width: 100px;
+    height: 100px;
+}*/
+
+.employee {
+    margin-right: 8px;
+    border: none;
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.card-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+}
+
+.card-img-overlay {
+    border: none;
+}
+
+
+.check {
+    -moz-box-shadow:0 0 15px #000;
+    -webkit-box-shadow:0 0 15px #000;
+    box-shadow:0 0 10px #000;
+    border-radius: 8px;
+}
+
+.icon-employee {
+    font-family: fontawesome !important;
+    font-style: normal;
+    font-size: medium;
+    cursor: pointer;
+    color: black;
+    margin-right: 5px;
+}
+
+.icon-line {
+    bottom: 0;
+    left: 5px;
+    position: absolute;
+    display: block;
+    opacity:0;
+    transition: 2s;
+}
+
+.employee:hover .icon-line {
+    background: rgba(255,255,255,0.7);
+    -moz-box-shadow:0 0 20px #fff;
+    -webkit-box-shadow:0 0 20px #fff;
+    box-shadow:0 0 15px #fff;
+    border-radius: 7px;
+    opacity:1;
+    transition: 1s;
+}
+
+.employee:hover .rate {
+    background: rgba(0,0,0,0.6);
+    opacity:1;
+    transition: 1s;
+}
+
+.rate {
+    top:0;
+    right:0;
+    text-align: right;
+    color: white;
+    position: absolute;
+    font-weight:bold;
+    background: rgba(0,0,0,0.2);
+    border-radius: 7px;
+}

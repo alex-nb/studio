@@ -1,0 +1,23 @@
+.department-list {
+    margin: 8px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    background-color: white;
+    flex-direction: row;
+}
+
+.check-list {
+    background-color: lightgrey;
+}
+
+h3 {
+    padding: 5px;
+    display: flex;
+}
+
+.employees-list {
+    padding: 5px;
+    flex-grow: 1;
+    min-height: 50px;
+    display: flex;
+}

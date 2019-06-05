@@ -1,0 +1,26 @@
+table {
+    margin-top: 5px;
+    width: 100%;
+}
+
+thead {
+    width: 100%;
+}
+
+.font-weight-bold {
+    color: black;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+tbody.collapse.in {
+    display: table-row-group;
+}
+
+i.fa-actions {
+    font-family: fontawesome !important;
+    font-style: normal;
+    font-size: small;
+}

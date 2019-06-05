@@ -1,0 +1,18 @@
+.mini-card {
+    width: 25rem;
+    height: 15rem;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+i.fa-card {
+    font-family: fontawesome !important;
+    font-style: normal;
+    padding: 1px;
+}
+
+.pointer {
+    cursor: pointer;
+    color: black;
+    margin-right: 4px;
+}

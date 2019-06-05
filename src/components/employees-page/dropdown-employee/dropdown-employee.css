@@ -1,0 +1,13 @@
+i.dropdown-element {
+    font-family: fontawesome !important;
+    font-style: normal;
+    font-size: large;
+    cursor: pointer;
+    color: darkgrey;
+    display: flex;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+i.dropdown-element:hover {
+    color: black;
+}
