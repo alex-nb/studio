@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import {Form, Col} from "react-bootstrap";
-import { fetchCompanyStructure } from "../../../actions";
+import { fetchCompanyStructure } from "../../../actions/employees";
 import {compose} from "../../../utils";
 import {withBdApiService} from "../../hoc";
 import {connect} from "react-redux";

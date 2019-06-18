@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from '../../utils';
 import { connect } from 'react-redux';
-import {fetchRequestsMoney} from '../../actions';
+import {fetchRequestsMoney} from '../../actions/requests';
 import { withBdApiService } from '../hoc';
 import './finance.css';
 

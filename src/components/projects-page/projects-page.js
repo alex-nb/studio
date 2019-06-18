@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from '../../utils';
 import { connect } from 'react-redux';
-import { fetchAllProjects, fetchPersonalReports } from '../../actions';
+import { fetchAllProjects, fetchPersonalReports } from '../../actions/projects';
 import { withBdApiService } from '../hoc';
 
 import Projects from "./projects/projects";

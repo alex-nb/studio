@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom';
+import axios from 'axios';
 
 import './app.css';
 
@@ -27,6 +28,7 @@ export default class App extends Component {
     };
 
     componentDidMount() {
+        axios.defaults.baseURL = 'http://localhost:8080';
         const token = localStorage.getItem('token');
         const expiryDate = localStorage.getItem('expiryDate');
         if (!token || !expiryDate) {
@@ -131,6 +133,7 @@ export default class App extends Component {
                 });
                 localStorage.setItem('token', resData.token);
                 localStorage.setItem('userId', resData.userId);
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + resData.token;
                 //localStorage.setItem('balance', resData.balance);
                 const remainingMilliseconds = 60 * 60 * 1000;
                 const expiryDate = new Date(

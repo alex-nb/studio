@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Button, Form} from "react-bootstrap";
 import { withBdApiService } from "../../hoc";
-import {employeeNewAdd} from '../../../actions';
+//import {employeeNewAdd} from '../../../actions';
 import {connect} from "react-redux";
 import {compose} from "../../../utils";
 
@@ -43,7 +43,7 @@ class CreateEmployee extends Component {
             birthday: ''
         });*/
         //console.log(onAdd);
-        this.props.onAdd({lastName: lastName, firstName: firstName, secondName: secondName});
+        //this.props.onAdd({lastName: lastName, firstName: firstName, secondName: secondName});
         //this.props.history.push("/employees");
     };
 
@@ -126,7 +126,7 @@ const mapStateToProps = ({ allEmployeesList }) => {
 
 const mapDispatchToProps = () => {
     return {
-        onAdd: employeeNewAdd
+        //onAdd: employeeNewAdd
     };
 };
 

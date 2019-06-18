@@ -76,7 +76,7 @@ export default class EditTransaction extends Component {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">
-                        Статья расходов
+                        Расход
                     </Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={this.onSubmit}>

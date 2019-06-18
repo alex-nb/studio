@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ButtonGroup, Button, Collapse } from "react-bootstrap";
 import { compose } from '../../utils';
 import { connect } from 'react-redux';
-import {fetchAllReports} from '../../actions';
+import {fetchAllReports} from '../../actions/reports';
 import { withBdApiService } from '../hoc';
 
 import './reports.css';

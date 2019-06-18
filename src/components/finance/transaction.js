@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { compose } from '../../utils';
 import { connect } from 'react-redux';
-import {fetchExpenditure, fetchTransaction} from '../../actions';
+import {fetchTransaction} from '../../actions/transactions';
+import {fetchExpenditure} from '../../actions/expenditure';
 import { withBdApiService } from '../hoc';
 import './finance.css';
 import Spinner from "../spinner";

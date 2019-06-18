@@ -3,7 +3,7 @@ import EditExpenditure from './edit-expenditure';
 import { Button } from 'react-bootstrap';
 import { compose } from '../../utils';
 import { connect } from 'react-redux';
-import {fetchExpenditure} from '../../actions';
+import {fetchExpenditure} from '../../actions/expenditure';
 import { withBdApiService } from '../hoc';
 import './finance.css';
 import Spinner from "../spinner";

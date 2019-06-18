@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { compose } from '../../utils';
+//import { compose } from '../../utils';
 import { connect } from 'react-redux';
-import { fetchPersonalInfo } from '../../actions';
-import { withBdApiService } from '../hoc';
+import { fetchPersonalInfo } from '../../actions/personal-info';
+//import { withBdApiService } from '../hoc';
 
 import {Balance, AskMoney} from '../top-panel';
 import ErrorMessage from "../error-message";
@@ -19,6 +19,7 @@ class Header extends Component {
     };
 
     componentDidMount() {
+        console.log(this.props.fetchPersonalInfo);
         this.props.fetchPersonalInfo();
     }
 
@@ -59,16 +60,15 @@ class Header extends Component {
 }
 
 const mapStateToProps = ({ personalInfo, loadingPersonalInfo, errorPersonalInfo }) => {
+    console.log('map state');
     return { personalInfo, loadingPersonalInfo, errorPersonalInfo };
 };
 
 const mapDispatchToProps = (dispatch, { bdApiService }) => {
+    console.log('mad dispatch');
     return {
         fetchPersonalInfo: fetchPersonalInfo(bdApiService, dispatch)
     };
 };
 
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

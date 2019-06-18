@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { fetchCompanyStructure } from "../../actions";
+import { fetchCompanyStructure } from "../../actions/employees";
 import {compose} from "../../utils";
 import {withBdApiService} from "../hoc";
 import {connect} from "react-redux";
