@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { fetchAllProjects, fetchPersonalReports } from '../../actions/projects';
 
 import Projects from "./projects/projects";
-import Spinner from "../spinner";
-import ErrorMessage from "../error-message";
+import Spinner from "../layout/spinner";
+import ErrorMessage from "../layout/error-message";
 import ProjectCard from "./project-card";
 import { withRouter } from 'react-router-dom';
 class ProjectsPage extends Component {

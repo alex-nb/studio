@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { fetchCompanyStructure } from "../../actions/employees";
 import {connect} from "react-redux";
-import Spinner from "../spinner";
-import ErrorMessage from "../error-message";
+import Spinner from "../layout/spinner";
+import ErrorMessage from "../layout/error-message";
 import DragDropList from './drag-drop-list';
 
 

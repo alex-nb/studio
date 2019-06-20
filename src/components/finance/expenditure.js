@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import {fetchExpenditure} from '../../actions/expenditure';
 
 import './finance.css';
-import Spinner from "../spinner";
-import ErrorMessage from "../error-message";
+import Spinner from "../layout/spinner";
+import ErrorMessage from "../layout/error-message";
 
 class Expenditure extends Component {
 

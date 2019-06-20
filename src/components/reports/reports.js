@@ -6,8 +6,8 @@ import {fetchAllReports} from '../../actions/reports';
 
 import './reports.css';
 
-import Spinner from "../spinner";
-import ErrorMessage from "../error-message";
+import Spinner from "../layout/spinner";
+import ErrorMessage from "../layout/error-message";
 
 
 class Reports extends Component {

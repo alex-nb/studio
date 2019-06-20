@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ErrorMessage from '../error-message';
+import ErrorMessage from './error-message';
 
 export default class ErrorBoundry extends Component {
 

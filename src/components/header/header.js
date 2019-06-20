@@ -7,7 +7,7 @@ import { fetchPersonalInfo } from '../../actions/personal-info';
 import { logout } from '../../actions/auth';
 
 import {Balance, AskMoney} from '../top-panel';
-import ErrorMessage from "../error-message";
+import ErrorMessage from "../layout/error-message";
 
 import './header.css';
 

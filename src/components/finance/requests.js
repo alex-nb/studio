@@ -5,8 +5,8 @@ import {fetchRequestsMoney} from '../../actions/requests';
 
 import './finance.css';
 
-import Spinner from "../spinner";
-import ErrorMessage from "../error-message";
+import Spinner from "../layout/spinner";
+import ErrorMessage from "../layout/error-message";
 import {Button, ButtonGroup} from "react-bootstrap";
 
 

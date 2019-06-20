@@ -3,8 +3,8 @@ import Button from 'react-bootstrap/Button';
 import {Form, Col} from "react-bootstrap";
 //import { fetchCompanyStructure } from "../../../actions/employees";
 import {connect} from "react-redux";
-import Spinner from "../../spinner";
-import ErrorMessage from "../../error-message";
+import Spinner from "../../layout/spinner";
+import ErrorMessage from "../../layout/error-message";
 
 import './edit-project.css';
 

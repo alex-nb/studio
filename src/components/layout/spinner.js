@@ -6,7 +6,7 @@ const Spinner = () => {
     return (
         <div className="lds-css ng-scope">
             <div className="custom-lds lds-eclipse">
-                <div></div>
+                <div/>
             </div>
         </div>
     );

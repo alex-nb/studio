@@ -5,8 +5,8 @@ import {fetchTransaction} from '../../actions/transactions';
 import {fetchExpenditure} from '../../actions/expenditure';
 
 import './finance.css';
-import Spinner from "../spinner";
-import ErrorMessage from "../error-message";
+import Spinner from "../layout/spinner";
+import ErrorMessage from "../layout/error-message";
 import {Button} from "react-bootstrap";
 import EditTransaction from "./edit-transaction";
 
