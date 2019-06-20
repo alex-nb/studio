@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import BalanceHistory from './balance-history';
 
 export default class Balance extends Component {
@@ -12,14 +12,14 @@ export default class Balance extends Component {
         const { balanceHistory, balance } = this.props;
 
         return (
-            <div>
+            <Fragment>
                 <span onClick={() => this.setState({ modalBalanceHistory: true })} title='Личный баланс'>{balance}</span>
                 <BalanceHistory
                     show={this.state.modalBalanceHistory}
                     onHide={modalBalanceHistory}
                     balanceHistory={balanceHistory}
                 />
-            </div>
+            </Fragment>
         );
     }
 

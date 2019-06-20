@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Collapse } from "react-bootstrap";
-import { compose } from '../../utils';
 import { connect } from 'react-redux';
 import {fetchAllReports} from '../../actions/reports';
-import { withBdApiService } from '../hoc';
+
 
 import './reports.css';
 
 import Spinner from "../spinner";
 import ErrorMessage from "../error-message";
+
 
 class Reports extends Component {
 
@@ -26,11 +26,11 @@ class Reports extends Component {
         } = this.props;
 
         if (loadingAllReports) {
-            return (<Spinner/>);
+            return (<div className="col-md-10 float-right"><Spinner/></div>);
         }
 
         if (errorAllReports) {
-            return <ErrorMessage/>;
+            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         }
 
         const tableBody = allReports.map((project) => {
@@ -91,33 +91,27 @@ class Reports extends Component {
             });
 
         return(
-            <table className="table table-hover table-sm">
-                <thead className="thead-dark">
-                <tr>
-                    <th style={{width: "15%"}}>Дата</th>
-                    <th style={{width: "15%"}}>Сотрудник</th>
-                    <th style={{width: "40%"}}>Отчет</th>
-                    <th style={{width: "15%"}}>Часы</th>
-                    <th style={{width: "15%"}} />
-                </tr>
-                </thead>
-                {tableBody}
-            </table>
+            <div className="col-md-10 float-right">
+                <table className="table table-hover table-sm">
+                    <thead className="thead-dark">
+                    <tr>
+                        <th style={{width: "15%"}}>Дата</th>
+                        <th style={{width: "15%"}}>Сотрудник</th>
+                        <th style={{width: "40%"}}>Отчет</th>
+                        <th style={{width: "15%"}}>Часы</th>
+                        <th style={{width: "15%"}} />
+                    </tr>
+                    </thead>
+                    {tableBody}
+                </table>
+            </div>
         );
     }
 };
 
-const mapStateToProps = ({ allReports, loadingAllReports, errorAllReports }) => {
+const mapStateToProps = ({ reportsList }) => {
+    const { allReports, loadingAllReports, errorAllReports } = reportsList;
     return { allReports, loadingAllReports, errorAllReports };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchAllReports: fetchAllReports(bdApiService, dispatch)
-    };
-};
-
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(Reports);
+export default connect(mapStateToProps, {fetchAllReports})(Reports);

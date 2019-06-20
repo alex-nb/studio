@@ -1,99 +1,63 @@
-import {
-    PROJECTS_NEW_GET_SUCCESS,
-    PROJECTS_NEW_GET_REQUEST,
-    PROJECTS_NEW_GET_FAILURE,
-    PROJECTS_PROCESS_GET_SUCCESS,
-    PROJECTS_PROCESS_GET_REQUEST,
-    PROJECTS_PROCESS_GET_FAILURE,
-    PROJECTS_CLOSE_GET_SUCCESS,
-    PROJECTS_CLOSE_GET_REQUEST,
-    PROJECTS_CLOSE_GET_FAILURE,
-    PERSONAL_REPORTS_GET_SUCCESS,
-    PERSONAL_REPORTS_GET_REQUEST,
-    PERSONAL_REPORTS_GET_FAILURE
-} from './types';
+import { projectsPageTypes } from './types';
+import { projectsPageAPI } from './api-endpoints';
 
 import axios from 'axios';
 
-const projectsNewLoaded = (listProjects) => {
-    return {
-        type: PROJECTS_NEW_GET_SUCCESS,
-        payload: listProjects
-    };
-};
+const projectsNewLoaded = (listProjects) => ({
+    type: projectsPageTypes.PROJECTS_NEW_GET_SUCCESS,
+    payload: listProjects
+});
 
-const projectsNewRequested = () => {
-    return {
-        type: PROJECTS_NEW_GET_REQUEST
-    };
-};
+const projectsNewRequested = () => ({
+    type: projectsPageTypes.PROJECTS_NEW_GET_REQUEST
+});
 
-const projectsNewError = (error) => {
-    return {
-        type: PROJECTS_NEW_GET_FAILURE,
-        payload: error
-    };
-};
+const projectsNewError = (error) => ({
+    type: projectsPageTypes.PROJECTS_NEW_GET_FAILURE,
+    payload: error
+});
 
-const projectsProcessLoaded = (listProjects) => {
-    return {
-        type: PROJECTS_PROCESS_GET_SUCCESS,
-        payload: listProjects
-    };
-};
+const projectsProcessLoaded = (listProjects) => ({
+    type: projectsPageTypes.PROJECTS_PROCESS_GET_SUCCESS,
+    payload: listProjects
+});
 
-const projectsProcessRequested = () => {
-    return {
-        type: PROJECTS_PROCESS_GET_REQUEST
-    };
-};
+const projectsProcessRequested = () => ({
+    type: projectsPageTypes.PROJECTS_PROCESS_GET_REQUEST
+});
 
-const projectsProcessError = (error) => {
-    return {
-        type: PROJECTS_PROCESS_GET_FAILURE,
-        payload: error
-    };
-};
+const projectsProcessError = (error) => ({
+    type: projectsPageTypes.PROJECTS_PROCESS_GET_FAILURE,
+    payload: error
+});
 
-const projectsCloseLoaded = (listProjects) => {
-    return {
-        type: PROJECTS_CLOSE_GET_SUCCESS,
-        payload: listProjects
-    };
-};
+const projectsCloseLoaded = (listProjects) => ({
+    type: projectsPageTypes.PROJECTS_CLOSE_GET_SUCCESS,
+    payload: listProjects
+});
 
-const projectsCloseRequested = () => {
-    return {
-        type:  PROJECTS_CLOSE_GET_REQUEST
-    };
-};
+const projectsCloseRequested = () => ({
+    type:  projectsPageTypes.PROJECTS_CLOSE_GET_REQUEST
+});
 
-const projectsCloseError = (error) => {
-    return {
-        type: PROJECTS_CLOSE_GET_FAILURE,
-        payload: error
-    };
-};
+const projectsCloseError = (error) => ({
+    type: projectsPageTypes.PROJECTS_CLOSE_GET_FAILURE,
+    payload: error
+});
 
-const personalReportsRequested = () => {
-    return {
-        type: PERSONAL_REPORTS_GET_REQUEST
-    };
-};
+const personalReportsRequested = () => ({
+    type: projectsPageTypes.PERSONAL_REPORTS_GET_REQUEST
+});
 
-const personalReportsLoaded = (personalReports) => {
-    return {
-        type: PERSONAL_REPORTS_GET_SUCCESS,
-        payload: personalReports
-    };
-};
+const personalReportsLoaded = (personalReports) => ({
+    type: projectsPageTypes.PERSONAL_REPORTS_GET_SUCCESS,
+    payload: personalReports
+});
 
-const personalReportsError = (error) => {
-    return {
-        type: PERSONAL_REPORTS_GET_FAILURE,
-        payload: error
-    };
-};
+const personalReportsError = (error) => ({
+    type: projectsPageTypes.PERSONAL_REPORTS_GET_FAILURE,
+    payload: error
+});
 
 export const fetchPersonalReports = () => async dispatch => {
     dispatch(personalReportsRequested());
@@ -132,44 +96,28 @@ export const fetchPersonalReports = () => async dispatch => {
     } catch (err) {
         dispatch(personalReportsError(err));
     }
-    /*dispatch(personalReportsRequested());
-    bdApiService.getPersonalReports()
-        .then((personalReports) => dispatch(personalReportsLoaded(personalReports)))
-        .catch((err) => dispatch(personalReportsError(err)));*/
 };
 
 export const fetchAllProjects = () => async dispatch => {
     dispatch(projectsProcessRequested());
     try {
-        const res = await axios.get('/projects/process');
-        dispatch(projectsProcessLoaded(res));
+        const res = await axios.get(projectsPageAPI.GET_PROCESS_PROJECTS);
+        dispatch(projectsProcessLoaded(res.data.projects));
     } catch (err) {
         dispatch(projectsProcessError(err));
     }
     dispatch(projectsCloseRequested());
     try {
-        const res = await axios.get('/projects/close');
-        dispatch(projectsCloseLoaded(res));
+        const res = await axios.get(projectsPageAPI.GET_CLOSE_PROJECTS);
+        dispatch(projectsCloseLoaded(res.data.projects));
     } catch (err) {
         dispatch(projectsCloseError(err));
     }
     dispatch(projectsNewRequested());
     try {
-        const res = await axios.get('/projects/new');
-        dispatch(projectsNewLoaded(res));
+        const res = await axios.get(projectsPageAPI.GET_NEW_PROJECTS);
+        dispatch(projectsNewLoaded(res.data.projects));
     } catch (err) {
         dispatch(projectsNewError(err));
     }
-    /*dispatch(projectsProcessRequested());
-    bdApiService.getProjectsProcess()
-        .then((projectsProcess) => dispatch(projectsProcessLoaded(projectsProcess)))
-        .catch((err) => dispatch(projectsProcessError(err)));
-    dispatch(projectsCloseRequested());
-    bdApiService.getProjectsClose()
-        .then((projectsClose) => dispatch(projectsCloseLoaded(projectsClose)))
-        .catch((err) => dispatch(projectsCloseError(err)));
-    dispatch(projectsNewRequested());
-    bdApiService.getProjectsNew()
-        .then((projectsNew) => dispatch(projectsNewLoaded(projectsNew)))
-        .catch((err) => dispatch(projectsNewError(err)));*/
 };

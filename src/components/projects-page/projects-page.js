@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { compose } from '../../utils';
+
 import { connect } from 'react-redux';
 import { fetchAllProjects, fetchPersonalReports } from '../../actions/projects';
-import { withBdApiService } from '../hoc';
 
 import Projects from "./projects/projects";
 import Spinner from "../spinner";
 import ErrorMessage from "../error-message";
 import ProjectCard from "./project-card";
 import { withRouter } from 'react-router-dom';
-
 class ProjectsPage extends Component {
 
     componentDidMount() {
@@ -45,17 +43,22 @@ class ProjectsPage extends Component {
             );
         });
 
-        return(<Projects elementsPrProc={elementsPrProc} elementsPrClose={elementsPrClose} elementsPrNew={elementsPrNew} />);
+        return(
+            <div className="col-md-10 float-right">
+                <Projects elementsPrProc={elementsPrProc} elementsPrClose={elementsPrClose} elementsPrNew={elementsPrNew} />
+            </div>
+        );
     }
 }
 
 
-const mapStateToProps = ({
-                             projectsClose, projectsProcess, projectsNew, personalReports,
-                             loadingProcess, loadingClose, loadingNew, loadingPersonalReports,
-                             errorProjectsProcess, errorProjectsClose, errorProjectsNew, errorPersonalReports,
-                             studioProject
-                         }) => {
+const mapStateToProps = ({ projectsList }) => {
+    const {
+        projectsClose, projectsProcess, projectsNew, personalReports,
+        loadingProcess, loadingClose, loadingNew, loadingPersonalReports,
+        errorProjectsProcess, errorProjectsClose, errorProjectsNew, errorPersonalReports,
+        studioProject
+    } = projectsList;
     return {
         projectsClose, projectsProcess, projectsNew, personalReports,
         loadingProcess, loadingClose, loadingNew, loadingPersonalReports,
@@ -64,17 +67,7 @@ const mapStateToProps = ({
     };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchAllProjects: fetchAllProjects(bdApiService, dispatch),
-        fetchPersonalReports: fetchPersonalReports(bdApiService, dispatch)
-    };
-};
-
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(withRouter(ProjectsPage));
+export default connect(mapStateToProps, {fetchAllProjects, fetchPersonalReports})(withRouter(ProjectsPage));
 
 
 

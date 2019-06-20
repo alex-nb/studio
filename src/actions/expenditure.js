@@ -1,32 +1,24 @@
-import {
-    EXPENDITURE_GET_REQUEST,
-    EXPENDITURE_GET_SUCCESS,
-    EXPENDITURE_GET_FAILURE
-} from './types';
+import { expendituresPageTypes } from './types';
+import { expendituresPageAPI } from './api-endpoints';
 
 import axios from 'axios';
-import leha from "../img/leha.jpeg";
-import men from "../img/men.jpg";
-import stark from "../img/stark.jpg";
-import tigra from "../img/tigra.png";
-import clever from "../img/clever.jpeg";
 
 const expenditureRequested = () => {
     return {
-        type:EXPENDITURE_GET_REQUEST
+        type: expendituresPageTypes.EXPENDITURE_GET_REQUEST
     };
 };
 
 const expenditureLoaded = (expenditure) => {
     return {
-        type: EXPENDITURE_GET_SUCCESS,
+        type: expendituresPageTypes.EXPENDITURE_GET_SUCCESS,
         payload: expenditure
     };
 };
 
 const expenditureError = (error) => {
     return {
-        type: EXPENDITURE_GET_FAILURE,
+        type: expendituresPageTypes.EXPENDITURE_GET_FAILURE,
         payload: error
     };
 };
@@ -34,13 +26,9 @@ const expenditureError = (error) => {
 export const fetchExpenditure = () => async dispatch => {
     dispatch(expenditureRequested());
     try {
-        const res = await axios.get('/finance/expenditure');
-        dispatch(expenditureLoaded(res));
+        const res = await axios.get(expendituresPageAPI.GET_EXPENDITURE);
+        dispatch(expenditureLoaded(res.data.expenditures));
     } catch (err) {
         dispatch(expenditureError(err));
     }
-    /*dispatch(expenditureRequested());
-    bdApiService.getExpenditure()
-        .then((expenditure) => dispatch(expenditureLoaded(expenditure)))
-        .catch((err) => dispatch(expenditureError(err)));*/
 };

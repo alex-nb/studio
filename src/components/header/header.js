@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-//import { compose } from '../../utils';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+
 import { fetchPersonalInfo } from '../../actions/personal-info';
-//import { withBdApiService } from '../hoc';
+import { logout } from '../../actions/auth';
 
 import {Balance, AskMoney} from '../top-panel';
 import ErrorMessage from "../error-message";
-
-import { Link } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import './header.css';
 
@@ -19,7 +18,6 @@ class Header extends Component {
     };
 
     componentDidMount() {
-        console.log(this.props.fetchPersonalInfo);
         this.props.fetchPersonalInfo();
     }
 
@@ -45,7 +43,7 @@ class Header extends Component {
                                 <NavDropdown.Item href="#profil">Профиль</NavDropdown.Item>
                                 <NavDropdown.Item onClick={() => this.setState({ modalAskMoney: true })}>Запрос ДС</NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item onClick={this.props.onLogout}>Выход</NavDropdown.Item>
+                                <NavDropdown.Item onClick={this.props.logout}>Выход</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>
@@ -59,16 +57,9 @@ class Header extends Component {
     }
 }
 
-const mapStateToProps = ({ personalInfo, loadingPersonalInfo, errorPersonalInfo }) => {
-    console.log('map state');
+const mapStateToProps = ({ personal_info }) => {
+    const { personalInfo, loadingPersonalInfo, errorPersonalInfo } = personal_info;
     return { personalInfo, loadingPersonalInfo, errorPersonalInfo };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    console.log('mad dispatch');
-    return {
-        fetchPersonalInfo: fetchPersonalInfo(bdApiService, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, {fetchPersonalInfo, logout})(Header);

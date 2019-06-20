@@ -1,41 +1,28 @@
-import {
-    TRANSACTION_GET_REQUEST,
-    TRANSACTION_GET_SUCCESS,
-    TRANSACTION_GET_FAILURE
-} from './types';
+import { transactionsPageTypes } from './types';
+import { transactionsPageAPI } from './api-endpoints';
 
 import axios from 'axios';
 
-const transactionRequested = () => {
-    return {
-        type: TRANSACTION_GET_REQUEST
-    };
-};
+const transactionRequested = () => ({
+    type: transactionsPageTypes.TRANSACTION_GET_REQUEST
+});
 
-const transactionLoaded = (transaction) => {
-    return {
-        type: TRANSACTION_GET_SUCCESS,
-        payload: transaction
-    };
-};
+const transactionLoaded = (transaction) => ({
+    type: transactionsPageTypes.TRANSACTION_GET_SUCCESS,
+    payload: transaction
+});
 
-const transactionError = (error) => {
-    return {
-        type: TRANSACTION_GET_FAILURE,
-        payload: error
-    };
-};
+const transactionError = (error) => ({
+    type: transactionsPageTypes.TRANSACTION_GET_FAILURE,
+    payload: error
+});
 
 export const fetchTransaction = () => async dispatch => {
     dispatch(transactionRequested());
     try {
-        const res = await axios.get('/finance/transaction');
-        dispatch(transactionLoaded(res));
+        const res = await axios.get(transactionsPageAPI.GET_TRANSACTIONS);
+        dispatch(transactionLoaded(res.data.transactions));
     } catch (err) {
         dispatch(transactionError(err));
     }
-    /*dispatch(transactionRequested());
-    bdApiService.getTransaction()
-        .then((transaction) => dispatch(transactionLoaded(transaction)))
-        .catch((err) => dispatch(transactionError(err)));*/
 };

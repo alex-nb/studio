@@ -1,19 +1,21 @@
 import { combineReducers } from 'redux';
 
-import employees from './employees';
+import employeesList from './employees';
 import personal_info from './personal-info';
-import expenditure from './expenditure';
-import projects from './projects';
-import reports from './reports';
-import requests from './requests';
-import transactions from './transactions';
+import expenditureList from './expenditure';
+import projectsList from './projects';
+import reportsList from './reports';
+import requestsList from './requests';
+import transactionsList from './transactions';
+import auth from './auth';
 
 export default combineReducers({
-    employees,
+    employeesList,
     personal_info,
-    expenditure,
-    projects,
-    reports,
-    requests,
-    transactions
+    expenditureList,
+    projectsList,
+    reportsList,
+    requestsList,
+    transactionsList,
+    auth
 });

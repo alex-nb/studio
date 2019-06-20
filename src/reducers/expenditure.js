@@ -1,8 +1,4 @@
-import {
-    EXPENDITURE_GET_REQUEST,
-    EXPENDITURE_GET_SUCCESS,
-    EXPENDITURE_GET_FAILURE
-} from '../actions/types';
+import { expendituresPageTypes } from '../actions/types';
 
 const initialState = {
     expenditure: [],
@@ -13,21 +9,21 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case EXPENDITURE_GET_REQUEST:
+        case expendituresPageTypes.EXPENDITURE_GET_REQUEST:
             return {
                 expenditure: [],
                 loadingExpenditure: true,
                 errorExpenditure: null
             };
 
-        case EXPENDITURE_GET_SUCCESS:
+        case expendituresPageTypes.EXPENDITURE_GET_SUCCESS:
             return {
                 expenditure: action.payload,
                 loadingExpenditure: false,
                 errorExpenditure: null
             };
 
-        case EXPENDITURE_GET_FAILURE:
+        case expendituresPageTypes.EXPENDITURE_GET_FAILURE:
             return {
                 expenditure: [],
                 loadingExpenditure: false,

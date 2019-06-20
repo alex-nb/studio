@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-
 import { Form, Button } from "react-bootstrap";
+import {signup} from '../../actions/auth';
+import {connect} from "react-redux";
 
 class Signup extends Component {
     state = {
@@ -27,7 +28,7 @@ class Signup extends Component {
 
     render() {
         return (
-                <Form onSubmit={e => this.props.onSignup(e, this.state)}>
+                <Form onSubmit={e => this.props.signup(e, this.state)}>
                     <Form.Group>
                         <Form.Label>E-mail</Form.Label>
                         <Form.Control
@@ -55,10 +56,15 @@ class Signup extends Component {
                             onChange={this.inputChangeHandler}
                         />
                     </Form.Group>
-                    <Button type="submit" variant="primary"  disabled={this.props.loading}>{this.props.loading ? 'Секунду...' : 'Зарегистрироваться'}</Button>
+                    <Button type="submit" variant="primary"  disabled={this.props.authLoading}>{this.props.authLoading ? 'Секунду...' : 'Зарегистрироваться'}</Button>
                 </Form>
         );
     }
 }
 
-export default Signup;
+const mapStateToProps = ({ auth }) => {
+    const { authLoading,  } = auth;
+    return { authLoading };
+};
+
+export default connect(mapStateToProps, { signup })(Signup);

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { compose } from '../../utils';
+
 import { connect } from 'react-redux';
 import {fetchRequestsMoney} from '../../actions/requests';
-import { withBdApiService } from '../hoc';
+
 import './finance.css';
 
 import Spinner from "../spinner";
 import ErrorMessage from "../error-message";
 import {Button, ButtonGroup} from "react-bootstrap";
+
 
 class Requests extends Component {
     componentDidMount() {
@@ -20,11 +21,11 @@ class Requests extends Component {
         } = this.props;
 
         if (loadingRequestsMoney) {
-            return (<Spinner/>);
+            return (<div className="col-md-10 float-right"><Spinner/></div>);
         }
 
         if (errorRequestsMoney) {
-            return <ErrorMessage/>;
+            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         }
 
         const tableBody = requestsMoney.map((request) => {
@@ -51,35 +52,30 @@ class Requests extends Component {
         });
 
         return(
-            <table className="table table-hover table-sm">
-                <thead className="thead-dark">
-                <tr>
-                    <th style={{width: "15%"}}>Дата</th>
-                    <th style={{width: "15%"}}>Сотрудник</th>
-                    <th style={{width: "40%"}}>До какого числа</th>
-                    <th style={{width: "15%"}}>Сколько</th>
-                    <th style={{width: "15%"}} />
-                </tr>
-                </thead>
-                <tbody>
-                    {tableBody}
-                </tbody>
-            </table>
+            <div className="col-md-10 float-right">
+                <table className="table table-hover table-sm">
+                    <thead className="thead-dark">
+                    <tr>
+                        <th style={{width: "15%"}}>Дата</th>
+                        <th style={{width: "15%"}}>Сотрудник</th>
+                        <th style={{width: "40%"}}>До какого числа</th>
+                        <th style={{width: "15%"}}>Сколько</th>
+                        <th style={{width: "15%"}} />
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {tableBody}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }
 
-const mapStateToProps = ({ requestsMoney, loadingRequestsMoney, errorRequestsMoney }) => {
+const mapStateToProps = ({ requestsList }) => {
+    const { requestsMoney, loadingRequestsMoney, errorRequestsMoney } = requestsList;
     return { requestsMoney, loadingRequestsMoney, errorRequestsMoney };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchRequestsMoney: fetchRequestsMoney(bdApiService, dispatch)
-    };
-};
 
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(Requests);
+export default connect(mapStateToProps, {fetchRequestsMoney})(Requests);

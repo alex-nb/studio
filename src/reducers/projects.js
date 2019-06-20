@@ -1,17 +1,4 @@
-import {
-    PROJECTS_NEW_GET_SUCCESS,
-    PROJECTS_NEW_GET_REQUEST,
-    PROJECTS_NEW_GET_FAILURE,
-    PROJECTS_PROCESS_GET_SUCCESS,
-    PROJECTS_PROCESS_GET_REQUEST,
-    PROJECTS_PROCESS_GET_FAILURE,
-    PROJECTS_CLOSE_GET_SUCCESS,
-    PROJECTS_CLOSE_GET_REQUEST,
-    PROJECTS_CLOSE_GET_FAILURE,
-    PERSONAL_REPORTS_GET_SUCCESS,
-    PERSONAL_REPORTS_GET_REQUEST,
-    PERSONAL_REPORTS_GET_FAILURE
-} from '../actions/types';
+import { projectsPageTypes } from '../actions/types';
 
 const initialState = {
     projectsNew: [],
@@ -31,7 +18,7 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case PROJECTS_NEW_GET_SUCCESS:
+        case projectsPageTypes.PROJECTS_NEW_GET_SUCCESS:
             return {
                 ...state,
                 projectsNew: action.payload,
@@ -39,7 +26,7 @@ export default function (state = initialState, action) {
                 errorProjectsNew: null
             };
 
-        case PROJECTS_NEW_GET_REQUEST:
+        case projectsPageTypes.PROJECTS_NEW_GET_REQUEST:
             return {
                 ...state,
                 projectsNew: [],
@@ -47,7 +34,7 @@ export default function (state = initialState, action) {
                 errorProjectsNew: null
             };
 
-        case PROJECTS_NEW_GET_FAILURE:
+        case projectsPageTypes.PROJECTS_NEW_GET_FAILURE:
             return {
                 ...state,
                 projectsNew: [],
@@ -55,7 +42,7 @@ export default function (state = initialState, action) {
                 errorProjectsNew: action.payload
             };
 
-        case PROJECTS_PROCESS_GET_SUCCESS:
+        case projectsPageTypes.PROJECTS_PROCESS_GET_SUCCESS:
             return {
                 ...state,
                 projectsProcess: action.payload,
@@ -63,7 +50,7 @@ export default function (state = initialState, action) {
                 errorProjectsProcess: null
             };
 
-        case PROJECTS_PROCESS_GET_REQUEST:
+        case projectsPageTypes.PROJECTS_PROCESS_GET_REQUEST:
             return {
                 ...state,
                 projectsProcess: [],
@@ -71,7 +58,7 @@ export default function (state = initialState, action) {
                 errorProjectsProcess: null
             };
 
-        case PROJECTS_PROCESS_GET_FAILURE:
+        case projectsPageTypes.PROJECTS_PROCESS_GET_FAILURE:
             return {
                 ...state,
                 projectsProcess: [],
@@ -79,7 +66,7 @@ export default function (state = initialState, action) {
                 errorProjectsProcess: action.payload
             };
 
-        case PROJECTS_CLOSE_GET_SUCCESS:
+        case projectsPageTypes.PROJECTS_CLOSE_GET_SUCCESS:
             return {
                 ...state,
                 projectsClose: action.payload,
@@ -87,7 +74,7 @@ export default function (state = initialState, action) {
                 errorProjectsClose: null
             };
 
-        case PROJECTS_CLOSE_GET_REQUEST:
+        case projectsPageTypes.PROJECTS_CLOSE_GET_REQUEST:
             return {
                 ...state,
                 projectsClose: [],
@@ -95,7 +82,7 @@ export default function (state = initialState, action) {
                 errorProjectsClose: null
             };
 
-        case PROJECTS_CLOSE_GET_FAILURE:
+        case projectsPageTypes.PROJECTS_CLOSE_GET_FAILURE:
             return {
                 ...state,
                 projectsClose: [],
@@ -103,7 +90,7 @@ export default function (state = initialState, action) {
                 errorProjectsClose: action.payload
             };
 
-        case PERSONAL_REPORTS_GET_SUCCESS:
+        case projectsPageTypes.PERSONAL_REPORTS_GET_SUCCESS:
             return {
                 ...state,
                 personalReports: action.payload,
@@ -111,7 +98,7 @@ export default function (state = initialState, action) {
                 errorPersonalReports: null
             };
 
-        case PERSONAL_REPORTS_GET_REQUEST:
+        case projectsPageTypes.PERSONAL_REPORTS_GET_REQUEST:
             return {
                 ...state,
                 personalReports: [],
@@ -119,7 +106,7 @@ export default function (state = initialState, action) {
                 errorPersonalReports: null
             };
 
-        case PERSONAL_REPORTS_GET_FAILURE:
+        case projectsPageTypes.PERSONAL_REPORTS_GET_FAILURE:
             return {
                 ...state,
                 personalReports: [],

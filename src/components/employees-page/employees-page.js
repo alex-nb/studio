@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import { fetchCompanyStructure } from "../../actions/employees";
-import {compose} from "../../utils";
-import {withBdApiService} from "../hoc";
 import {connect} from "react-redux";
 import Spinner from "../spinner";
 import ErrorMessage from "../error-message";
@@ -14,36 +12,45 @@ class EmployeesPage extends Component {
         this.props.fetchCompanyStructure();
     }
 
+    onDelete = (id) => {
+        console.log(id);
+    };
+
     render () {
         const {
             departmentOrder, departments, employees, allEmployeesList,
             loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
-            errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
+            errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList
         } = this.props;
 
         if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList) {
-            return (<Spinner/>);
+            return (<div className="col-md-10 float-right"><Spinner/></div>);
         }
 
         if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList) {
-            return <ErrorMessage/>;
+            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         }
 
-        return (<DragDropList
-            departmentOrder={departmentOrder}
-            departments={departments}
-            employees={employees}
-            onDelete={onDelete}
-            allEmployees = {allEmployeesList}
-        />);
+        return (
+            <div className="col-md-10 float-right">
+                <DragDropList
+                    departmentOrder={departmentOrder}
+                    departments={departments}
+                    employees={employees}
+                    onDelete={this.onDelete}
+                    allEmployees = {allEmployeesList}
+                />
+            </div>
+        );
     };
 }
 
-const mapStateToProps = ({
-     departmentOrder, departments, employees, allEmployeesList,
-     loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
-     errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
-}) => {
+const mapStateToProps = ({ employeesList }) => {
+    const {
+        departmentOrder, departments, employees, allEmployeesList,
+        loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
+        errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
+    } = employeesList;
     return {
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
@@ -51,16 +58,4 @@ const mapStateToProps = ({
     };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchCompanyStructure: fetchCompanyStructure(bdApiService, dispatch),
-        onDelete: (id) => {
-            console.log(`delete ${id}`);
-        }
-    };
-};
-
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(EmployeesPage);
+export default connect(mapStateToProps, {fetchCompanyStructure})(EmployeesPage);

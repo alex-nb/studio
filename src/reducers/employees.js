@@ -1,17 +1,4 @@
-import {
-    EMPLOYEES_GET_SUCCESS,
-    EMPLOYEES_GET_REQUEST,
-    EMPLOYEES_GET_FAILURE,
-    DEPARTMENTS_GET_SUCCESS,
-    DEPARTMENTS_GET_REQUEST,
-    DEPARTMENTS_GET_FAILURE,
-    DEPARTMENT_ORDER_GET_SUCCESS,
-    DEPARTMENT_ORDER_GET_REQUEST,
-    DEPARTMENT_ORDER_GET_FAILURE,
-    ALL_EMPLOYEES_LIST_GET_SUCCESS,
-    ALL_EMPLOYEES_LIST_GET_REQUEST,
-    ALL_EMPLOYEES_LIST_GET_FAILURE
-} from '../actions/types';
+import { employeesPageTypes } from '../actions/types';
 
 const initialState = {
     employees: {},
@@ -47,7 +34,7 @@ export default function (state = initialState, action) {
                 ],
             };*/
 
-        case EMPLOYEES_GET_SUCCESS:
+        case employeesPageTypes.EMPLOYEES_GET_SUCCESS:
             return {
                 ...state,
                 employees: action.payload,
@@ -55,7 +42,7 @@ export default function (state = initialState, action) {
                 errorEmployees: null
             };
 
-        case EMPLOYEES_GET_REQUEST:
+        case employeesPageTypes.EMPLOYEES_GET_REQUEST:
             return {
                 ...state,
                 employees: {},
@@ -63,7 +50,7 @@ export default function (state = initialState, action) {
                 errorEmployees: null
             };
 
-        case EMPLOYEES_GET_FAILURE:
+        case employeesPageTypes.EMPLOYEES_GET_FAILURE:
             return {
                 ...state,
                 employees: {},
@@ -71,7 +58,7 @@ export default function (state = initialState, action) {
                 errorEmployees: action.payload
             };
 
-        case DEPARTMENTS_GET_SUCCESS:
+        case employeesPageTypes.DEPARTMENTS_GET_SUCCESS:
             return {
                 ...state,
                 departments: action.payload,
@@ -79,7 +66,7 @@ export default function (state = initialState, action) {
                 errorDepartments: null
             };
 
-        case DEPARTMENTS_GET_REQUEST:
+        case employeesPageTypes.DEPARTMENTS_GET_REQUEST:
             return {
                 ...state,
                 departments: {},
@@ -87,7 +74,7 @@ export default function (state = initialState, action) {
                 errorDepartments: null
             };
 
-        case DEPARTMENTS_GET_FAILURE:
+        case employeesPageTypes.DEPARTMENTS_GET_FAILURE:
             return {
                 ...state,
                 departments: {},
@@ -95,7 +82,7 @@ export default function (state = initialState, action) {
                 errorDepartments: action.payload
             };
 
-        case DEPARTMENT_ORDER_GET_SUCCESS:
+        case employeesPageTypes.DEPARTMENT_ORDER_GET_SUCCESS:
             return {
                 ...state,
                 departmentOrder: action.payload,
@@ -103,7 +90,7 @@ export default function (state = initialState, action) {
                 errorDepartmentOrder: null
             };
 
-        case DEPARTMENT_ORDER_GET_REQUEST:
+        case employeesPageTypes.DEPARTMENT_ORDER_GET_REQUEST:
             return {
                 ...state,
                 departmentOrder: {},
@@ -111,7 +98,7 @@ export default function (state = initialState, action) {
                 errorDepartmentOrder: null
             };
 
-        case DEPARTMENT_ORDER_GET_FAILURE:
+        case employeesPageTypes.DEPARTMENT_ORDER_GET_FAILURE:
             return {
                 ...state,
                 departmentOrder: {},
@@ -119,7 +106,7 @@ export default function (state = initialState, action) {
                 errorDepartmentOrder: action.payload
             };
 
-        case ALL_EMPLOYEES_LIST_GET_SUCCESS:
+        case employeesPageTypes.ALL_EMPLOYEES_LIST_GET_SUCCESS:
             return {
                 ...state,
                 allEmployeesList: action.payload,
@@ -127,7 +114,7 @@ export default function (state = initialState, action) {
                 errorAllEmployeesList: null
             };
 
-        case ALL_EMPLOYEES_LIST_GET_REQUEST:
+        case employeesPageTypes.ALL_EMPLOYEES_LIST_GET_REQUEST:
             return {
                 ...state,
                 allEmployeesList: [],
@@ -135,7 +122,7 @@ export default function (state = initialState, action) {
                 errorAllEmployeesList: null
             };
 
-        case ALL_EMPLOYEES_LIST_GET_FAILURE:
+        case employeesPageTypes.ALL_EMPLOYEES_LIST_GET_FAILURE:
             return {
                 ...state,
                 allEmployeesList: [],

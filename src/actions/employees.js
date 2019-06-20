@@ -1,19 +1,7 @@
-import {
-    EMPLOYEES_GET_SUCCESS,
-    EMPLOYEES_GET_REQUEST,
-    EMPLOYEES_GET_FAILURE,
-    DEPARTMENTS_GET_SUCCESS,
-    DEPARTMENTS_GET_REQUEST,
-    DEPARTMENTS_GET_FAILURE,
-    DEPARTMENT_ORDER_GET_SUCCESS,
-    DEPARTMENT_ORDER_GET_REQUEST,
-    DEPARTMENT_ORDER_GET_FAILURE,
-    ALL_EMPLOYEES_LIST_GET_SUCCESS,
-    ALL_EMPLOYEES_LIST_GET_REQUEST,
-    ALL_EMPLOYEES_LIST_GET_FAILURE
-} from './types';
+import { employeesPageTypes } from './types';
+//import { employeesPageAPI } from './api-endpoints';
 
-import axios from 'axios';
+//import axios from 'axios';
 import stark from "../img/stark.jpg";
 import leha from "../img/leha.jpeg";
 import men from "../img/men.jpg";
@@ -22,83 +10,61 @@ import clever from "../img/clever.jpeg";
 
 const employeesLoaded = (listEmployees) => {
     return {
-        type: EMPLOYEES_GET_SUCCESS,
+        type: employeesPageTypes.EMPLOYEES_GET_SUCCESS,
         payload: listEmployees
     };
 };
 
-const employeesRequested = () => {
-    return {
-        type: EMPLOYEES_GET_REQUEST
-    };
-};
+const employeesRequested = () => ({
+    type: employeesPageTypes.EMPLOYEES_GET_REQUEST
+});
 
-const employeesError = (error) => {
-    return {
-        type: EMPLOYEES_GET_FAILURE,
-        payload: error
-    };
-};
+const employeesError = (error) => ({
+    type: employeesPageTypes.EMPLOYEES_GET_FAILURE,
+    payload: error
+});
 
-const departmentsLoaded = (listDepartments) => {
-    return {
-        type: DEPARTMENTS_GET_SUCCESS,
-        payload: listDepartments
-    };
-};
+const departmentsLoaded = (listDepartments) => ({
+    type: employeesPageTypes.DEPARTMENTS_GET_SUCCESS,
+    payload: listDepartments
+});
 
-const departmentsRequested = () => {
-    return {
-        type: DEPARTMENTS_GET_REQUEST
-    };
-};
+const departmentsRequested = () => ({
+    type: employeesPageTypes.DEPARTMENTS_GET_REQUEST
+});
 
-const departmentsError = (error) => {
-    return {
-        type: DEPARTMENTS_GET_FAILURE,
-        payload: error
-    };
-};
+const departmentsError = (error) => ({
+    type: employeesPageTypes.DEPARTMENTS_GET_FAILURE,
+    payload: error
+});
 
-const departmentOrderLoaded = (listDepartmentOrder) => {
-    return {
-        type: DEPARTMENT_ORDER_GET_SUCCESS,
-        payload: listDepartmentOrder
-    };
-};
+const departmentOrderLoaded = (listDepartmentOrder) => ({
+    type: employeesPageTypes.DEPARTMENT_ORDER_GET_SUCCESS,
+    payload: listDepartmentOrder
+});
 
-const departmentOrderRequested = () => {
-    return {
-        type: DEPARTMENT_ORDER_GET_REQUEST
-    };
-};
+const departmentOrderRequested = () => ({
+    type: employeesPageTypes.DEPARTMENT_ORDER_GET_REQUEST
+});
 
-const departmentOrderError = (error) => {
-    return {
-        type: DEPARTMENT_ORDER_GET_FAILURE,
-        payload: error
-    };
-};
+const departmentOrderError = (error) => ({
+    type: employeesPageTypes.DEPARTMENT_ORDER_GET_FAILURE,
+    payload: error
+});
 
-const allEmployeesListRequested = () => {
-    return {
-        type:  ALL_EMPLOYEES_LIST_GET_REQUEST
-    };
-};
+const allEmployeesListRequested = () => ({
+    type:  employeesPageTypes.ALL_EMPLOYEES_LIST_GET_REQUEST
+});
 
-const allEmployeesListLoaded = (listAllEmployees) => {
-    return {
-        type: ALL_EMPLOYEES_LIST_GET_SUCCESS,
-        payload: listAllEmployees
-    };
-};
+const allEmployeesListLoaded = (listAllEmployees) => ({
+    type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET_SUCCESS,
+    payload: listAllEmployees
+});
 
-const allEmployeesListError = (error) => {
-    return {
-        type: ALL_EMPLOYEES_LIST_GET_FAILURE,
-        payload: error
-    };
-};
+const allEmployeesListError = (error) => ({
+    type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET_FAILURE,
+    payload: error
+});
 
 export const fetchCompanyStructure = () => async dispatch => {
     dispatch(employeesRequested());
@@ -178,22 +144,4 @@ export const fetchCompanyStructure = () => async dispatch => {
     } catch (err) {
         dispatch(allEmployeesListError(err));
     }
-    /*
-    dispatch(employeesRequested());
-    bdApiService.getEmployees()
-        .then((employees) => dispatch(employeesLoaded(employees)))
-        .catch((err) => dispatch(employeesError(err)));
-    dispatch(departmentsRequested());
-    bdApiService.getDepartments()
-        .then((departments) => dispatch(departmentsLoaded(departments)))
-        .catch((err) => dispatch(departmentsError(err)));
-    dispatch(departmentOrderRequested());
-    bdApiService.getDepartmentsOrder()
-        .then((departmentOrder) => dispatch(departmentOrderLoaded(departmentOrder)))
-        .catch((err) => dispatch(departmentOrderError(err)));
-    dispatch(allEmployeesListRequested());
-    bdApiService.getListEmployees()
-        .then((allEmployeesList) => dispatch(allEmployeesListLoaded(allEmployeesList)))
-        .catch((err) => dispatch(allEmployeesListError(err)));
-    */
 };

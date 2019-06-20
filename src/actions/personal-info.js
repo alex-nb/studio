@@ -1,32 +1,22 @@
-import {
-    PERSONAL_INFO_GET_REQUEST,
-    PERSONAL_INFO_GET_SUCCESS,
-    PERSONAL_INFO_GET_FAILURE
-} from './types';
+import { headerPageTypes } from './types';
+//import { headerPageAPI } from './api-endpoints';
 
-import axios from 'axios';
+//import axios from 'axios';
 import stark from "../img/stark.jpg";
 
-const personalInfoRequested = () => {
-    console.log('actions');
-    return {
-        type: PERSONAL_INFO_GET_REQUEST
-    };
-};
+const personalInfoRequested = () => ({
+    type: headerPageTypes.PERSONAL_INFO_GET_REQUEST
+});
 
-const personalInfoLoaded = (personalInfo) => {
-    return {
-        type: PERSONAL_INFO_GET_SUCCESS,
-        payload: personalInfo
-    };
-};
+const personalInfoLoaded = (personalInfo) => ({
+    type: headerPageTypes.PERSONAL_INFO_GET_SUCCESS,
+    payload: personalInfo
+});
 
-const personalInfoError = (error) => {
-    return {
-        type: PERSONAL_INFO_GET_FAILURE,
-        payload: error
-    };
-};
+const personalInfoError = (error) => ({
+    type: headerPageTypes.PERSONAL_INFO_GET_FAILURE,
+    payload: error
+});
 
 export const fetchPersonalInfo = () => async dispatch => {
     dispatch(personalInfoRequested());
@@ -81,8 +71,4 @@ export const fetchPersonalInfo = () => async dispatch => {
     } catch (err) {
         dispatch(personalInfoError(err));
     }
-    //dispatch(personalInfoRequested());
-    /*bdApiService.getPersonalInfo()
-        .then((personalInfo) => dispatch(personalInfoLoaded(personalInfo)))
-        .catch((err) => dispatch(personalInfoError(err)));*/
 };

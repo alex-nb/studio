@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import EditExpenditure from './edit-expenditure';
 import { Button } from 'react-bootstrap';
-import { compose } from '../../utils';
+
 import { connect } from 'react-redux';
 import {fetchExpenditure} from '../../actions/expenditure';
-import { withBdApiService } from '../hoc';
+
 import './finance.css';
 import Spinner from "../spinner";
 import ErrorMessage from "../error-message";
@@ -30,11 +30,11 @@ class Expenditure extends Component {
         } = this.props;
 
         if (loadingExpenditure) {
-            return (<Spinner/>);
+            return (<div className="col-md-10 float-right"><Spinner/></div>);
         }
 
         if (errorExpenditure) {
-            return <ErrorMessage/>;
+            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         }
 
         const listExpenditure = expenditure.map((exp) => {
@@ -74,7 +74,7 @@ class Expenditure extends Component {
         const manyExpenditure = expenditure.filter(exp => !exp.idExpParent || exp.idExpParent === '');
 
         return (
-            <div>
+            <div className="col-md-10 float-right">
                 <Button variant="secondary" onClick={() => this.setState({ modalEditForm: true })}>Добавить</Button>
                 <ul className="category-list">
                     {listExpenditure}
@@ -94,17 +94,9 @@ class Expenditure extends Component {
     }
 }
 
-const mapStateToProps = ({ expenditure, loadingExpenditure, errorExpenditure }) => {
+const mapStateToProps = ({ expenditureList }) => {
+    const { expenditure, loadingExpenditure, errorExpenditure } = expenditureList;
     return { expenditure, loadingExpenditure, errorExpenditure };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchExpenditure: fetchExpenditure(bdApiService, dispatch)
-    };
-};
-
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(Expenditure);
+export default connect(mapStateToProps, {fetchExpenditure})(Expenditure);

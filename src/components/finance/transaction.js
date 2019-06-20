@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { compose } from '../../utils';
+
 import { connect } from 'react-redux';
 import {fetchTransaction} from '../../actions/transactions';
 import {fetchExpenditure} from '../../actions/expenditure';
-import { withBdApiService } from '../hoc';
+
 import './finance.css';
 import Spinner from "../spinner";
 import ErrorMessage from "../error-message";
 import {Button} from "react-bootstrap";
 import EditTransaction from "./edit-transaction";
-
 
 
 class Transaction extends Component {
@@ -36,11 +35,11 @@ class Transaction extends Component {
         } = this.props;
 
         if (loadingTransaction || loadingExpenditure) {
-            return (<Spinner/>);
+            return (<div className="col-md-10 float-right"><Spinner/></div>);
         }
 
         if (errorTransaction || errorExpenditure) {
-            return <ErrorMessage/>;
+            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         }
 
         const modalCloseEditForm = () => this.setState({ modalEditForm: false });
@@ -76,7 +75,7 @@ class Transaction extends Component {
         });
 
         return(
-            <div>
+            <div className="col-md-10 float-right">
                 <Button variant="secondary" onClick={() => this.setState({ modalEditForm: true })}>Добавить</Button>
                 <table className="table table-hover table-sm">
                     <thead className="thead-dark">
@@ -109,18 +108,10 @@ class Transaction extends Component {
     }
 }
 
-const mapStateToProps = ({ transaction, loadingTransaction, errorTransaction, expenditure, loadingExpenditure, errorExpenditure }) => {
+const mapStateToProps = ({ transactionsList, expenditureList }) => {
+    const { transaction, loadingTransaction, errorTransaction } = transactionsList;
+    const {  expenditure, loadingExpenditure, errorExpenditure } = expenditureList;
     return { transaction, loadingTransaction, errorTransaction, expenditure, loadingExpenditure, errorExpenditure };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchTransaction: fetchTransaction(bdApiService, dispatch),
-        fetchExpenditure: fetchExpenditure(bdApiService, dispatch)
-    };
-};
-
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(Transaction);
+export default connect(mapStateToProps, {fetchTransaction, fetchExpenditure})(Transaction);

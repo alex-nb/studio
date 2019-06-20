@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import {Form, Col} from "react-bootstrap";
-import { fetchCompanyStructure } from "../../../actions/employees";
-import {compose} from "../../../utils";
-import {withBdApiService} from "../../hoc";
+//import { fetchCompanyStructure } from "../../../actions/employees";
 import {connect} from "react-redux";
 import Spinner from "../../spinner";
 import ErrorMessage from "../../error-message";
@@ -165,59 +163,61 @@ class EditProject extends Component {
         });
 
         return (
-            <Form onSubmit={this.onSubmit}>
-                <legend>Редактирование проекта ({this.state.id})</legend>
-                {chooseEmployee}
-                <Form.Group>
-                    <Form.Label>Общая сумма проекта</Form.Label>
-                    <Form.Control
-                        required type="number"
-                        name="totalSum"
-                        value={this.state.totalSum}
-                        onChange={this.onInputChange}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Дата начала</Form.Label>
-                    <Form.Control
-                        required type="date"
-                        name="dateStart"
-                        value={this.state.dateStart}
-                        onChange={this.onInputChange}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Дата дедлайна</Form.Label>
-                    <Form.Control
-                        required type="date"
-                        name="dateEnd"
-                        value={this.state.dateEnd}
-                        onChange={this.onInputChange}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Премия (на 1 день досрочной сдачи)</Form.Label>
-                    <Form.Control
-                        required type="number"
-                        name="premium"
-                        value={this.state.premium}
-                        onChange={this.onInputChange}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Штраф (на 1 день срыва срока)</Form.Label>
-                    <Form.Control
-                        required type="number"
-                        name="fine"
-                        value={this.state.fine}
-                        onChange={this.onInputChange}
-                    />
-                </Form.Group>
-                <Button type="submit" variant="primary">Сохранить</Button>
-            </Form>
+            <div className="col-md-10 float-right">
+                <Form onSubmit={this.onSubmit}>
+                    <legend>Редактирование проекта ({this.state.id})</legend>
+                    {chooseEmployee}
+                    <Form.Group>
+                        <Form.Label>Общая сумма проекта</Form.Label>
+                        <Form.Control
+                            required type="number"
+                            name="totalSum"
+                            value={this.state.totalSum}
+                            onChange={this.onInputChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Дата начала</Form.Label>
+                        <Form.Control
+                            required type="date"
+                            name="dateStart"
+                            value={this.state.dateStart}
+                            onChange={this.onInputChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Дата дедлайна</Form.Label>
+                        <Form.Control
+                            required type="date"
+                            name="dateEnd"
+                            value={this.state.dateEnd}
+                            onChange={this.onInputChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Премия (на 1 день досрочной сдачи)</Form.Label>
+                        <Form.Control
+                            required type="number"
+                            name="premium"
+                            value={this.state.premium}
+                            onChange={this.onInputChange}
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Штраф (на 1 день срыва срока)</Form.Label>
+                        <Form.Control
+                            required type="number"
+                            name="fine"
+                            value={this.state.fine}
+                            onChange={this.onInputChange}
+                        />
+                    </Form.Group>
+                    <Button type="submit" variant="primary">Сохранить</Button>
+                </Form>
+            </div>
         );
     }
-};
+}
 
 const mapStateToProps = ({
                              departmentOrder, departments, employees, allEmployeesList,
@@ -231,16 +231,4 @@ const mapStateToProps = ({
     };
 };
 
-const mapDispatchToProps = (dispatch, { bdApiService }) => {
-    return {
-        fetchCompanyStructure: fetchCompanyStructure(bdApiService, dispatch),
-        onDelete: (id) => {
-            console.log(`delete ${id}`);
-        }
-    };
-};
-
-export default compose(
-    withBdApiService(),
-    connect(mapStateToProps, mapDispatchToProps)
-)(EditProject);
+export default connect(mapStateToProps)(EditProject);

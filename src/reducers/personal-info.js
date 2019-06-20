@@ -1,8 +1,4 @@
-import {
-    PERSONAL_INFO_GET_REQUEST,
-    PERSONAL_INFO_GET_SUCCESS,
-    PERSONAL_INFO_GET_FAILURE
-} from '../actions/types';
+import { headerPageTypes } from '../actions/types';
 
 const initialState = {
     personalInfo: {},
@@ -11,25 +7,22 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-    console.log(action.type);
-    //console.log(PERSONAL_INFO_GET_REQUEST);
     switch (action.type) {
-        case PERSONAL_INFO_GET_SUCCESS:
-            console.log('reducer');
+        case headerPageTypes.PERSONAL_INFO_GET_SUCCESS:
             return {
                 personalInfo: action.payload,
                 loadingPersonalInfo: false,
                 errorPersonalInfo: null
             };
 
-        case PERSONAL_INFO_GET_REQUEST:
+        case headerPageTypes.PERSONAL_INFO_GET_REQUEST:
             return {
                 personalInfo: [],
                 loadingPersonalInfo: true,
                 errorPersonalInfo: null
             };
 
-        case PERSONAL_INFO_GET_FAILURE:
+        case headerPageTypes.PERSONAL_INFO_GET_FAILURE:
             return {
                 personalInfo: [],
                 loadingPersonalInfo: false,

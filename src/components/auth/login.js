@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Button } from "react-bootstrap";
+import { login } from '../../actions/auth';
+import { Redirect } from 'react-router-dom';
 
 import './auth.css';
+import {connect} from "react-redux";
 
 class Login extends Component {
 
@@ -26,13 +29,20 @@ class Login extends Component {
         });
     };
 
+    onSubmit = async e => {
+        e.preventDefault();
+        this.props.login(this.state.loginForm.email, this.state.loginForm.password);
+    };
+
     render() {
+        if (this.props.isAuth) {
+            return <Redirect to='/' />;
+        }
+
         return (
             <div className="background-login-page">
                 <div className="login-form">
-                    <Form onSubmit={e => this.props.onLogin(e, {
-                        email: this.state.loginForm.email,
-                        password: this.state.loginForm.password})}>
+                    <Form onSubmit={this.onSubmit}>
                         <Form.Group>
                             <Form.Label>E-mail</Form.Label>
                             <Form.Control
@@ -51,7 +61,7 @@ class Login extends Component {
                                 onChange={this.inputChangeHandler}
                             />
                         </Form.Group>
-                        <Button className="button-submit" type="submit" variant="primary" disabled={this.props.loading}>{this.props.loading ? 'Секунду...' : 'Вход'}</Button>
+                        <Button className="button-submit" type="submit" variant="primary" disabled={this.props.authLoading}>{this.props.authLoading ? 'Секунду...' : 'Вход'}</Button>
                     </Form>
                 </div>
             </div>
@@ -59,4 +69,9 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const mapStateToProps = ({ auth }) => {
+    const { isAuth, authLoading,  } = auth;
+    return { isAuth, authLoading };
+};
+
+export default connect(mapStateToProps, { login })(Login);
