@@ -56,16 +56,16 @@ export default class EditTransaction extends Component {
         cb(label);*/
     };
 
-    render() {
-
-        let listExpenditure = null;
-
+    _expendituresList() {
         if (this.props.all_expenditure) {
-            listExpenditure = this.props.all_expenditure.map((expend) => {
+            return  this.props.all_expenditure.map((expend) => {
                 return (<option key={expend._id}>{expend.title}</option>);
             });
         }
+        return null;
+    };
 
+    render() {
         return (
             <Modal
                 {...this.props}
@@ -130,7 +130,7 @@ export default class EditTransaction extends Component {
                                           value={this.state.expenditure}
                                           onChange={this.onChange}
                             >
-                                {listExpenditure}
+                                {this._expendituresList}
                             </Form.Control>
                         </Form.Group>
                     </Modal.Body>

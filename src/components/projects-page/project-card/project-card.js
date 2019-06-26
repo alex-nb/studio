@@ -1,44 +1,48 @@
 import React, {Component, Fragment} from 'react';
-import Report from '../report';
-
-import Participant from './participant';
-import ReportsHistory from '../reports-history';
+import { Link } from 'react-router-dom';
 
 import './project-card.css';
+
+import Report from '../report';
+import Participant from './participant';
+import ReportsHistory from '../reports-history';
 import CloseProject from "../close-project";
 import PeopleList from "../people-list";
 
 
 class ProjectCard extends Component {
     state = {
-        modalShowReport: false,
-        modalShowReportsHistory: false,
-        modalCloseProject: false,
-        modalShowParticipant: false
+        showModalReport: false,
+        showModalReportsHistory: false,
+        showModalCloseProject: false,
+        showModalParticipant: false
     };
 
-    render() {
-        const { editProject } = this.props;
-        const {
-            title, costTotal, infoDepartments, status,
-            participants, reports,
-            dateStart, deadline, _id
-        } = this.props.project;
+    changeStateModalReportsHistory = () => {
+        this.setState({ showModalReportsHistory: !this.state.showModalReportsHistory })
+    };
 
-        const modalReportsHistory = () => this.setState({ modalShowReportsHistory: false });
-        const modalReport = () => this.setState({ modalShowReport: false });
-        const modalCloseProject = () => this.setState({ modalCloseProject: false });
-        const modalParticipant = () => this.setState({ modalShowParticipant: false });
+    changeStateModalReport = () => {
+        this.setState({ showModalReport: !this.state.showModalReport });
+    };
 
-        const departments = infoDepartments ? infoDepartments.map((dept) => {
-            const participantsArray = participants.filter(people => people.idDept===dept.idDept);
-            const participantsList = participantsArray.map((people) => {
-                return (
-                    <PeopleList
-                        key={people.idEmployee}
-                        name={people.nameEmployee}
-                    />
-                );
+    changeStateModalCloseProject = () => {
+        this.setState({ showModalCloseProject: !this.state.showModalCloseProject });
+    };
+
+    changeStateModalParticipant = () => {
+        this.setState({ showModalParticipant: !this.state.showModalParticipant });
+    };
+
+    _departmentsInfo() {
+        const { infoDepartments, participants } = this.props.project;
+        if (!infoDepartments) return null;
+        return infoDepartments.map((dept) => {
+            const participantsList =  participants.filter(people => people.idDept===dept.idDept).map((people) => {
+                return <PeopleList
+                    key={people.idEmployee}
+                    name={people.nameEmployee}
+                />;
             });
             return (
                 <Fragment key={dept.idDept}>
@@ -50,66 +54,81 @@ class ProjectCard extends Component {
                     <hr/>
                 </Fragment>
             );
-        }) : null;
+        });
+    };
+
+    _notNewProjectInfo() {
+        return (
+            <Fragment>
+                <span className="pointer" onClick={() => this.changeStateModalParticipant()}>Участники проекта</span>
+                <br />
+                <span onClick={() => this.changeStateModalReportsHistory()} className="pointer">
+                    Отчеты
+                </span>
+            </Fragment>
+        );
+    };
+
+    _processProjectInfo() {
+        return (
+            <Fragment>
+                <span onClick={() => this.changeStateModalCloseProject()}>
+                    <i className="fas fa-check-circle fa-card pointer"/>
+                </span>
+                <span onClick={() => this.changeStateModalReport()}>
+                    <i className="fas fa-plus-circle fa-card pointer"/>
+                </span>
+                <br />
+            </Fragment>
+        );
+    };
+
+    _notCloseProjectInfo() {
+        const { _id } = this.props.project;
+        return <Link to={`/projects/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>;
+    };
+
+    render() {
+        const {
+            costTotal, status,
+            participants, reports, deadline,
+            title, dateStart
+        } = this.props.project;
 
         return(
             <div className="mini-card card bg-light mb-3">
                 <div className="card-header">
                     {title}
-                    {dateStart || deadline ?
-                        (<div>{dateStart} - {deadline}</div>)
-                        : null}
+                    <div>{dateStart} - {deadline}</div>
                 </div>
                 <div className="card-body">
                     <div className="card-text">
                         <strong>Стоимость:</strong> <span title="Общая стоимость">{costTotal} Y </span>
                         <hr/>
-                        {status !== 'new' ?
-                            (<Fragment>
-                                <span className="pointer" onClick={() => this.setState({ modalShowParticipant: true })}>Участники проекта</span>
-                                <br />
-                                <span onClick={() => this.setState({ modalShowReportsHistory: true })} className="pointer">
-                                            Отчеты
-                                </span>
-                            </Fragment>) : null}
-                        {status !== 'close' ?
-                            (<Fragment>
-                                <br />
-                                <span onClick={() => editProject(_id)}>
-                                    <i className="fas fa-edit fa-card pointer"/>
-                                </span>
-                            </Fragment>) : null}
-                        {status === 'process' ?
-                            (<Fragment>
-                                <span onClick={() => this.setState({ modalCloseProject: true })}>
-                                            <i className="fas fa-check-circle fa-card pointer"/>
-                                </span>
-                                <span onClick={() => this.setState({ modalShowReport: true })}>
-                                            <i className="fas fa-plus-circle fa-card pointer"/>
-                                </span>
-                                <br />
-                            </Fragment>) : null}
+                        {status !== 'new' && this._notNewProjectInfo()}
+                        {status !== 'close' && this._notCloseProjectInfo()}
+                        {status === 'process' && this._processProjectInfo()}
                     </div>
                 </div>
                 <Report
-                    show={this.state.modalShowReport}
-                    onHide={modalReport}
+                    show={this.state.showModalReport}
+                    onHide={this.changeStateModalReport}
                 />
                 <ReportsHistory
-                    show={this.state.modalShowReportsHistory}
-                    onHide={modalReportsHistory}
+                    show={this.state.showModalReportsHistory}
+                    onHide={this.changeStateModalReportsHistory}
                     reports={reports}
                 />
                 <CloseProject
-                    show={this.state.modalCloseProject}
-                    onHide={modalCloseProject}
+                    show={this.state.showModalCloseProject}
+                    onHide={this.changeStateModalCloseProject}
                     participants={participants}
                     deadline={deadline}
                 />
                 <Participant
-                    show={this.state.modalShowParticipant}
-                    onHide={modalParticipant}
-                    departments={departments}
+                    show={this.state.showModalParticipant}
+                    onHide={this.changeStateModalParticipant}
+                    departments={this._departmentsInfo()}
                 />
             </div>
         );

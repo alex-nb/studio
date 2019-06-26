@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, Fragment} from 'react';
 import Collapse from 'react-bootstrap/Collapse'
 import Button from 'react-bootstrap/Button';
 
@@ -10,61 +10,85 @@ export default class Projects extends Component {
         tabProjectsClose: false
     };
 
-    render() {
-        const {
-            elementsPrProc, elementsPrClose, elementsPrNew
-        } = this.props;
+    _openTab(statusProjects) {
+        switch (statusProjects) {
+            case 'new':
+                this.setState({ tabProjectsNew: !this.state.tabProjectsNew });
+                break;
+            case 'process':
+                this.setState({ tabProjectsProcess: !this.state.tabProjectsProcess });
+                break;
+            case 'close':
+                this.setState({ tabProjectsClose: !this.state.tabProjectsClose });
+                break;
+            default:
+                break;
+        }
+    }
 
-        const { tabProjectsProcess, tabProjectsClose, tabProjectsNew } = this.state;
+    _tabNewProjects() {
+        const { projects } = this.props;
+        const { tabProjectsNew } = this.state;
+        return (
+            <Fragment>
+                <Button
+                    block variant="outline-primary"
+                    onClick={() => this._openTab('new')}
+                    aria-controls="collapse-new-projects"
+                    aria-expanded={tabProjectsNew}
+                    className="project-button"
+                >
+                    Новые проекты
+                </Button>
+                <Collapse in={tabProjectsNew}>
+                    <div id="collapse-new-projects" className="project-card">
+                        { projects.new }
+                    </div>
+                </Collapse>
+            </Fragment>
+        );
+    }
+
+    render() {
+        const { projects } = this.props;
+        const { tabProjectsProcess, tabProjectsClose } = this.state;
         return(
-            <>
-                {elementsPrNew ? (
-                    <>
-                    <Button
-                        block variant="outline-primary"
-                        onClick={() => this.setState({ tabProjectsNew: !tabProjectsNew })}
-                        aria-controls="collapse-new-projects"
-                        aria-expanded={tabProjectsNew}
-                        className="project-button"
-                    >
-                        Новые проекты
-                    </Button>
-                    <Collapse in={tabProjectsNew}>
-                        <div id="collapse-new-projects" className="project-card">
-                            { elementsPrNew }
-                        </div>
-                    </Collapse></>): null}
+            <Fragment>
+                {projects.new && this._tabNewProjects()}
 
                 <Button
-
                     block variant="outline-primary"
-                    onClick={() => this.setState({ tabProjectsProcess: !tabProjectsProcess })}
+                    onClick={() => this._openTab('process')}
                     aria-controls="collapse-open-projects"
                     aria-expanded={tabProjectsProcess}
                     className="project-button"
                 >
                 Текущие проекты
                 </Button>
+
                 <Collapse in={tabProjectsProcess}>
                     <div id="collapse-open-projects" className="project-card">
-                        { elementsPrProc }
+                        { projects.process }
                     </div>
                 </Collapse>
+
                 <Button
                     block variant="outline-primary"
-                    onClick={() => this.setState({ tabProjectsClose: !tabProjectsClose })}
+                    onClick={() => this._openTab('close')}
                     aria-controls="collapse-close-projects"
                     aria-expanded={tabProjectsClose}
                     className="project-button"
                 >
                     Закрытые проекты
                 </Button>
+
                 <Collapse in={tabProjectsClose}>
                     <div id="collapse-close-projects" className="project-card">
-                        { elementsPrClose }
+                        { projects.close }
                     </div>
                 </Collapse>
-            </>
+
+            </Fragment>
         );
     }
 }

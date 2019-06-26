@@ -14,7 +14,7 @@ import EditTransaction from "./edit-transaction";
 class Transaction extends Component {
 
     state = {
-        modalEditForm: false,
+        showModalEditForm: false,
         id: '',
         date: '',
         title: '',
@@ -28,22 +28,12 @@ class Transaction extends Component {
         this.props.fetchExpenditure();
     }
 
-    render() {
-        const {
-            transaction, loadingTransaction, errorTransaction,
-            expenditure, loadingExpenditure, errorExpenditure
-        } = this.props;
+    changeStateModalEditForm = () => {
+        this.setState({ showModalEditForm: !this.state.showModalEditForm })
+    };
 
-        if (loadingTransaction || loadingExpenditure) {
-            return (<div className="col-md-10 float-right"><Spinner/></div>);
-        }
-
-        if (errorTransaction || errorExpenditure) {
-            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
-        }
-
-        const modalCloseEditForm = () => this.setState({ modalEditForm: false });
-        const tableBody = transaction.map((trans) => {
+    _tableBody() {
+        return this.props.transaction.map((trans) => {
             let date = new Date(trans.createdAt);
             let month = ''+(date.getMonth()+1);
             let day = ''+date.getDate();
@@ -66,17 +56,28 @@ class Transaction extends Component {
                             whom: whom,
                             summ: trans.summ,
                             expenditure: trans.expenditure.title,
-                            modalEditForm: true })}>
+                            showModalEditForm: true })}>
                             <i className="fas fa-edit fa-actions"/>
                         </Button>
                     </td>
                 </tr>
             );
         });
+    }
+
+    render() {
+        const {
+            loadingTransaction, errorTransaction,
+            expenditure, loadingExpenditure, errorExpenditure
+        } = this.props;
+
+        if (loadingTransaction || loadingExpenditure)  return (<div className="col-md-10 float-right"><Spinner/></div>);
+
+        if (errorTransaction || errorExpenditure) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return(
             <div className="col-md-10 float-right">
-                <Button variant="secondary" onClick={() => this.setState({ modalEditForm: true })}>Добавить</Button>
+                <Button variant="secondary" onClick={() => this.changeStateModalEditForm()}>Добавить</Button>
                 <table className="table table-hover table-sm">
                     <thead className="thead-dark">
                     <tr>
@@ -89,12 +90,12 @@ class Transaction extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {tableBody}
+                        {this._tableBody()}
                     </tbody>
                 </table>
                 <EditTransaction
-                    show={this.state.modalEditForm}
-                    onHide={modalCloseEditForm}
+                    show={this.state.showModalEditForm}
+                    onHide={this.changeStateModalEditForm()}
                     id={this.state.id}
                     date={this.state.date}
                     title={this.state.title}

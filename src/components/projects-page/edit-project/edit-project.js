@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
-import {Form, Col} from "react-bootstrap";
-//import { fetchCompanyStructure } from "../../../actions/employees";
+import React, { Component, Fragment } from 'react';
+import {Form, Col, Button} from "react-bootstrap";
 import {connect} from "react-redux";
+
+import { fetchCompanyStructure } from "../../../actions/employees";
+
 import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
 
@@ -82,18 +83,10 @@ class EditProject extends Component {
         cb(label);*/
     };
 
-    render() {
-        const {
-            departmentOrder, departments, employees,
-            loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
-            errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList
-        } = this.props;
+    _chooseEmployee() {
+        const { departmentOrder, departments, employees } = this.props;
 
-        if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList) return (<Spinner/>);
-        if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList) return <ErrorMessage/>;
-
-        const chooseEmployee = departmentOrder.map((dept) => {
-
+        return departmentOrder.map((dept) => {
             const titleDept = departments[dept].title;
             const type = (dept !== "dept-6") ? (dept !== "dept-5") ? "checkbox" : "radio" : null;
 
@@ -111,8 +104,9 @@ class EditProject extends Component {
                     </Form.Check.Label>
                 );
             }) : null;
+
             return (employeesDept) ? (
-                <React.Fragment key={dept}>
+                <Fragment key={dept}>
                     <p className="title-dept">{titleDept}</p>
                     <Form.Row style={{paddingLeft: "25px", paddingTop: "0"}}>
                         <Form.Group as={Col} md="1">
@@ -158,15 +152,25 @@ class EditProject extends Component {
                             {employeesDept}
                         </Form.Check>
                     </Form.Group>
-                </React.Fragment>
+                </Fragment>
             ) : null;
-        });
+        })
+    };
+
+    render() {
+        const {
+            loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
+            errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList
+        } = this.props;
+
+        if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList) return <Spinner/>;
+        if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList) return <ErrorMessage/>;
 
         return (
             <div className="col-md-10 float-right">
                 <Form onSubmit={this.onSubmit}>
                     <legend>Редактирование проекта ({this.state.id})</legend>
-                    {chooseEmployee}
+                    {this._chooseEmployee()}
                     <Form.Group>
                         <Form.Label>Общая сумма проекта</Form.Label>
                         <Form.Control
@@ -219,11 +223,12 @@ class EditProject extends Component {
     }
 }
 
-const mapStateToProps = ({
-                             departmentOrder, departments, employees, allEmployeesList,
-                             loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
-                             errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
-                         }) => {
+const mapStateToProps = ({ employeesList }) => {
+    const {
+        departmentOrder, departments, employees, allEmployeesList,
+        loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
+        errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
+    } = employeesList;
     return {
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
@@ -231,4 +236,4 @@ const mapStateToProps = ({
     };
 };
 
-export default connect(mapStateToProps)(EditProject);
+export default connect(mapStateToProps, { fetchCompanyStructure })(EditProject);

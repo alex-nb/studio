@@ -13,7 +13,7 @@ import LeftMenu from "./left-menu";
 class App extends Component {
 
     componentWillMount() {
-        axios.defaults.baseURL = 'http://localhost:8080';
+        axios.defaults.baseURL = 'http://localhost:8000';
         if (localStorage.getItem('token')) {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
         }

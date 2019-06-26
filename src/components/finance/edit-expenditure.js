@@ -40,10 +40,16 @@ export default class EditExpenditure extends Component {
         cb(label);*/
     };
 
+    _expendituresList() {
+        if (this.props.expenditures) {
+            return  this.props.expenditures.map((exp) => {
+                return (<option key={exp._id} value={exp._id}>{exp.title}</option>);
+            });
+        }
+        return null;
+    };
+
     render() {
-        const allExp = this.props.expenditures ? this.props.expenditures.map((exp) => {
-            return (<option key={exp._id} value={exp._id}>{exp.title}</option>);
-        }) : null;
         return (
             <Modal
                 {...this.props}
@@ -93,7 +99,7 @@ export default class EditExpenditure extends Component {
                                           onChange={this.onChange}
                             >
                                 <option value="0"/>
-                                {allExp}
+                                {this._expendituresList()}
                             </Form.Control>
                         </Form.Group>
                     </Modal.Body>

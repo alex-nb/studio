@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, Fragment} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
@@ -25,12 +25,10 @@ class Header extends Component {
         const modalAskMoney = () => this.setState({ modalAskMoney: false });
         const { personalInfo, loadingPersonalInfo, errorPersonalInfo } = this.props;
 
-        if (errorPersonalInfo) {
-            return <ErrorMessage/>;
-        }
+        if (errorPersonalInfo) return <ErrorMessage/>;
 
         return (
-            <>
+            <Fragment>
                 <Navbar collapseOnSelect expand="lg" bg="primary" className="navbar-dark" >
                     <Navbar.Brand as={Link} to="/">Studio</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -52,7 +50,7 @@ class Header extends Component {
                     show={this.state.modalAskMoney}
                     onHide={modalAskMoney}
                 />
-            </>
+            </Fragment>
         );
     }
 }

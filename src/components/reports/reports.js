@@ -20,43 +20,31 @@ class Reports extends Component {
         this.props.fetchAllReports();
     }
 
-    render() {
-        const {
-            allReports, loadingAllReports, errorAllReports
-        } = this.props;
-
-        if (loadingAllReports) {
-            return (<div className="col-md-10 float-right"><Spinner/></div>);
-        }
-
-        if (errorAllReports) {
-            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
-        }
-
-        const tableBody = allReports.map((project) => {
+    _tableBody() {
+        return this.props.allReports.map((project) => {
             const newStateName = `tabProjects${project._id}`;
             const {tabsProjects} = this.state;
 
             return (
                 <React.Fragment key={project._id}>
                     <tbody>
-                        <tr
-                            className="clickable"
-                            aria-expanded={tabsProjects[newStateName]}
-                            aria-controls={`group-of-rows-${project._id}`}
-                            onClick={() => this.setState({ tabsProjects: {...tabsProjects, [newStateName]: !tabsProjects[newStateName] }})}
-                        >
-                            <td className="font-weight-bold">
-                                <i className="fa fa-plus" aria-hidden="true"/>
-                                {project.title}
-                            </td>
-                            <td/>
-                            <td/>
-                            <td>
-                                {project.hoursFact}/{project.hoursPlan} ({project.hoursBad})
-                            </td>
-                            <td/>
-                        </tr>
+                    <tr
+                        className="clickable"
+                        aria-expanded={tabsProjects[newStateName]}
+                        aria-controls={`group-of-rows-${project._id}`}
+                        onClick={() => this.setState({ tabsProjects: {...tabsProjects, [newStateName]: !tabsProjects[newStateName] }})}
+                    >
+                        <td className="font-weight-bold">
+                            <i className="fa fa-plus" aria-hidden="true"/>
+                            {project.title}
+                        </td>
+                        <td/>
+                        <td/>
+                        <td>
+                            {project.hoursFact}/{project.hoursPlan} ({project.hoursBad})
+                        </td>
+                        <td/>
+                    </tr>
                     </tbody>
                     <Collapse in={tabsProjects[newStateName]}>
                         <tbody id={`group-of-rows-${project.id}`} className="collapse">
@@ -88,7 +76,15 @@ class Reports extends Component {
                     </Collapse>
                 </React.Fragment>
             );
-            });
+        })
+    }
+
+    render() {
+        const { loadingAllReports, errorAllReports } = this.props;
+
+        if (loadingAllReports) return (<div className="col-md-10 float-right"><Spinner/></div>);
+
+        if (errorAllReports) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return(
             <div className="col-md-10 float-right">
@@ -102,7 +98,7 @@ class Reports extends Component {
                         <th style={{width: "15%"}} />
                     </tr>
                     </thead>
-                    {tableBody}
+                    {this._tableBody()}
                 </table>
             </div>
         );

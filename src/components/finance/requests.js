@@ -15,20 +15,8 @@ class Requests extends Component {
         this.props.fetchRequestsMoney();
     }
 
-    render() {
-        const {
-            requestsMoney, loadingRequestsMoney, errorRequestsMoney
-        } = this.props;
-
-        if (loadingRequestsMoney) {
-            return (<div className="col-md-10 float-right"><Spinner/></div>);
-        }
-
-        if (errorRequestsMoney) {
-            return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
-        }
-
-        const tableBody = requestsMoney.map((request) => {
+    _tableBody() {
+        return this.props.requestsMoney.map((request) => {
             let date = new Date(request.createdAt);
             let month = ''+(date.getMonth()+1);
             let day = ''+date.getDate();
@@ -50,6 +38,14 @@ class Requests extends Component {
                 </tr>
             );
         });
+    }
+
+    render() {
+        const { loadingRequestsMoney, errorRequestsMoney } = this.props;
+
+        if (loadingRequestsMoney) return (<div className="col-md-10 float-right"><Spinner/></div>);
+
+        if (errorRequestsMoney) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return(
             <div className="col-md-10 float-right">
@@ -64,7 +60,7 @@ class Requests extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {tableBody}
+                        {this._tableBody()}
                     </tbody>
                 </table>
             </div>
