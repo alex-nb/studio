@@ -9,9 +9,9 @@ export default class CloseProject extends Component {
         summ: {},
     };
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        if(Object.keys(nextState.summ).length === 0 && nextProps.participants) {
-            const participants = nextProps.participants;
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(Object.keys(this.state.summ).length === 0 && this.state.participants) {
+            const participants = this.state.participants;
             if(participants.length > 0) {
                 participants.map((people) => {
                     this.setState(nextState => ({

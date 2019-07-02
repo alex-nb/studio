@@ -46,9 +46,6 @@ class EditProject extends Component {
     }
 
     onInputChange = (e) => {
-        /*if ( e.target.name.indexOf("percent" > -1) || e.target.name.indexOf("hours" > -1) || e.target.name.indexOf("rate" > -1)) {
-
-        }*/
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -79,8 +76,6 @@ class EditProject extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         console.log( this.state );
-        /*const cb = this.props.onItemAdded || (() => {});
-        cb(label);*/
     };
 
     _chooseEmployee() {
