@@ -6,16 +6,6 @@ import Button from 'react-bootstrap/Button';
 const BalanceHistory = (props) => {
     const {balanceHistory, ...modalProps} = props;
 
-    const records = balanceHistory.map((record) => {
-        return (
-            <tr key={record.id}>
-                <th scope="row">{record.date}</th>
-                <td>{record.spending}</td>
-                <td>{record.arrival}</td>
-                <td>{record.balance}</td>
-            </tr>
-        );
-    });
     return (
         <Modal
             {...modalProps}
@@ -39,7 +29,16 @@ const BalanceHistory = (props) => {
                     </tr>
                     </thead>
                     <tbody>
-                        {records}
+                        {balanceHistory.map((record) => {
+                            return (
+                                <tr key={record.id}>
+                                    <th scope="row">{record.date}</th>
+                                    <td>{record.spending}</td>
+                                    <td>{record.arrival}</td>
+                                    <td>{record.balance}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </Modal.Body>
