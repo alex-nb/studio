@@ -14,15 +14,19 @@ import './header.css';
 class Header extends Component {
 
     state = {
-        modalAskMoney: false
+        showModalAskMoney: false
     };
 
     componentDidMount() {
         this.props.fetchPersonalInfo();
     }
 
+    changeStateModalEditForm = () => {
+        this.setState({ showModalAskMoney: !this.state.showModalAskMoney })
+    };
+
     render () {
-        const modalAskMoney = () => this.setState({ modalAskMoney: false });
+
         const { personalInfo, loadingPersonalInfo, errorPersonalInfo } = this.props;
 
         if (errorPersonalInfo) return <ErrorMessage/>;
@@ -39,7 +43,7 @@ class Header extends Component {
                             </Nav.Link>
                             <NavDropdown active title={<i className="far fa-user fa-2x fa-menu"/>} id="collasible-nav-dropdown" alignRight>
                                 <NavDropdown.Item href="#profil">Профиль</NavDropdown.Item>
-                                <NavDropdown.Item onClick={() => this.setState({ modalAskMoney: true })}>Запрос ДС</NavDropdown.Item>
+                                <NavDropdown.Item onClick={this.changeStateModalEditForm}>Запрос ДС</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={this.props.logout}>Выход</NavDropdown.Item>
                             </NavDropdown>
@@ -47,8 +51,8 @@ class Header extends Component {
                     </Navbar.Collapse>
                 </Navbar>
                 <AskMoney
-                    show={this.state.modalAskMoney}
-                    onHide={modalAskMoney}
+                    show={this.state.showModalAskMoney}
+                    onHide={this.changeStateModalEditForm}
                 />
             </Fragment>
         );
