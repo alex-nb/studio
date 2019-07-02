@@ -13,14 +13,14 @@ export default class EditTransaction extends Component {
         expenditure: ''
     };
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        if(nextProps.id !== this.props.id) this.setState({id: nextProps.id});
-        if(nextProps.title !== this.props.title) this.setState({title: nextProps.title});
-        if(nextProps.whom !== this.props.whom) this.setState({whom: nextProps.whom});
-        if(nextProps.summ !== this.props.summ) this.setState({summ: nextProps.summ});
-        if(nextProps.expenditure !== this.props.expenditure) this.setState({expenditure: nextProps.expenditure});
-        if(nextProps.date !== this.props.date) {
-            let date = new Date(nextProps.date);
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.id !== this.props.id) this.setState({id: this.props.id});
+        if(prevProps.title !== this.props.title) this.setState({title: this.props.title});
+        if(prevProps.whom !== this.props.whom) this.setState({whom: this.props.whom});
+        if(prevProps.summ !== this.props.summ) this.setState({summ: this.props.summ});
+        if(prevProps.expenditure !== this.props.expenditure) this.setState({expenditure: this.props.expenditure});
+        if(prevProps.date !== this.props.date) {
+            let date = new Date(this.props.date);
             let month = '' + (date.getMonth() + 1);
             let day = '' + date.getDate();
             if (month.length < 2) month = '0' + month;
@@ -29,7 +29,7 @@ export default class EditTransaction extends Component {
             this.setState({date: date});
         }
 
-        if(nextProps.show !== this.props.show && nextProps.show === false) {
+        if(prevProps.show !== this.props.show && this.props.show === false) {
             this.setState({
                 id: '',
                 date: '',
@@ -39,7 +39,6 @@ export default class EditTransaction extends Component {
                 expenditure: ''
             });
         }
-
     }
 
     onChange = (e) => {
@@ -52,8 +51,6 @@ export default class EditTransaction extends Component {
         e.preventDefault();
         console.log(this.state);
         this.props.onHide();
-        /*const cb = this.props.onItemAdded || (() => {});
-        cb(label);*/
     };
 
     _expendituresList() {
