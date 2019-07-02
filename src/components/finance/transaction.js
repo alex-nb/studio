@@ -32,6 +32,18 @@ class Transaction extends Component {
         this.setState({ showModalEditForm: !this.state.showModalEditForm })
     };
 
+    showModalEditForm = (transaction) => {
+        this.setState({
+            id: transaction._id,
+            date: transaction.date,
+            title: transaction.title,
+            whom: transaction.whom,
+            summ: transaction.summ,
+            expenditure: transaction.expenditure,
+            showModalEditForm: true
+        });
+    };
+
     _tableBody() {
         return this.props.transaction.map((trans) => {
             let date = new Date(trans.createdAt);
@@ -49,14 +61,14 @@ class Transaction extends Component {
                     <td>{trans.summ}</td>
                     <td>{trans.expenditure.title}</td>
                     <td>
-                        <Button variant="secondary" onClick={() => this.setState({
+                        <Button variant="secondary" onClick= { () => this.showModalEditForm({
                             id: trans._id,
                             date: trans.createdAt,
                             title: trans.title,
                             whom: whom,
                             summ: trans.summ,
-                            expenditure: trans.expenditure.title,
-                            showModalEditForm: true })}>
+                            expenditure: trans.expenditure.title
+                        })}>
                             <i className="fas fa-edit fa-actions"/>
                         </Button>
                     </td>
@@ -95,7 +107,7 @@ class Transaction extends Component {
                 </table>
                 <EditTransaction
                     show={this.state.showModalEditForm}
-                    onHide={this.changeStateModalEditForm()}
+                    onHide={this.changeStateModalEditForm}
                     id={this.state.id}
                     date={this.state.date}
                     title={this.state.title}
