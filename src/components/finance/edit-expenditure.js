@@ -11,12 +11,12 @@ export default class EditExpenditure extends Component {
         parent_exp: ''
     };
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        if(nextProps.name_ex !== this.props.name_ex) this.setState({name_ex: nextProps.name_ex});
-        if(nextProps.id_ex !== this.props.id_ex) this.setState({id_ex: nextProps.id_ex});
-        if(nextProps.type !== this.props.type) this.setState({type: nextProps.type});
-        if(nextProps.parent_exp !== this.props.parent_exp) this.setState({parent_exp: nextProps.parent_exp});
-        if(nextProps.show !== this.props.show && nextProps.show === false) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.name_ex !== this.props.name_ex) this.setState({name_ex: this.props.name_ex});
+        if(prevProps.id_ex !== this.props.id_ex) this.setState({id_ex: this.props.id_ex});
+        if(prevProps.type !== this.props.type) this.setState({type: this.props.type});
+        if(prevProps.parent_exp !== this.props.parent_exp) this.setState({parent_exp: this.props.parent_exp});
+        if(prevProps.show !== this.props.show && this.props.show === false) {
             this.setState({
                 name_ex: '',
                 id_ex: '',
@@ -36,8 +36,6 @@ export default class EditExpenditure extends Component {
         e.preventDefault();
         console.log(this.state);
         this.props.onHide();
-        /*const cb = this.props.onItemAdded || (() => {});
-        cb(label);*/
     };
 
     _expendituresList() {

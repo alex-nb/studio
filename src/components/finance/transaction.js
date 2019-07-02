@@ -34,7 +34,7 @@ class Transaction extends Component {
 
     showModalEditForm = (transaction) => {
         this.setState({
-            id: transaction._id,
+            id: transaction.id,
             date: transaction.date,
             title: transaction.title,
             whom: transaction.whom,

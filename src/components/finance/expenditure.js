@@ -12,7 +12,7 @@ import ErrorMessage from "../layout/error-message";
 class Expenditure extends Component {
 
     state = {
-        modalEditForm: false,
+        showModalEditForm: false,
         id_ex: '',
         name_ex: '',
         type: '',
@@ -23,6 +23,20 @@ class Expenditure extends Component {
         this.props.fetchExpenditure();
     }
 
+    changeStateModalEditForm = () => {
+        this.setState({ showModalEditForm: !this.state.showModalEditForm })
+    };
+
+    showModalEditForm = (expenditure) => {
+        this.setState({
+            id_ex: expenditure.id_ex,
+            name_ex: expenditure.name_ex,
+            type: expenditure.type,
+            parent_exp: expenditure.parent_exp ? expenditure.parent_exp : null,
+            showModalEditForm: true
+        });
+    };
+
     _expendituresList() {
         if (this.props.expenditure) {
             return this.props.expenditure.map((exp) => {
@@ -31,22 +45,22 @@ class Expenditure extends Component {
                     const listChild = this.props.expenditure.filter(expChild => expChild.idExpParent === idParent).map((expChild) => {
                         return (
                             <li key={expChild._id}>
-                                <a onClick={() => this.setState({
+                                <a onClick={() => this.showModalEditForm({
                                     id_ex: expChild._id,
                                     name_ex: expChild.title,
                                     type: expChild.type,
-                                    parent_exp: expChild.idExpParent,
-                                    modalEditForm: true })}>
+                                    parent_exp: expChild.idExpParent
+                                })}>
                                     {expChild.title} ({expChild.type})</a>
                                 <span>{expChild.count}</span></li>);
                     });
                     return (
                         <li key={exp._id}>
-                            <a onClick={() => this.setState({
+                            <a onClick={() => this.showModalEditForm({
                                 id_ex: exp._id,
                                 name_ex: exp.title,
-                                type: exp.type,
-                                modalEditForm: true })}>
+                                type: exp.type
+                            })}>
                                 {exp.title} ({exp.type})</a>
                             <span>{exp.count}</span>
                             <ul>
@@ -62,7 +76,7 @@ class Expenditure extends Component {
     }
 
     render() {
-        const modalCloseEditForm = () => this.setState({ modalEditForm: false });
+
         const {
             expenditure, loadingExpenditure, errorExpenditure
         } = this.props;
@@ -73,13 +87,13 @@ class Expenditure extends Component {
 
         return (
             <div className="col-md-10 float-right">
-                <Button variant="secondary" onClick={() => this.setState({ modalEditForm: true })}>Добавить</Button>
+                <Button variant="secondary" onClick={this.changeStateModalEditForm}>Добавить</Button>
                 <ul className="category-list">
                     {this._expendituresList()}
                 </ul>
                 <EditExpenditure
-                    show={this.state.modalEditForm}
-                    onHide={modalCloseEditForm}
+                    show={this.state.showModalEditForm}
+                    onHide={this.changeStateModalEditForm}
                     name_ex={this.state.name_ex}
                     id_ex={this.state.id_ex}
                     type={this.state.type}

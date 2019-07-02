@@ -120,7 +120,7 @@ export default class EditTransaction extends Component {
                             />
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Статься</Form.Label>
+                            <Form.Label>Статья</Form.Label>
                             <Form.Control as="select"
                                           required
                                           name="expenditure"
