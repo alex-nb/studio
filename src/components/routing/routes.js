@@ -19,7 +19,7 @@ const Routes = () => {
             <Route path="/signup" exact component={SignupPage}/>
             <PrivateRoute path="/" exact component={Welcome}/>
             <PrivateRoute path="/projects" exact component={ProjectsPage} />
-            <PrivateRoute path="/projects/:id" render={({ match }) => {
+            <PrivateRoute path="/projects/:id" component={({ match }) => {
                 const { id } = match.params;
                 return <EditProject projectId={id} />
             }} />

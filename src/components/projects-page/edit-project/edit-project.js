@@ -164,7 +164,7 @@ class EditProject extends Component {
         return (
             <div className="col-md-10 float-right">
                 <Form onSubmit={this.onSubmit}>
-                    <legend>Редактирование проекта ({this.state.id})</legend>
+                    <legend>Редактирование проекта </legend>
                     {this._chooseEmployee()}
                     <Form.Group>
                         <Form.Label>Общая сумма проекта</Form.Label>
