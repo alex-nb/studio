@@ -74,9 +74,9 @@ export const fetchCompanyStructure = () => async dispatch => {
         await res.data.departmentsStructure.map(async dept => {
             let listEmployees = [];
             departmentsOrder[dept.orderNum-1] = dept._id;
-            if (dept.employees && dept.employees.length != 0) {
+            if (dept.employees && dept.employees.length !== 0) {
                 await dept.employees.map(emp => {
-                    const imgPath = '../'+emp.idEmp.img;
+                    //const imgPath = '../'+emp.idEmp.img;
                     employees = {
                         ...employees,
                         [i]: {
@@ -88,6 +88,7 @@ export const fetchCompanyStructure = () => async dispatch => {
                     };
                     listEmployees.push(i);
                     i++;
+                    return null;
                 });
             }
             departments = {

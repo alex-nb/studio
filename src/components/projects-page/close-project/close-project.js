@@ -15,7 +15,7 @@ export default class CloseProject extends Component {
             if(participants.length > 0) {
                 participants.map((people) => {
                     this.setState(nextState => ({
-                        summ: {...nextState.summ, [people.idEmployee]: {
+                        summ: {...nextState.summ, [people.idEmployee._id]: {
                                 premium: 0,
                                 fine: 0
                             }
@@ -51,13 +51,13 @@ export default class CloseProject extends Component {
         if (this.props.participants && Object.keys(this.state.summ).length !== 0) {
             return this.props.participants.map((people) => {
                 return (
-                    <Form.Group key={people.idEmployee} as={Row}>
-                        <Form.Label column sm="1"><img alt={people.nameEmployee} className="employee-img" src={people.imgEmployee} title={people.nameEmployee}/></Form.Label>
+                    <Form.Group key={people.idEmployee._id} as={Row}>
+                        <Form.Label column sm="1"><img alt={people.idEmployee.name} className="employee-img" src={people.idEmployee.img} title={people.nameEmployee}/></Form.Label>
                         <Col sm="5">
                             <Form.Control
                                 required type="number" placeholder="Сумма премии"
-                                name={people.idEmployee}
-                                value={this.state.summ[people.idEmployee].premium}
+                                name={people.idEmployee._id}
+                                value={this.state.summ[people.idEmployee._id].premium}
                                 onChange={this.onInputChange}
                                 title='premium'
                             />
@@ -65,8 +65,8 @@ export default class CloseProject extends Component {
                         <Col sm="5">
                             <Form.Control
                                 required type="number" placeholder="Сумма штрафа"
-                                name={people.idEmployee}
-                                value={this.state.summ[people.idEmployee].fine}
+                                name={people.idEmployee._id}
+                                value={this.state.summ[people.idEmployee._id].fine}
                                 onChange={this.onInputChange}
                                 title='fine'
                             />

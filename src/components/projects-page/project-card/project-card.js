@@ -40,8 +40,8 @@ class ProjectCard extends Component {
         return infoDepartments.map((dept) => {
             const participantsList =  participants.filter(people => people.idDept===dept.idDept).map((people) => {
                 return <PeopleList
-                    key={people.idEmployee}
-                    name={people.nameEmployee}
+                    key={people.idEmployee._id}
+                    name={people.idEmployee.name}
                 />;
             });
             return (
