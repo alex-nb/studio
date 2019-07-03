@@ -106,7 +106,10 @@ export default class DragDropList extends Component {
                             ref={provided.innerRef}
                         >
                             {departmentOrder.map((deptId, index) => {
+                                //console.log(departments);
+                                //console.log(deptId);
                                 const dept = departments[deptId];
+                                //console.log(dept);
                                 return (<InnerListDepartment
                                     key={dept.id}
                                     dept={dept}

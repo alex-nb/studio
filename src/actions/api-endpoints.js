@@ -9,9 +9,8 @@ export const authAPI = {
 /*   Employees page */
 
 export const employeesPageAPI = {
-    GET_EMPLOYEES_STRUCTURE : '',
-    GET_DEPARTMENTS : '',
-    GET_ALL_EMPLOYEES : ''
+    GET_DEPARTMENTS_STRUCTURE : '/employees/departments',
+    GET_ALL_EMPLOYEES : '/employees'
 };
 
 
@@ -37,7 +36,7 @@ export const projectsPageAPI = {
 /*   Reports page */
 
 export const reportsPageAPI = {
-    GET_ALL_REPORTS : '/report'
+    GET_ALL_REPORTS : '/reports'
 };
 
 

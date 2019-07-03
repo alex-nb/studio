@@ -79,7 +79,7 @@ export default class DropdownEmployee extends Component {
 
                 <Dropdown.Menu as={CustomMenu}>
                     {this.props.allEmployees.map(
-                        (employee) => (<Dropdown.Item key={employee.id} eventKey={employee.id} >{employee.name}</Dropdown.Item>)
+                        (employee) => (<Dropdown.Item key={employee._id} eventKey={employee._id} >{employee.name}</Dropdown.Item>)
                     )}
                     <Dropdown.Divider> </Dropdown.Divider>
                     <Dropdown.Item as={Link} to="/create_employee" eventKey="0" >New</Dropdown.Item>
