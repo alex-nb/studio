@@ -124,10 +124,4 @@ const mapStateToProps = ({ allEmployeesList }) => {
     return { allEmployeesList };
 };
 
-const mapDispatchToProps = () => {
-    return {
-        //onAdd: employeeNewAdd
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateEmployee);
+export default connect(mapStateToProps)(CreateEmployee);

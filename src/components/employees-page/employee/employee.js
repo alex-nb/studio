@@ -19,25 +19,23 @@ export default class InnerListEmployee extends Component {
 
 const Employee = ({ employee, index, onDelete }) => {
     return (
-        <>
-            <Draggable draggableId={employee.id} index={index}>
-                {(provided, snapshot) => (
-                    <Card
-                          {...provided.draggableProps} {...provided.dragHandleProps}
-                          ref={provided.innerRef}
-                          className={snapshot.isDragging ? "employee check" : "employee"}
-                          title={employee.name}
-                    >
-                        <Card.Img src={employee.img} />
-                        <Card.ImgOverlay>
-                            <div className="icon-line">
-                                <i className="fas fa-trash icon-employee" onClick={onDelete}/>
-                            </div>
-                        </Card.ImgOverlay>
-                    </Card>
+        <Draggable draggableId={employee.id} index={index}>
+            {(provided, snapshot) => (
+                <Card
+                      {...provided.draggableProps} {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      className={snapshot.isDragging ? "employee check" : "employee"}
+                      title={employee.name}
+                >
+                    <Card.Img src={employee.img} />
+                    <Card.ImgOverlay>
+                        <div className="icon-line">
+                            <i className="fas fa-trash icon-employee" onClick={onDelete}/>
+                        </div>
+                    </Card.ImgOverlay>
+                </Card>
 
-                )}
-            </Draggable>
-        </>
+            )}
+        </Draggable>
     );
 };
