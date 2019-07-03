@@ -7,12 +7,9 @@ import Routes from './routing/routes';
 import Header from './header';
 import LeftMenu from "./left-menu";
 
-
-
-
 class App extends Component {
 
-    componentWillMount() {
+    componentDidMount() {
         axios.defaults.baseURL = 'http://localhost:8000';
         if (localStorage.getItem('token')) {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');

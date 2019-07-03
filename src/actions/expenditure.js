@@ -29,6 +29,7 @@ export const fetchExpenditure = () => async dispatch => {
         const res = await axios.get(expendituresPageAPI.GET_EXPENDITURE);
         dispatch(expenditureLoaded(res.data.expenditures));
     } catch (err) {
+        console.error('Get expenditures list. '+err);
         dispatch(expenditureError(err));
     }
 };

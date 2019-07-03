@@ -23,6 +23,7 @@ export const fetchRequestsMoney = () => async dispatch => {
         const res = await axios.get(requestsMoneyPageAPI.GET_REQUESTS_MONEY);
         dispatch(requestsMoneyLoaded(res.data.requests));
     } catch (err) {
+        console.error('Get requests list. '+err);
         dispatch(requestsMoneyError(err));
     }
 };

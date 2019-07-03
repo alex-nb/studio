@@ -69,6 +69,7 @@ export const fetchPersonalInfo = () => async dispatch => {
         };
         dispatch(personalInfoLoaded(res));
     } catch (err) {
+        console.error('Get personal info. '+err);
         dispatch(personalInfoError(err));
     }
 };

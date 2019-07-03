@@ -81,6 +81,7 @@ export const fetchCompanyStructure = () => async dispatch => {
         //const res = await axios.get('/api/posts');
         dispatch(employeesLoaded(res));
     } catch (err) {
+        console.error('Get employees list. '+err);
         dispatch(employeesError(err));
     }
     dispatch(departmentsRequested());
@@ -120,6 +121,7 @@ export const fetchCompanyStructure = () => async dispatch => {
         //const res = await axios.get('/api/posts');
         dispatch(departmentsLoaded(res));
     } catch (err) {
+        console.error('Get departments. '+err);
         dispatch(departmentsError(err));
     }
     dispatch(departmentOrderRequested());
@@ -128,6 +130,7 @@ export const fetchCompanyStructure = () => async dispatch => {
         //const res = await axios.get('/api/posts');
         dispatch(departmentOrderLoaded(res));
     } catch (err) {
+        console.error('Get department order. '+err);
         dispatch(departmentOrderError(err));
     }
     dispatch(allEmployeesListRequested());
@@ -142,6 +145,7 @@ export const fetchCompanyStructure = () => async dispatch => {
         //const res = await axios.get('/api/posts');
         dispatch(allEmployeesListLoaded(res));
     } catch (err) {
+        console.error('Get all employees list. '+err);
         dispatch(allEmployeesListError(err));
     }
 };

@@ -104,6 +104,7 @@ export const fetchAllProjects = () => async dispatch => {
         const res = await axios.get(projectsPageAPI.GET_PROCESS_PROJECTS);
         dispatch(projectsProcessLoaded(res.data.projects));
     } catch (err) {
+        console.error('Get process projects. '+err);
         dispatch(projectsProcessError(err));
     }
     dispatch(projectsCloseRequested());
@@ -111,6 +112,7 @@ export const fetchAllProjects = () => async dispatch => {
         const res = await axios.get(projectsPageAPI.GET_CLOSE_PROJECTS);
         dispatch(projectsCloseLoaded(res.data.projects));
     } catch (err) {
+        console.error('Get close projects. '+err);
         dispatch(projectsCloseError(err));
     }
     dispatch(projectsNewRequested());
@@ -118,6 +120,7 @@ export const fetchAllProjects = () => async dispatch => {
         const res = await axios.get(projectsPageAPI.GET_NEW_PROJECTS);
         dispatch(projectsNewLoaded(res.data.projects));
     } catch (err) {
+        console.error('Get new projects. '+err);
         dispatch(projectsNewError(err));
     }
 };

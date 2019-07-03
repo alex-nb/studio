@@ -11,6 +11,12 @@ export const authTypes = {
 };
 
 
+/*   Common info */
+
+export const commonInfoTypes = {
+    CHANGE_SELECTED_MENU: 'CHANGE_SELECTED_MENU'
+};
+
 
 /*   Employees page */
 

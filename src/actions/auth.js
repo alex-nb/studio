@@ -26,6 +26,7 @@ export const signup = ({ name, email, password }) => async dispatch => {
             payload: res.data
         });
     } catch (err) {
+        console.error('Register user. '+err);
         dispatch({
             type: authTypes.REGISTER_FAIL,
             payload: err
@@ -49,11 +50,14 @@ export const login = (email, password) => async dispatch => {
 
     try {
         const res = await axios.post(authAPI.LOGIN, body, config);
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('userId', res.data.userId);
         dispatch({
             type: authTypes.LOGIN_SUCCESS,
             payload: res.data
         });
     } catch (err) {
+        console.error('Login user. '+err);
         dispatch({
             type: authTypes.LOGIN_FAIL,
             payload: err
@@ -63,5 +67,7 @@ export const login = (email, password) => async dispatch => {
 
 // Logout
 export const logout = () => dispatch => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     dispatch({ type: authTypes.LOGOUT });
 };

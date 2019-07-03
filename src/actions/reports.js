@@ -23,6 +23,7 @@ export const fetchAllReports = () => async dispatch => {
         const res = await axios.get(reportsPageAPI.GET_ALL_REPORTS);
         dispatch(allReportsLoaded(res.data.reports));
     } catch (err) {
+        console.error('Get reports list. '+err);
         dispatch(allReportsError(err));
     }
 };

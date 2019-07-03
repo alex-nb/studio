@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from './private-route';
 import ProjectsPage from '../projects-page';
@@ -11,27 +11,61 @@ import LoginPage from '../auth/login';
 import SignupPage from '../auth/signup';
 import Welcome from '../layout/welcome';
 import NotFound from '../layout/not-found';
+import { connect } from 'react-redux';
+import {changeSelected} from '../../actions/common-info';
 
-const Routes = () => {
-    return (
-        <Switch>
-            <Route path="/login" exact component={LoginPage}/>
-            <Route path="/signup" exact component={SignupPage}/>
-            <PrivateRoute path="/" exact component={Welcome}/>
-            <PrivateRoute path="/projects" exact component={ProjectsPage} />
-            <PrivateRoute path="/projects/:id" component={({ match }) => {
-                const { id } = match.params;
-                return <EditProject projectId={id} />
-            }} />
-            <PrivateRoute path="/employees" component={EmployeesPage} />
-            <PrivateRoute path="/create_employee" component={CreateEmployee} />
-            <PrivateRoute path="/balance" component={Transaction} />
-            <PrivateRoute path="/expenditure" component={Expenditure} />
-            <PrivateRoute path="/requests" component={Requests} />
-            <PrivateRoute path="/reports" component={Reports} />
-            <Route component={NotFound} />
-        </Switch>
-    );
+
+class Routes extends Component {
+
+    render() {
+        return (
+            <Switch>
+                <Route path="/login" exact component={LoginPage}/>
+                <Route path="/signup" exact component={SignupPage}/>
+                <PrivateRoute path="/" exact component={Welcome}/>
+                <PrivateRoute path="/projects" exact component={() => {
+                    this.props.changeSelected('projects');
+                    return <ProjectsPage />;
+                }} />
+                <PrivateRoute path="/projects/:id" component={({ match }) => {
+                    const { id } = match.params;
+                    this.props.changeSelected('projects');
+                    return <EditProject projectId={id} />
+                }} />
+                <PrivateRoute path="/employees" component={() => {
+                    this.props.changeSelected('employees');
+                    return <EmployeesPage />;
+                }} />
+                <PrivateRoute path="/create_employee" component={() => {
+                    this.props.changeSelected('employees');
+                    return <CreateEmployee />;
+                }} />
+                <PrivateRoute path="/balance" component={() => {
+                    this.props.changeSelected('balance');
+                    return <Transaction />;
+                }} />
+                <PrivateRoute path="/expenditure" component={() => {
+                    this.props.changeSelected('expenditure');
+                    return <Expenditure />;
+                }} />
+                <PrivateRoute path="/requests" component={() => {
+                    this.props.changeSelected('requests');
+                    return <Requests />;
+                }} />
+                <PrivateRoute path="/reports" component={() => {
+                    this.props.changeSelected('reports');
+                    return <Reports />;
+                }} />
+                <Route component={NotFound} />
+            </Switch>
+        );
+    }
+}
+
+const mapStateToProps = ({ commonInfo }) => {
+    const { selected } = commonInfo;
+    return { selected };
 };
 
-export default Routes;
+export default connect(mapStateToProps, {changeSelected})(Routes);
+

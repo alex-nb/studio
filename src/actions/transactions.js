@@ -23,6 +23,7 @@ export const fetchTransaction = () => async dispatch => {
         const res = await axios.get(transactionsPageAPI.GET_TRANSACTIONS);
         dispatch(transactionLoaded(res.data.transactions));
     } catch (err) {
+        console.error('Get transactions list. '+err);
         dispatch(transactionError(err));
     }
 };
