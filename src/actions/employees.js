@@ -83,7 +83,7 @@ export const fetchCompanyStructure = () => async dispatch => {
                             id: i,
                             name: emp.idEmp.name,
                             idBase: emp.idEmp._id,
-                            //img: require(imgPath)
+                            img: emp.idEmp.img
                         }
                     };
                     listEmployees.push(i);
