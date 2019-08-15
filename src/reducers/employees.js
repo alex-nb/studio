@@ -34,19 +34,11 @@ export default function (state = initialState, action) {
                 ],
             };*/
 
-        case employeesPageTypes.EMPLOYEES_GET_SUCCESS:
+        case employeesPageTypes.EMPLOYEES_GET:
             return {
                 ...state,
                 employees: action.payload,
                 loadingEmployees: false,
-                errorEmployees: null
-            };
-
-        case employeesPageTypes.EMPLOYEES_GET_REQUEST:
-            return {
-                ...state,
-                employees: {},
-                loadingEmployees: true,
                 errorEmployees: null
             };
 
@@ -58,19 +50,11 @@ export default function (state = initialState, action) {
                 errorEmployees: action.payload
             };
 
-        case employeesPageTypes.DEPARTMENTS_GET_SUCCESS:
+        case employeesPageTypes.DEPARTMENTS_GET:
             return {
                 ...state,
                 departments: action.payload,
                 loadingDepartments: false,
-                errorDepartments: null
-            };
-
-        case employeesPageTypes.DEPARTMENTS_GET_REQUEST:
-            return {
-                ...state,
-                departments: {},
-                loadingDepartments: true,
                 errorDepartments: null
             };
 
@@ -82,19 +66,11 @@ export default function (state = initialState, action) {
                 errorDepartments: action.payload
             };
 
-        case employeesPageTypes.DEPARTMENT_ORDER_GET_SUCCESS:
+        case employeesPageTypes.DEPARTMENT_ORDER_GET:
             return {
                 ...state,
                 departmentOrder: action.payload,
                 loadingDepartmentOrder: false,
-                errorDepartmentOrder: null
-            };
-
-        case employeesPageTypes.DEPARTMENT_ORDER_GET_REQUEST:
-            return {
-                ...state,
-                departmentOrder: {},
-                loadingDepartmentOrder: true,
                 errorDepartmentOrder: null
             };
 
@@ -106,19 +82,11 @@ export default function (state = initialState, action) {
                 errorDepartmentOrder: action.payload
             };
 
-        case employeesPageTypes.ALL_EMPLOYEES_LIST_GET_SUCCESS:
+        case employeesPageTypes.ALL_EMPLOYEES_LIST_GET:
             return {
                 ...state,
                 allEmployeesList: action.payload,
                 loadingAllEmployeesList: false,
-                errorAllEmployeesList: null
-            };
-
-        case employeesPageTypes.ALL_EMPLOYEES_LIST_GET_REQUEST:
-            return {
-                ...state,
-                allEmployeesList: [],
-                loadingAllEmployeesList: true,
                 errorAllEmployeesList: null
             };
 
