@@ -12,10 +12,7 @@ import './edit-project.css';
 
 /*
 * TODO
-*  загрузка выбранных сотрудников в process projects и информации по отделам
-*  control form для checkbox и radio
 *  save method
-*
 * */
 
 class EditProject extends Component {
@@ -24,10 +21,13 @@ class EditProject extends Component {
         id: this.props.projectId,
         dateStart: '',
         dateEnd: '',
-        fine: '0',
-        premium: '0',
+        fine: 0,
+        premium: 0,
+        totalSum: 0,
         employees: {},
-        totalSum: '0'
+        cost: {},
+        rate: {},
+        hours: {}
     };
 
     componentDidMount() {
@@ -52,26 +52,70 @@ class EditProject extends Component {
                 const deptId = departmentOrder[i];
                 let infoDepartment = [];
                 let participants = [];
-                if (!loadingProject && project && project.infoDepartments.length > 0) {
+                if (!loadingProject &&
+                    project &&
+                    project.infoDepartments &&
+                    project.infoDepartments.length > 0) {
                     infoDepartment = project.infoDepartments.filter(department => department.idDept === deptId);
                 }
-                if (!loadingProject && project && project.participants.length > 0) {
+                if (!loadingProject &&
+                    project &&
+                    project.participants &&
+                    project.participants.length > 0) {
                     participants = project.participants.filter(participant => participant.idDept === deptId);
                 }
-                const costDept = `cost-${deptId}`;
-                const hoursDept = `hours-${deptId}`;
-                const rateDept = `rate-${deptId}`;
                 this.setState(prevState => ({
                     employees: {...prevState.employees, [deptId]: participants.length > 0 ? participants.map(participant => {return participant.idEmployee}) : [] },
-                    [costDept]: infoDepartment.length > 0 && infoDepartment[0].cost ? infoDepartment[0].cost :'0',
-                    [hoursDept]: infoDepartment.length > 0 && infoDepartment[0].hoursPlan ? infoDepartment[0].hoursPlan :'0',
-                    [rateDept]: infoDepartment.length > 0 && infoDepartment[0].rate ? infoDepartment[0].rate :'0'
+                    cost: {...prevState.cost, [deptId]: infoDepartment.length > 0 && infoDepartment[0].cost ? infoDepartment[0].cost :'0'},
+                    hours: {...prevState.hours,[deptId]: infoDepartment.length > 0 && infoDepartment[0].hoursPlan ? infoDepartment[0].hoursPlan :'0'},
+                    rate: {...prevState.rate,[deptId]: infoDepartment.length > 0 && infoDepartment[0].rate ? infoDepartment[0].rate :'0'}
                 }));
             }
         }
+        if (prevState.cost !== this.state.cost) {
+            let totalSum = 0;
+            for (let cost in this.state.cost) {
+                console.log(this.state.cost[cost]);
+                totalSum+= Number(this.state.cost[cost]);
+            }
+            this.setState({
+                totalSum: totalSum
+            });
+        }
+        /*let totalSum = 0;
+            let costs = document.getElementsByClassName('cost');
+            for (let cost of costs) {
+                totalSum += Number(cost.value);
+            }
+            console.log(totalSum);*/
     }
 
     onInputChange = (e) => {
+        let deptId = e.target.name.split("-")[1];
+        if (e.target.name.indexOf('hours') > -1) {
+            console.log(e.target.value, this.state.rate[deptId]);
+            this.setState({
+                hours: {
+                    [deptId]: e.target.value
+                },
+                cost: {
+                    [deptId]: e.target.value*this.state.rate[deptId]
+                }
+            });
+            return;
+        }
+        if (e.target.name.indexOf('rate') > -1) {
+            console.log(e.target.value, this.state.hours[deptId]);
+            this.setState({
+                rate: {
+                    [deptId]: e.target.value
+                },
+                cost: {
+                    [deptId]: e.target.value*this.state.hours[deptId]
+                }
+            });
+            return;
+        }
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -109,7 +153,7 @@ class EditProject extends Component {
 
         return departmentOrder.map((dept) => {
             const titleDept = departments[dept].title;
-            const type = (dept !== "dept-6") ? (dept !== "dept-5") ? "checkbox" : "radio" : null;
+            const type = (titleDept === "Studio" || titleDept === "Project management") ? "radio" : "checkbox";
 
             const employeesDept = (type && departments[dept].employeesIds) ? departments[dept].employeesIds.map((empId) => {
                 return (
@@ -134,7 +178,7 @@ class EditProject extends Component {
                             <Form.Control
                                 required type="number"
                                 name={`rate-${dept}`}
-                                value={this.state[`rate-${dept}`]}
+                                value={this.state.rate[dept]}
                                 onChange={this.onInputChange}
                                 className="dept-input"
                             />
@@ -146,7 +190,7 @@ class EditProject extends Component {
                             <Form.Control
                                 required type="number"
                                 name={`hours-${dept}`}
-                                value={this.state[`hours-${dept}`]}
+                                value={this.state.hours[dept]}
                                 onChange={this.onInputChange}
                                 className="dept-input"
                             />
@@ -156,11 +200,11 @@ class EditProject extends Component {
                         </Form.Group>
                         <Form.Group as={Col} md="1">
                             <Form.Control
-                                required type="number"
+                                required readOnly
+                                type="number"
                                 name={`cost-${dept}`}
-                                value={this.state[`cost-${dept}`]}
-                                onChange={this.onInputChange}
-                                className="dept-input"
+                                value={this.state.cost[dept]}
+                                className="dept-input cost"
                             />
                             <Form.Text className="text-muted">
                                 Сумма на отдел
@@ -199,10 +243,10 @@ class EditProject extends Component {
                     <Form.Group>
                         <Form.Label>Общая сумма проекта</Form.Label>
                         <Form.Control
-                            required type="number"
+                            readOnly required
+                            type="number"
                             name="totalSum"
                             value={this.state.totalSum}
-                            onChange={this.onInputChange}
                         />
                     </Form.Group>
                     <Form.Group>
