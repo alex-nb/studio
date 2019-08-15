@@ -9,14 +9,7 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case expendituresPageTypes.EXPENDITURE_GET_REQUEST:
-            return {
-                expenditure: [],
-                loadingExpenditure: true,
-                errorExpenditure: null
-            };
-
-        case expendituresPageTypes.EXPENDITURE_GET_SUCCESS:
+        case expendituresPageTypes.EXPENDITURE_GET:
             return {
                 expenditure: action.payload,
                 loadingExpenditure: false,
