@@ -39,7 +39,6 @@ class EditProject extends Component {
         const { departmentOrder } = this.props;
         const { project, loadingProject } = this.props;
         if (project !== prevProps.project) {
-            //console.log(project);
             this.setState({
                 dateStart: loadingProject || !project.dateStart ? '' :  project.dateStart.split(".").reverse().join("-"),
                 dateEnd: loadingProject || !project.deadline ? '' : project.deadline.split(".").reverse().join("-"),
@@ -51,20 +50,25 @@ class EditProject extends Component {
         if (departmentOrder !== prevProps.departmentOrder) {
             for (let i=0; i<departmentOrder.length; i++) {
                 const deptId = departmentOrder[i];
+                let infoDepartment = [];
+                let participants = [];
+                if (!loadingProject && project && project.infoDepartments.length > 0) {
+                    infoDepartment = project.infoDepartments.filter(department => department.idDept === deptId);
+                }
+                if (!loadingProject && project && project.participants.length > 0) {
+                    participants = project.participants.filter(participant => participant.idDept === deptId);
+                }
                 const costDept = `cost-${deptId}`;
                 const hoursDept = `hours-${deptId}`;
                 const rateDept = `rate-${deptId}`;
                 this.setState(prevState => ({
-                    employees: {...prevState.employees, [deptId]: [] },
-                    [costDept]: '0',
-                    [hoursDept]: '0',
-                    [rateDept]: '0'
+                    employees: {...prevState.employees, [deptId]: participants.length > 0 ? participants.map(participant => {return participant.idEmployee}) : [] },
+                    [costDept]: infoDepartment.length > 0 && infoDepartment[0].cost ? infoDepartment[0].cost :'0',
+                    [hoursDept]: infoDepartment.length > 0 && infoDepartment[0].hoursPlan ? infoDepartment[0].hoursPlan :'0',
+                    [rateDept]: infoDepartment.length > 0 && infoDepartment[0].rate ? infoDepartment[0].rate :'0'
                 }));
             }
         }
-        /*if (Object.keys(this.state.employees).length > 0 && Object.keys(project).length > 0) {
-
-        }*/
     }
 
     onInputChange = (e) => {
@@ -113,9 +117,9 @@ class EditProject extends Component {
                         <Form.Check.Input
                             type={type} className="employee-img"
                             name={dept}
-                            value={employees[empId].id}
+                            value={employees[empId].idBase}
                             onChange={this.onCheckboxChange}
-                            //checked={ this.state.employees[dept].indexOf(employees[empId].id) > -1 }
+                            checked={ this.state.employees[dept] && this.state.employees[dept].indexOf(employees[empId].idBase) > -1 }
                         />
                         <img alt={employees[empId].name} className="employee-img" src={employees[empId].img} title={employees[empId].name}/>
                     </Form.Check.Label>
@@ -175,7 +179,8 @@ class EditProject extends Component {
     };
 
     render() {
-        console.log(this.state);
+
+
         const {
             loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
             errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList
