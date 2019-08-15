@@ -58,8 +58,7 @@ export const projectsPageTypes = {
 /*   Reports page */
 
 export const reportsPageTypes = {
-    ALL_REPORTS_GET_REQUEST : 'ALL_REPORTS_GET_REQUEST',
-    ALL_REPORTS_GET_SUCCESS : 'ALL_REPORTS_GET_SUCCESS',
+    ALL_REPORTS_GET : 'ALL_REPORTS_GET',
     ALL_REPORTS_GET_FAILURE : 'ALL_REPORTS_GET_FAILURE'
 };
 
@@ -67,7 +66,6 @@ export const reportsPageTypes = {
 /*   Requests money page */
 
 export const requestsMoneyPageTypes = {
-    REQUESTS_MONEY_GET_REQUEST : 'REQUESTS_MONEY_GET_REQUEST',
     REQUESTS_MONEY_GET_SUCCESS : 'REQUESTS_MONEY_GET_SUCCESS',
     REQUESTS_MONEY_GET_FAILURE : 'REQUESTS_MONEY_GET_FAILURE'
 };

@@ -9,17 +9,10 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case reportsPageTypes.ALL_REPORTS_GET_SUCCESS:
+        case reportsPageTypes.ALL_REPORTS_GET:
             return {
                 allReports: action.payload,
                 loadingAllReports: false,
-                errorAllReports: null
-            };
-
-        case reportsPageTypes.ALL_REPORTS_GET_REQUEST:
-            return {
-                allReports: {},
-                loadingAllReports: true,
                 errorAllReports: null
             };
 
