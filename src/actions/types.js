@@ -66,7 +66,7 @@ export const reportsPageTypes = {
 /*   Requests money page */
 
 export const requestsMoneyPageTypes = {
-    REQUESTS_MONEY_GET_SUCCESS : 'REQUESTS_MONEY_GET_SUCCESS',
+    REQUESTS_MONEY_GET : 'REQUESTS_MONEY_GET',
     REQUESTS_MONEY_GET_FAILURE : 'REQUESTS_MONEY_GET_FAILURE'
 };
 

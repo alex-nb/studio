@@ -10,14 +10,7 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case requestsMoneyPageTypes.REQUESTS_MONEY_GET_REQUEST:
-            return {
-                requestsMoney: [],
-                loadingRequestsMoney: true,
-                errorRequestsMoney: null
-            };
-
-        case requestsMoneyPageTypes.REQUESTS_MONEY_GET_SUCCESS:
+        case requestsMoneyPageTypes.REQUESTS_MONEY_GET:
             return {
                 requestsMoney: action.payload,
                 loadingRequestsMoney: false,

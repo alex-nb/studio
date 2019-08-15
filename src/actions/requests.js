@@ -3,12 +3,8 @@ import { requestsMoneyPageAPI } from './api-endpoints';
 
 import axios from 'axios';
 
-const requestsMoneyRequested = () => ({
-    type: requestsMoneyPageTypes.REQUESTS_MONEY_GET_REQUEST
-});
-
 const requestsMoneyLoaded = (requestsMoney) => ({
-    type: requestsMoneyPageTypes.REQUESTS_MONEY_GET_SUCCESS,
+    type: requestsMoneyPageTypes.REQUESTS_MONEY_GET,
     payload: requestsMoney
 });
 
@@ -18,7 +14,6 @@ const requestsMoneyError = (error) => ({
 });
 
 export const fetchRequestsMoney = () => async dispatch => {
-    dispatch(requestsMoneyRequested());
     try {
         const res = await axios.get(requestsMoneyPageAPI.GET_REQUESTS_MONEY);
         dispatch(requestsMoneyLoaded(res.data.requests));
