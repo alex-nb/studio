@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { fetchAllProjects, fetchPersonalReports } from '../../actions/projects';
+import { fetchAllProjects } from '../../actions/projects';
 
 import Projects from "./projects/projects";
 import Spinner from "../layout/spinner";
@@ -12,7 +12,6 @@ class ProjectsPage extends Component {
 
     componentDidMount() {
         this.props.fetchAllProjects();
-        this.props.fetchPersonalReports();
     }
 
 
@@ -27,27 +26,23 @@ class ProjectsPage extends Component {
 
     _projectsProcessCards() {
         const {
-            projectsProcess, personalReports,
-            loadingProcess, loadingPersonalReports,
-            errorProjectsProcess, errorPersonalReports
+            projectsProcess, loadingProcess, errorProjectsProcess
         } = this.props;
-        if (loadingProcess || loadingPersonalReports) return  <Spinner/>;
-        if (errorProjectsProcess || errorPersonalReports) return  <ErrorMessage/>;
+        if (loadingProcess) return  <Spinner/>;
+        if (errorProjectsProcess) return  <ErrorMessage/>;
         return  projectsProcess.map((project) => {
-            return <ProjectCard key={project._id} project={project} personalReports={personalReports[project._id]}/>;
+            return <ProjectCard key={project._id} project={project} reports={project.reports}/>;
         });
     }
 
     _projectsCloseCards() {
         const {
-            projectsClose, personalReports,
-            loadingClose, loadingPersonalReports,
-            errorProjectsClose, errorPersonalReports
+            projectsClose, loadingClose, errorProjectsClose,
         } = this.props;
-        if (loadingClose || loadingPersonalReports) return  <Spinner/>;
-        if (errorProjectsClose || errorPersonalReports) return  <ErrorMessage/>;
+        if (loadingClose) return  <Spinner/>;
+        if (errorProjectsClose) return  <ErrorMessage/>;
         return  projectsClose.map((project) => {
-            return <ProjectCard key={project._id} project={project} personalReports={personalReports[project._id]}/>;
+            return <ProjectCard key={project._id} project={project} reports={project.reports}/>;
         });
     }
 
@@ -68,20 +63,20 @@ class ProjectsPage extends Component {
 
 const mapStateToProps = ({ projectsList }) => {
     const {
-        projectsClose, projectsProcess, projectsNew, personalReports,
-        loadingProcess, loadingClose, loadingNew, loadingPersonalReports,
-        errorProjectsProcess, errorProjectsClose, errorProjectsNew, errorPersonalReports,
+        projectsClose, projectsProcess, projectsNew,
+        loadingProcess, loadingClose, loadingNew,
+        errorProjectsProcess, errorProjectsClose, errorProjectsNew,
         studioProject
     } = projectsList;
     return {
-        projectsClose, projectsProcess, projectsNew, personalReports,
-        loadingProcess, loadingClose, loadingNew, loadingPersonalReports,
-        errorProjectsProcess, errorProjectsClose, errorProjectsNew, errorPersonalReports,
+        projectsClose, projectsProcess, projectsNew,
+        loadingProcess, loadingClose, loadingNew,
+        errorProjectsProcess, errorProjectsClose, errorProjectsNew,
         studioProject
     };
 };
 
-export default connect(mapStateToProps, {fetchAllProjects, fetchPersonalReports})(ProjectsPage);
+export default connect(mapStateToProps, {fetchAllProjects})(ProjectsPage);
 
 
 

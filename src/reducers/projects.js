@@ -4,33 +4,42 @@ const initialState = {
     projectsNew: [],
     projectsClose: [],
     projectsProcess: [],
-    allReports: [],
+    project: {},
+    loadingProject: true,
     loadingNew: true,
     loadingProcess: true,
     loadingClose: true,
-    loadingAllReports: true,
+    errorProject: null,
     errorProjectsNew: null,
     errorProjectsProcess: null,
-    errorProjectsClose: null,
-    errorAllReports: null,
+    errorProjectsClose: null
 };
 
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case projectsPageTypes.PROJECTS_NEW_GET_SUCCESS:
+
+        case projectsPageTypes.GET_CURRENT_PROJECT:
+            return {
+                ...state,
+                project: action.payload,
+                loadingProject: false,
+                errorProject: null
+            };
+
+        case projectsPageTypes.GET_CURRENT_PROJECT_FAILURE:
+            return {
+                ...state,
+                project: {},
+                loadingProject: false,
+                errorProject: action.payload
+            };
+
+        case projectsPageTypes.PROJECTS_NEW_GET:
             return {
                 ...state,
                 projectsNew: action.payload,
                 loadingNew: false,
-                errorProjectsNew: null
-            };
-
-        case projectsPageTypes.PROJECTS_NEW_GET_REQUEST:
-            return {
-                ...state,
-                projectsNew: [],
-                loadingNew: true,
                 errorProjectsNew: null
             };
 
@@ -42,19 +51,11 @@ export default function (state = initialState, action) {
                 errorProjectsNew: action.payload
             };
 
-        case projectsPageTypes.PROJECTS_PROCESS_GET_SUCCESS:
+        case projectsPageTypes.PROJECTS_PROCESS_GET:
             return {
                 ...state,
                 projectsProcess: action.payload,
                 loadingProcess: false,
-                errorProjectsProcess: null
-            };
-
-        case projectsPageTypes.PROJECTS_PROCESS_GET_REQUEST:
-            return {
-                ...state,
-                projectsProcess: [],
-                loadingProcess: true,
                 errorProjectsProcess: null
             };
 
@@ -66,19 +67,11 @@ export default function (state = initialState, action) {
                 errorProjectsProcess: action.payload
             };
 
-        case projectsPageTypes.PROJECTS_CLOSE_GET_SUCCESS:
+        case projectsPageTypes.PROJECTS_CLOSE_GET:
             return {
                 ...state,
                 projectsClose: action.payload,
                 loadingClose: false,
-                errorProjectsClose: null
-            };
-
-        case projectsPageTypes.PROJECTS_CLOSE_GET_REQUEST:
-            return {
-                ...state,
-                projectsClose: [],
-                loadingClose: true,
                 errorProjectsClose: null
             };
 
@@ -88,30 +81,6 @@ export default function (state = initialState, action) {
                 projectsClose: [],
                 loadingClose: false,
                 errorProjectsClose: action.payload
-            };
-
-        case projectsPageTypes.PERSONAL_REPORTS_GET_SUCCESS:
-            return {
-                ...state,
-                personalReports: action.payload,
-                loadingPersonalReports: false,
-                errorPersonalReports: null
-            };
-
-        case projectsPageTypes.PERSONAL_REPORTS_GET_REQUEST:
-            return {
-                ...state,
-                personalReports: [],
-                loadingPersonalReports: true,
-                errorPersonalReports: null
-            };
-
-        case projectsPageTypes.PERSONAL_REPORTS_GET_FAILURE:
-            return {
-                ...state,
-                personalReports: [],
-                loadingPersonalReports: false,
-                errorPersonalReports: action.payload
             };
 
         default:

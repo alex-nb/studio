@@ -3,11 +3,20 @@ import {Form, Col, Button} from "react-bootstrap";
 import {connect} from "react-redux";
 
 import { fetchCompanyStructure } from "../../../actions/employees";
+import { getCurrentProject } from '../../../actions/projects';
 
 import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
 
 import './edit-project.css';
+
+/*
+* TODO
+*  загрузка выбранных сотрудников в process projects и информации по отделам
+*  control form для checkbox и radio
+*  save method
+*
+* */
 
 class EditProject extends Component {
 
@@ -23,26 +32,39 @@ class EditProject extends Component {
 
     componentDidMount() {
         this.props.fetchCompanyStructure();
+        this.props.getCurrentProject(this.props.projectId);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         const { departmentOrder } = this.props;
-        const { employees } = this.state;
-        if(departmentOrder.length > 0 && Object.keys(employees).length === 0) {
+        const { project, loadingProject } = this.props;
+        if (project !== prevProps.project) {
+            //console.log(project);
+            this.setState({
+                dateStart: loadingProject || !project.dateStart ? '' :  project.dateStart.split(".").reverse().join("-"),
+                dateEnd: loadingProject || !project.deadline ? '' : project.deadline.split(".").reverse().join("-"),
+                fine: loadingProject || !project.fine ? '0' :  project.fine,
+                premium: loadingProject || !project.premium ? '0' : project.premium,
+                totalSum: loadingProject || !project.costTotal ? '0' : project.costTotal
+            });
+        }
+        if (departmentOrder !== prevProps.departmentOrder) {
             for (let i=0; i<departmentOrder.length; i++) {
                 const deptId = departmentOrder[i];
-                const percentDept = `percent-${deptId}`;
+                const costDept = `cost-${deptId}`;
                 const hoursDept = `hours-${deptId}`;
                 const rateDept = `rate-${deptId}`;
                 this.setState(prevState => ({
                     employees: {...prevState.employees, [deptId]: [] },
-                    [percentDept]: '0',
+                    [costDept]: '0',
                     [hoursDept]: '0',
                     [rateDept]: '0'
                 }));
             }
         }
-        //console.log(this.state.employees);
+        /*if (Object.keys(this.state.employees).length > 0 && Object.keys(project).length > 0) {
+
+        }*/
     }
 
     onInputChange = (e) => {
@@ -131,13 +153,13 @@ class EditProject extends Component {
                         <Form.Group as={Col} md="1">
                             <Form.Control
                                 required type="number"
-                                name={`percent-${dept}`}
-                                value={this.state[`percent-${dept}`]}
+                                name={`cost-${dept}`}
+                                value={this.state[`cost-${dept}`]}
                                 onChange={this.onInputChange}
                                 className="dept-input"
                             />
                             <Form.Text className="text-muted">
-                                % на отдел
+                                Сумма на отдел
                             </Form.Text>
                         </Form.Group>
                     </Form.Row>
@@ -153,13 +175,16 @@ class EditProject extends Component {
     };
 
     render() {
+        console.log(this.state);
         const {
             loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
             errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList
         } = this.props;
 
-        if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList) return <Spinner/>;
-        if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList) return <ErrorMessage/>;
+        if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList)
+            return <div className="col-md-10 float-right"><Spinner/></div>;
+        if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList)
+            return <div className="col-md-10 float-right"><ErrorMessage/></div>;
 
         return (
             <div className="col-md-10 float-right">
@@ -218,17 +243,19 @@ class EditProject extends Component {
     }
 }
 
-const mapStateToProps = ({ employeesList }) => {
+const mapStateToProps = ({ employeesList, projectsList }) => {
     const {
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
         errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
     } = employeesList;
+    const { project, loadingProject, errorProject } = projectsList;
     return {
+        project, loadingProject, errorProject,
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
         errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
     };
 };
 
-export default connect(mapStateToProps, { fetchCompanyStructure })(EditProject);
+export default connect(mapStateToProps, { fetchCompanyStructure, getCurrentProject })(EditProject);

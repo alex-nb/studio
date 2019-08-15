@@ -28,7 +28,7 @@ export const projectsPageAPI = {
     GET_PROCESS_PROJECTS : '/projects/process',
     GET_CLOSE_PROJECTS : '/projects/close',
     GET_ALL_PROJECTS : '/projects',
-    GET_PERSONAL_REPORTS : ''
+    GET_PROJECT : '/projects/',
 };
 
 
