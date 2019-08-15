@@ -9,14 +9,8 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        case transactionsPageTypes.TRANSACTION_GET_REQUEST:
-            return {
-                transaction: [],
-                loadingTransaction: true,
-                errorTransaction: null
-            };
 
-        case transactionsPageTypes.TRANSACTION_GET_SUCCESS:
+        case transactionsPageTypes.TRANSACTION_GET:
             return {
                 transaction: action.payload,
                 loadingTransaction: false,

@@ -74,8 +74,7 @@ export const requestsMoneyPageTypes = {
 /*   Transactions page */
 
 export const transactionsPageTypes = {
-    TRANSACTION_GET_REQUEST : 'TRANSACTION_GET_REQUEST',
-    TRANSACTION_GET_SUCCESS : 'TRANSACTION_GET_SUCCESS',
+    TRANSACTION_GET : 'TRANSACTION_GET',
     TRANSACTION_GET_FAILURE : 'TRANSACTION_GET_FAILURE'
 };
 

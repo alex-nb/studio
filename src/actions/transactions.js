@@ -3,12 +3,8 @@ import { transactionsPageAPI } from './api-endpoints';
 
 import axios from 'axios';
 
-const transactionRequested = () => ({
-    type: transactionsPageTypes.TRANSACTION_GET_REQUEST
-});
-
 const transactionLoaded = (transaction) => ({
-    type: transactionsPageTypes.TRANSACTION_GET_SUCCESS,
+    type: transactionsPageTypes.TRANSACTION_GET,
     payload: transaction
 });
 
@@ -18,7 +14,6 @@ const transactionError = (error) => ({
 });
 
 export const fetchTransaction = () => async dispatch => {
-    dispatch(transactionRequested());
     try {
         const res = await axios.get(transactionsPageAPI.GET_TRANSACTIONS);
         dispatch(transactionLoaded(res.data.transactions));
