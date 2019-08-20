@@ -24,3 +24,10 @@ i.fa-actions {
     font-style: normal;
     font-size: small;
 }
+
+.text {
+    padding-top: 1em;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+}
