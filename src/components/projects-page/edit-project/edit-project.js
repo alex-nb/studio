@@ -75,49 +75,46 @@ class EditProject extends Component {
         if (prevState.cost !== this.state.cost) {
             let totalSum = 0;
             for (let cost in this.state.cost) {
-                console.log(this.state.cost[cost]);
                 totalSum+= Number(this.state.cost[cost]);
             }
             this.setState({
                 totalSum: totalSum
             });
         }
-        /*let totalSum = 0;
-            let costs = document.getElementsByClassName('cost');
-            for (let cost of costs) {
-                totalSum += Number(cost.value);
-            }
-            console.log(totalSum);*/
     }
 
     onInputChange = (e) => {
-        let deptId = e.target.name.split("-")[1];
-        if (e.target.name.indexOf('hours') > -1) {
-            console.log(e.target.value, this.state.rate[deptId]);
-            this.setState({
+        const value = e.target.value;
+        const name = e.target.name;
+        let deptId = name.split("-")[1];
+        if (name.indexOf('hours') > -1) {
+            this.setState(prevState => ({
                 hours: {
-                    [deptId]: e.target.value
+                    ...prevState.hours,
+                    [deptId]: value
                 },
                 cost: {
-                    [deptId]: e.target.value*this.state.rate[deptId]
+                    ...prevState.cost,
+                    [deptId]: value*this.state.rate[deptId]
                 }
-            });
+            }));
             return;
         }
-        if (e.target.name.indexOf('rate') > -1) {
-            console.log(e.target.value, this.state.hours[deptId]);
-            this.setState({
+        if (name.indexOf('rate') > -1) {
+            this.setState(prevState => ({
                 rate: {
-                    [deptId]: e.target.value
+                    ...prevState.rate,
+                    [deptId]: value
                 },
                 cost: {
-                    [deptId]: e.target.value*this.state.hours[deptId]
+                    ...prevState.cost,
+                    [deptId]: value*this.state.hours[deptId]
                 }
-            });
+            }));
             return;
         }
         this.setState({
-            [e.target.name]: e.target.value
+            [name]: value
         });
     };
 
@@ -223,8 +220,6 @@ class EditProject extends Component {
     };
 
     render() {
-
-
         const {
             loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
             errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList

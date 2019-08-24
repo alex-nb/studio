@@ -27,7 +27,7 @@ export default class Projects extends Component {
     }
 
     _tabNewProjects() {
-        const { projects } = this.props;
+        const { projects, totalCosts } = this.props;
         const { tabProjectsNew } = this.state;
         return (
             <Fragment>
@@ -39,6 +39,7 @@ export default class Projects extends Component {
                     className="project-button"
                 >
                     Новые проекты
+                    <p className="rightstr">{totalCosts.costPrNew} Y</p>
                 </Button>
                 <Collapse in={tabProjectsNew}>
                     <div id="collapse-new-projects" className="project-card">
@@ -50,7 +51,7 @@ export default class Projects extends Component {
     }
 
     render() {
-        const { projects } = this.props;
+        const { projects, totalCosts } = this.props;
         const { tabProjectsProcess, tabProjectsClose } = this.state;
         return(
             <Fragment>
@@ -63,7 +64,8 @@ export default class Projects extends Component {
                     aria-expanded={tabProjectsProcess}
                     className="project-button"
                 >
-                Текущие проекты
+                    Текущие проекты
+                    <p className="rightstr">{totalCosts.costPrProcess} Y</p>
                 </Button>
 
                 <Collapse in={tabProjectsProcess}>
@@ -80,6 +82,7 @@ export default class Projects extends Component {
                     className="project-button"
                 >
                     Закрытые проекты
+                    <p className="rightstr">{totalCosts.costPrClose} Y</p>
                 </Button>
 
                 <Collapse in={tabProjectsClose}>
