@@ -9,3 +9,7 @@ input.employee-img + img.employee-img {
     cursor: pointer;
     border-radius: 8px;
 }
+
+.dept {
+    display: grid;
+}

@@ -16,9 +16,10 @@ input.employee-img + img.employee-img {
     width: 100%; height: 100%;
     cursor: pointer;
     border-radius: 8px;
+    -webkit-filter: opacity(25%);
 }
 input.employee-img:checked + img.employee-img  	{
-    -webkit-filter: opacity(25%);
+    -webkit-filter: opacity(100%);
 }
 
 input.employee-img {
@@ -46,6 +47,12 @@ input[type=number]
 
 .title-dept {
     font-weight: bold;
-    color: grey;
+    color: #696969;
     font-size: medium;
+    margin-right: 10px;
+}
+
+legend {
+    text-align: center;
+    color: #696969;
 }

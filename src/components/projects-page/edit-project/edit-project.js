@@ -10,10 +10,6 @@ import ErrorMessage from "../../layout/error-message";
 
 import './edit-project.css';
 
-/*
-* TODO
-*  save method
-* */
 
 class EditProject extends Component {
 
@@ -27,7 +23,8 @@ class EditProject extends Component {
         employees: {},
         cost: {},
         rate: {},
-        hours: {}
+        hours: {},
+        getDepartmentOrder: false
     };
 
     componentDidMount() {
@@ -36,8 +33,10 @@ class EditProject extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+
         const { departmentOrder } = this.props;
         const { project, loadingProject } = this.props;
+
         if (project !== prevProps.project) {
             this.setState({
                 dateStart: loadingProject || !project.dateStart ? '' :  project.dateStart.split(".").reverse().join("-"),
@@ -47,7 +46,11 @@ class EditProject extends Component {
                 totalSum: loadingProject || !project.costTotal ? '0' : project.costTotal
             });
         }
-        if (departmentOrder !== prevProps.departmentOrder) {
+
+        if (Object.keys(departmentOrder).length !== 0
+            && !this.state.getDepartmentOrder
+            && Object.keys(project).length !== 0)
+        {
             for (let i=0; i<departmentOrder.length; i++) {
                 const deptId = departmentOrder[i];
                 let infoDepartment = [];
@@ -65,17 +68,23 @@ class EditProject extends Component {
                     participants = project.participants.filter(participant => participant.idDept === deptId);
                 }
                 this.setState(prevState => ({
-                    employees: {...prevState.employees, [deptId]: participants.length > 0 ? participants.map(participant => {return participant.idEmployee}) : [] },
+                    employees: {...prevState.employees, [deptId]: participants.length > 0 ?
+                            participants.map(participant => {
+                                return {[participant.idEmployee._id]: participant.revenue ? participant.revenue : 0};
+                            })
+                            : [] },
                     cost: {...prevState.cost, [deptId]: infoDepartment.length > 0 && infoDepartment[0].cost ? infoDepartment[0].cost :'0'},
                     hours: {...prevState.hours,[deptId]: infoDepartment.length > 0 && infoDepartment[0].hoursPlan ? infoDepartment[0].hoursPlan :'0'},
-                    rate: {...prevState.rate,[deptId]: infoDepartment.length > 0 && infoDepartment[0].rate ? infoDepartment[0].rate :'0'}
+                    rate: {...prevState.rate,[deptId]: infoDepartment.length > 0 && infoDepartment[0].rate ? infoDepartment[0].rate :'0'},
+                    getDepartmentOrder: true
                 }));
             }
         }
+
         if (prevState.cost !== this.state.cost) {
             let totalSum = 0;
-            for (let cost in this.state.cost) {
-                totalSum+= Number(this.state.cost[cost]);
+            for (let costDept in this.state.cost) {
+                totalSum+= Number(this.state.cost[costDept]);
             }
             this.setState({
                 totalSum: totalSum
@@ -86,7 +95,7 @@ class EditProject extends Component {
     onInputChange = (e) => {
         const value = e.target.value;
         const name = e.target.name;
-        let deptId = name.split("-")[1];
+        const deptId = name.split("-")[1];
         if (name.indexOf('hours') > -1) {
             this.setState(prevState => ({
                 hours: {
@@ -119,25 +128,41 @@ class EditProject extends Component {
     };
 
     onCheckboxChange = (e) => {
-        const options = e.target.value;
-        const name = e.target.name;
-
+        const idEmp = e.target.value;
+        const idDept = e.target.name;
+        let employeesState = this.state.employees[idDept];
         if (e.target.type === "checkbox") {
-            const value = (this.state.employees[name].indexOf(options) > -1) ?
-                this.state.employees[name].filter(s => s !== options)
-                : [...this.state.employees[name], options];
-
+            const employee = employeesState.filter(employees => idEmp in employees);
+            if (employee.length === 0) employeesState.push({[idEmp]: 0});
+            else employeesState.splice(employeesState.indexOf(employee[0]), 1);
             this.setState( prevState => ({ employees:
-                        {...prevState.employees, [name]: value }
+                        {...prevState.employees, [idDept]: employeesState }
                 })
             );
         }
         else {
             this.setState( prevState => ({ employees:
-                        {...prevState.employees, [name]: options }
+                        {...prevState.employees, [idDept]: [{[idEmp]: 0}] }
                 })
             );
         }
+    };
+
+    changeRevenue = (e) => {
+        const value = e.target.value;
+        const name = e.target.name;
+        const idDept = name.split("-")[0];
+        const idEmp = name.split("-")[1];
+        let employeesState = this.state.employees[idDept];
+        const employee = employeesState.filter(employees => idEmp in employees);
+        employeesState[employeesState.indexOf(employee[0])][idEmp] = value;
+        this.setState( prevState => ({
+            employees: {
+                ...prevState.employees,
+                [idDept]: employeesState
+                }
+            })
+        );
     };
 
     onSubmit = (e) => {
@@ -153,24 +178,46 @@ class EditProject extends Component {
             const type = (titleDept === "Studio" || titleDept === "Project management") ? "radio" : "checkbox";
 
             const employeesDept = (type && departments[dept].employeesIds) ? departments[dept].employeesIds.map((empId) => {
+                const employeesInState = this.state.employees[dept] ?
+                    this.state.employees[dept].filter(employee => employees[empId].idBase in employee)
+                    : [];
+                const revenue = employeesInState[0] && employeesInState[0][employees[empId].idBase] ? employeesInState[0][employees[empId].idBase] : 0;
                 return (
-                    <Form.Check.Label type={type} className="employee-img" key={employees[empId].id}>
-                        <Form.Check.Input
-                            type={type} className="employee-img"
-                            name={dept}
-                            value={employees[empId].idBase}
-                            onChange={this.onCheckboxChange}
-                            checked={ this.state.employees[dept] && this.state.employees[dept].indexOf(employees[empId].idBase) > -1 }
-                        />
-                        <img alt={employees[empId].name} className="employee-img" src={employees[empId].img} title={employees[empId].name}/>
-                    </Form.Check.Label>
+                    <Form.Row key={employees[empId].id}>
+                        <Form.Group as={Col} md="1">
+                            <Form.Check.Label type={type} className="employee-img">
+                                <Form.Check.Input
+                                    type={type} className="employee-img"
+                                    name={dept}
+                                    value={employees[empId].idBase}
+                                    onChange={this.onCheckboxChange}
+                                    checked={ employeesInState.length > 0 }
+                                />
+                                <img alt={employees[empId].name} className="employee-img" src={employees[empId].img} title={employees[empId].name}/>
+                            </Form.Check.Label>
+                            <Form.Text className="text-muted">
+                                {employees[empId].name}
+                            </Form.Text>
+                        </Form.Group>
+                        <Form.Group as={Col} md="2">
+                            <Form.Control
+                                type="number"
+                                disabled={!employeesInState.length > 0}
+                                name={`${dept}-${employees[empId].idBase}`}
+                                value={revenue}
+                                onChange={this.changeRevenue}
+                            />
+                        </Form.Group>
+                    </Form.Row>
                 );
             }) : null;
 
             return (employeesDept) ? (
                 <Fragment key={dept}>
-                    <p className="title-dept">{titleDept}</p>
                     <Form.Row style={{paddingLeft: "25px", paddingTop: "0"}}>
+                        <Form.Text className="title-dept">
+                            {titleDept}
+                        </Form.Text>
                         <Form.Group as={Col} md="1">
                             <Form.Control
                                 required type="number"
@@ -210,10 +257,11 @@ class EditProject extends Component {
                     </Form.Row>
 
                     <Form.Group style={{paddingLeft: "25px"}}>
-                        <Form.Check inline type={type}>
+                        <Form.Check type={type}>
                             {employeesDept}
                         </Form.Check>
                     </Form.Group>
+                    <hr/>
                 </Fragment>
             ) : null;
         })
@@ -221,19 +269,19 @@ class EditProject extends Component {
 
     render() {
         const {
-            loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
-            errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList
+            loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList, loadingProject,
+            errorEmployees, errorDepartments, errorDepartmentOrder, errorAllEmployeesList, errorProject
         } = this.props;
 
-        if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList)
+        if (loadingEmployees || loadingDepartmentOrder || loadingDepartments || loadingAllEmployeesList || loadingProject)
             return <div className="col-md-10 float-right"><Spinner/></div>;
-        if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList)
+        if (errorEmployees || errorDepartments || errorDepartmentOrder || errorAllEmployeesList || errorProject)
             return <div className="col-md-10 float-right"><ErrorMessage/></div>;
 
         return (
             <div className="col-md-10 float-right">
                 <Form onSubmit={this.onSubmit}>
-                    <legend>Редактирование проекта </legend>
+                    <legend>Редактирование проекта «{this.props.project.title}» </legend>
                     {this._chooseEmployee()}
                     <Form.Group>
                         <Form.Label>Общая сумма проекта</Form.Label>

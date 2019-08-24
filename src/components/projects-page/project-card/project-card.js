@@ -6,7 +6,6 @@ import './project-card.css';
 import Report from '../report';
 import Participant from './participant';
 import ReportsHistory from '../reports-history';
-import CloseProject from "../close-project";
 import PeopleList from "../people-list";
 
 
@@ -14,7 +13,6 @@ class ProjectCard extends Component {
     state = {
         showModalReport: false,
         showModalReportsHistory: false,
-        showModalCloseProject: false,
         showModalParticipant: false
     };
 
@@ -24,10 +22,6 @@ class ProjectCard extends Component {
 
     changeStateModalReport = () => {
         this.setState({ showModalReport: !this.state.showModalReport });
-    };
-
-    changeStateModalCloseProject = () => {
-        this.setState({ showModalCloseProject: !this.state.showModalCloseProject });
     };
 
     changeStateModalParticipant = () => {
@@ -70,11 +64,10 @@ class ProjectCard extends Component {
     };
 
     _processProjectInfo() {
+        const { _id } = this.props.project;
         return (
             <Fragment>
-                <span onClick={() => this.changeStateModalCloseProject()}>
-                    <i className="fas fa-check-circle fa-card pointer"/>
-                </span>
+                <Link to={`/projects/close/${_id}`}><i className="fas fa-check-circle fa-card pointer"/></Link>
                 <span onClick={() => this.changeStateModalReport()}>
                     <i className="fas fa-plus-circle fa-card pointer"/>
                 </span>
@@ -85,13 +78,13 @@ class ProjectCard extends Component {
 
     _notCloseProjectInfo() {
         const { _id } = this.props.project;
-        return <Link to={`/projects/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>;
+        return <Link to={`/projects/edit/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>;
     };
 
     render() {
         const {
             costTotal, status,
-            participants, reports, deadline,
+            reports, deadline,
             title, dateStart
         } = this.props.project;
 
@@ -118,12 +111,6 @@ class ProjectCard extends Component {
                     show={this.state.showModalReportsHistory}
                     onHide={this.changeStateModalReportsHistory}
                     reports={reports}
-                />
-                <CloseProject
-                    show={this.state.showModalCloseProject}
-                    onHide={this.changeStateModalCloseProject}
-                    participants={participants}
-                    deadline={deadline}
                 />
                 <Participant
                     show={this.state.showModalParticipant}
