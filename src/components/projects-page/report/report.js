@@ -6,8 +6,13 @@ export default class Report extends Component {
     state = {
         timeWork: '',
         report: '',
-        timeStudy: ''
+        timeStudy: '',
+        idProject: ''
     };
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.id_project !== this.props.id_project) this.setState({idProject: this.props.id_project})
+    }
 
     onInputChange = (e) => {
         this.setState({
@@ -43,6 +48,11 @@ export default class Report extends Component {
                 <Form onSubmit={this.onSubmit}>
                     <Modal.Body>
                         <fieldset>
+                            <Form.Control
+                                required type="hidden"
+                                name="idProject"
+                                value={this.state.idProject}
+                            />
                             <Form.Group>
                                 <Form.Label>Время работы</Form.Label>
                                 <Form.Control
@@ -73,7 +83,7 @@ export default class Report extends Component {
                                     name="report"
                                     value={this.state.report}
                                 />
-                            </Form.Group>>
+                            </Form.Group>
                         </fieldset>
                     </Modal.Body>
                     <Modal.Footer>

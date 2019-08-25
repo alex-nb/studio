@@ -13,7 +13,8 @@ class ProjectCard extends Component {
     state = {
         showModalReport: false,
         showModalReportsHistory: false,
-        showModalParticipant: false
+        showModalParticipant: false,
+        idProject: ''
     };
 
     changeStateModalReportsHistory = () => {
@@ -22,6 +23,13 @@ class ProjectCard extends Component {
 
     changeStateModalReport = () => {
         this.setState({ showModalReport: !this.state.showModalReport });
+    };
+
+    showModalReport = (id) => {
+        this.setState({
+            idProject: id,
+            showModalReport: true
+        });
     };
 
     changeStateModalParticipant = () => {
@@ -68,7 +76,7 @@ class ProjectCard extends Component {
         return (
             <Fragment>
                 <Link to={`/projects/close/${_id}`}><i className="fas fa-check-circle fa-card pointer"/></Link>
-                <span onClick={() => this.changeStateModalReport()}>
+                <span onClick={() => this.showModalReport(_id)}>
                     <i className="fas fa-plus-circle fa-card pointer"/>
                 </span>
                 <br />
@@ -106,6 +114,7 @@ class ProjectCard extends Component {
                 <Report
                     show={this.state.showModalReport}
                     onHide={this.changeStateModalReport}
+                    id_project={this.state.idProject}
                 />
                 <ReportsHistory
                     show={this.state.showModalReportsHistory}

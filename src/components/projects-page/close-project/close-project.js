@@ -82,11 +82,10 @@ class CloseProject extends Component {
         const {participants} = this.props.project;
         if (participants && Object.keys(this.state.summ).length !== 0) {
             return participants.map((people) => {
-                console.log(people.revenue);
                 return (
-                    <Fragment>
+                    <Fragment key={people._id}>
                         <small className="dept"> {people.nameDept} </small>
-                        <Form.Group key={people._id} as={Row}>
+                        <Form.Group as={Row}>
                             <Form.Label column sm="2">
                                 <img alt={people.idEmployee.name}
                                      className="employee-img"

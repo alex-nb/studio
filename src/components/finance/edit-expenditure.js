@@ -16,14 +16,6 @@ export default class EditExpenditure extends Component {
         if(prevProps.id_ex !== this.props.id_ex) this.setState({id_ex: this.props.id_ex});
         if(prevProps.type !== this.props.type) this.setState({type: this.props.type});
         if(prevProps.parent_exp !== this.props.parent_exp) this.setState({parent_exp: this.props.parent_exp});
-        if(prevProps.show !== this.props.show && this.props.show === false) {
-            this.setState({
-                name_ex: '',
-                id_ex: '',
-                type: '',
-                parent_exp: ''
-            });
-        }
     }
 
     onChange = (e) => {

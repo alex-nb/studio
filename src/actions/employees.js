@@ -46,6 +46,16 @@ const allEmployeesListError = (error) => ({
     payload: error
 });
 
+export const fetchAllEmployeesList = () => async dispatch => {
+    try {
+        const res = await axios.get(employeesPageAPI.GET_ALL_EMPLOYEES);
+        dispatch(allEmployeesListLoaded(res.data.employeesList));
+    } catch (err) {
+        console.error('Get all employees list. '+err);
+        dispatch(allEmployeesListError(err));
+    }
+};
+
 export const fetchCompanyStructure = () => async dispatch => {
     try {
         const res = await axios.get(employeesPageAPI.GET_DEPARTMENTS_STRUCTURE);
