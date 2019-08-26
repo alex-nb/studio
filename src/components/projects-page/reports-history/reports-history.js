@@ -11,7 +11,7 @@ const ReportsHistory = (props) => {
                 <th scope="row">{report.idEmployee.name}</th>
                 <th>{report.idReport.date}</th>
                 <td>{report.idReport.report}</td>
-                <td>{report.idReport.hours}</td>
+                <td title="работа/обучение">{report.idReport.hoursWork}/{report.idReport.hoursStudy}</td>
                 <td>{report.idReport.status ==='accepted' ? "Принято!" : report.idReport.status === 'rejected' ? "Врушка!" : "Нейтрально"}</td>
             </tr>
         );
@@ -36,7 +36,7 @@ const ReportsHistory = (props) => {
                         <th scope="col">Сотрудник</th>
                         <th scope="col">Дата</th>
                         <th scope="col">Отчет</th>
-                        <th scope="col">Фак. время</th>
+                        <th scope="col">Время</th>
                         <th scope="col">Статус</th>
                     </tr>
                     </thead>

@@ -18,7 +18,6 @@ export default class InnerListEmployee extends Component {
 };
 
 const Employee = ({ employee, index, onDelete }) => {
-    console.log(employee);
     return (
         <Draggable draggableId={employee.id} index={index}>
             {(provided, snapshot) => (

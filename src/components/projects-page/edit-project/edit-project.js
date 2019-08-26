@@ -3,7 +3,7 @@ import {Form, Col, Button} from "react-bootstrap";
 import {connect} from "react-redux";
 
 import { fetchCompanyStructure } from "../../../actions/employees";
-import { getCurrentProject } from '../../../actions/projects';
+import { getCurrentProject, updateProject } from '../../../actions/projects';
 
 import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
@@ -167,7 +167,8 @@ class EditProject extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log( this.state );
+        console.log(this.state);
+        //updateProject(this.state, this.props.history);
     };
 
     _chooseEmployee() {
@@ -350,4 +351,4 @@ const mapStateToProps = ({ employeesList, projectsList }) => {
     };
 };
 
-export default connect(mapStateToProps, { fetchCompanyStructure, getCurrentProject })(EditProject);
+export default connect(mapStateToProps, { fetchCompanyStructure, getCurrentProject, updateProject })(EditProject);

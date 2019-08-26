@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Form, Button, Modal} from "react-bootstrap";
+import {addReport} from "../../../actions/reports";
+import { connect } from 'react-redux';
 
-export default class Report extends Component {
+class Report extends Component {
 
     state = {
         timeWork: '',
@@ -22,7 +24,15 @@ export default class Report extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        let date = new Date();
+        let dd = date.getDate();
+        if (dd < 10) dd = '0' + dd;
+        let mm = date.getMonth() + 1;
+        if (mm < 10) mm = '0' + mm;
+        let yyyy = date.getFullYear();
+        let formData = this.state;
+        formData.date = dd + '.' + mm + '.' + yyyy;
+        this.props.addReport(formData);
         this.setState({
             timeWork: '',
             report: '',
@@ -94,4 +104,6 @@ export default class Report extends Component {
             </Modal>
         );
     }
-};
+}
+
+export default connect(null, {addReport})(Report);

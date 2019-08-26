@@ -172,7 +172,6 @@ class Reports extends Component {
         for (let employee in reports) {
             const newStateName = `tabProjects${reports[employee]._id}`;
             const {tabsProjects} = this.state;
-            console.log(reports[employee]);
             tableBody.push(
             <React.Fragment key={reports[employee]._id}>
                 <tbody>
