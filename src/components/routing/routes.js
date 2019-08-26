@@ -13,6 +13,7 @@ import Welcome from '../layout/welcome';
 import NotFound from '../layout/not-found';
 import { connect } from 'react-redux';
 import {changeSelected} from '../../actions/common-info';
+import CloseProject from "../projects-page/close-project";
 
 
 class Routes extends Component {
@@ -27,10 +28,15 @@ class Routes extends Component {
                     this.props.changeSelected('projects');
                     return <ProjectsPage />;
                 }} />
-                <PrivateRoute path="/projects/:id" component={({ match }) => {
+                <PrivateRoute path="/projects/edit/:id" component={({ match }) => {
                     const { id } = match.params;
                     this.props.changeSelected('projects');
                     return <EditProject projectId={id} />
+                }} />
+                <PrivateRoute path="/projects/close/:id" component={({ match }) => {
+                    const { id } = match.params;
+                    this.props.changeSelected('projects');
+                    return <CloseProject projectId={id} />
                 }} />
                 <PrivateRoute path="/employees" component={() => {
                     this.props.changeSelected('employees');

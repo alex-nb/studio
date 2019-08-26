@@ -5,4 +5,11 @@
 .project-button {
     margin-top: 5px;
     margin-left: 5px;
+    padding-bottom: 0;
+}
+
+.rightstr {
+    float: right;
+    width: 10%;
+    text-align: right;
 }

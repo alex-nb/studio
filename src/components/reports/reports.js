@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ButtonGroup, Button, Collapse, Form, Table, Row,Col } from "react-bootstrap";
 import { connect } from 'react-redux';
 import {fetchAllReports} from '../../actions/reports';
-
+import RejectedReport from "./rejected-report";
 
 import './reports.css';
 
@@ -15,12 +15,25 @@ class Reports extends Component {
     state = {
         tabsProjects: {},
         grouping: "project",
-        dates: ""
+        dates: "",
+        showModalReject: false,
+        idReport: ''
     };
 
     componentDidMount() {
         this.props.fetchAllReports();
     }
+
+    changeStateModalReject = () => {
+        this.setState({ showModalReject: !this.state.showModalReject })
+    };
+
+    showModalReject = (id) => {
+        this.setState({
+            idReport: id,
+            showModalReject: true
+        });
+    };
 
     onChangeTypeGrouping = (e) => {
         this.setState({
@@ -47,8 +60,9 @@ class Reports extends Component {
                         </td>
                         <td/>
                         <td/>
-                        <td>
-                            {project.hoursFact}/{project.hoursPlan} ({project.hoursBad})
+                        <td/>
+                        <td title="план./факт. (не принятые)">
+                            {project.hoursFact}/{project.hoursPlan} ({project.hoursBad ? project.hoursBad : 0})
                         </td>
                         <td/>
                     </tr>
@@ -65,14 +79,25 @@ class Reports extends Component {
                                         <ButtonGroup size="sm">
                                             <Button variant="success"><i className="fas fa-check fa-actions"/></Button>
                                             <Button variant="primary"><i className="fas fa-minus fa-actions"/></Button>
-                                            <Button variant="danger"><i className="fas fa-times fa-actions"/></Button>
+                                            <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
+                                                <i className="fas fa-times fa-actions"/>
+                                            </Button>
                                         </ButtonGroup>;
                             return (
                                 <tr key={report.idReport._id}>
                                     <td>{report.idReport.date}</td>
                                     <td>{report.idEmployee.name}</td>
                                     <td>{report.idReport.report}</td>
-                                    <td>{report.idReport.hours}</td>
+                                    <td>{report.idReport.reason ? report.idReport.reason : ""}</td>
+                                    <td>
+                                        {report.idReport.hoursWork ? `Работа: ${report.idReport.hoursWork}` : ""}
+                                        <br/>
+                                        {report.idReport.acceptedHoursWork ? `(принято: ${report.idReport.acceptedHoursWork})` : ""}
+                                        <br/>
+                                        {report.idReport.hoursStudy ? `Обучение: ${report.idReport.hoursStudy}` : ""}
+                                        <br/>
+                                        {report.idReport.acceptedHoursStudy ? `(принято: ${report.idReport.acceptedHoursStudy})` : ""}
+                                    </td>
                                     <td>
                                         {status}
                                     </td>
@@ -89,23 +114,48 @@ class Reports extends Component {
     _tableBodyEmployee() {
         let reports = [];
         let tableBody = [];
+
         this.props.allReports.map((project) => {
             project.reports.map((report) => {
                 reports[report.idEmployee._id] =
                     reports[report.idEmployee._id] ?
                         reports[report.idEmployee._id] :
-                        {name: report.idEmployee.name, _id: report.idEmployee._id};
+                        {
+                            name: report.idEmployee.name,
+                            _id: report.idEmployee._id,
+                            allHoursWork: 0,
+                            allAcceptedHoursWork: 0,
+                            allHoursStudy: 0,
+                            allAcceptedHoursStudy: 0
+                        };
                 reports[report.idEmployee._id].reports =
                     reports[report.idEmployee._id].reports ?
                         reports[report.idEmployee._id].reports :
                         [];
 
+                reports[report.idEmployee._id].allHoursWork = report.idReport.hoursWork ?
+                    reports[report.idEmployee._id].allHoursWork+Number(report.idReport.hoursWork)
+                    : reports[report.idEmployee._id].allHoursWork;
+                reports[report.idEmployee._id].allAcceptedHoursWork = report.idReport.allAcceptedHoursWork ?
+                    reports[report.idEmployee._id].allAcceptedHoursWork+Number(report.idReport.allAcceptedHoursWork)
+                    : reports[report.idEmployee._id].allAcceptedHoursWork;
+                reports[report.idEmployee._id].allHoursStudy = report.idReport.allHoursStudy ?
+                    reports[report.idEmployee._id].allHoursStudy+Number(report.idReport.allHoursStudy)
+                    : reports[report.idEmployee._id].allHoursStudy;
+                reports[report.idEmployee._id].allAcceptedHoursStudy = report.idReport.allAcceptedHoursStudy ?
+                    reports[report.idEmployee._id].allAcceptedHoursStudy+Number(report.idReport.allAcceptedHoursStudy)
+                    : reports[report.idEmployee._id].allAcceptedHoursStudy;
+
                 reports[report.idEmployee._id].reports.push({
                     idReport: {
                         _id: report.idReport._id,
                         date: report.idReport.date,
-                        hours: report.idReport.hours,
                         report: report.idReport.report,
+                        reason: report.idReport.reason,
+                        hoursWork: report.idReport.hoursWork,
+                        acceptedHoursWork: report.idReport.acceptedHoursWork,
+                        hoursStudy: report.idReport.hoursStudy,
+                        acceptedHoursStudy: report.idReport.acceptedHoursStudy,
                         status: report.idReport.status,
                     },
                     idProject: {
@@ -118,6 +168,7 @@ class Reports extends Component {
             });
 
         });
+
         for (let employee in reports) {
             const newStateName = `tabProjects${reports[employee]._id}`;
             const {tabsProjects} = this.state;
@@ -136,8 +187,11 @@ class Reports extends Component {
                     </td>
                     <td/>
                     <td/>
-                    <td>
-                        тут будут часы сотрудника
+                    <td/>
+                    <td title="факт.ч. (принятые) ">
+                        Работа: {reports[employee].allHoursWork} ({reports[employee].allAcceptedHoursWork})
+                        <br/>
+                        Обучение: {reports[employee].allHoursStudy} ({reports[employee].allAcceptedHoursStudy})
                     </td>
                     <td/>
                 </tr>
@@ -145,7 +199,6 @@ class Reports extends Component {
                 <Collapse in={tabsProjects[newStateName]}>
                     <tbody id={`group-of-rows-${reports[employee]._id}`} className="collapse">
                     {reports[employee].reports.map((report) => {
-                        console.log(report);
                         const status = report.idReport.status ==='accepted' ?
                             <Button variant="success" disabled><i className="fas fa-check fa-actions"/></Button> :
                             report.idReport.status === 'rejected' ?
@@ -155,14 +208,25 @@ class Reports extends Component {
                                     <ButtonGroup size="sm">
                                         <Button variant="success"><i className="fas fa-check fa-actions"/></Button>
                                         <Button variant="primary"><i className="fas fa-minus fa-actions"/></Button>
-                                        <Button variant="danger"><i className="fas fa-times fa-actions"/></Button>
+                                        <Button variant="danger" onClick={() => this.showModalReject(report.idReport._id)}>
+                                            <i className="fas fa-times fa-actions"/>
+                                        </Button>
                                     </ButtonGroup>;
                         return (
                             <tr key={report.idReport._id}>
                                 <td>{report.idReport.date}</td>
                                 <td>{report.idProject.title}</td>
                                 <td>{report.idReport.report}</td>
-                                <td>{report.idReport.hours}</td>
+                                <td>{report.idReport.reason ? report.idReport.reason : ""}</td>
+                                <td>
+                                    {report.idReport.hoursWork ? `Работа: ${report.idReport.hoursWork}` : ""}
+                                    <br/>
+                                    {report.idReport.acceptedHoursWork ? `(принято: ${report.idReport.acceptedHoursWork})` : ""}
+                                    <br/>
+                                    {report.idReport.hoursStudy ? `Обучение: ${report.idReport.hoursStudy}` : ""}
+                                    <br/>
+                                    {report.idReport.acceptedHoursStudy ? `(принято: ${report.idReport.acceptedHoursStudy})` : ""}
+                                </td>
                                 <td>
                                     {status}
                                 </td>
@@ -178,6 +242,7 @@ class Reports extends Component {
 
     render() {
         const { loadingAllReports, errorAllReports } = this.props;
+
         if (loadingAllReports) return (<div className="col-md-10 float-right"><Spinner/></div>);
         if (errorAllReports) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
@@ -197,17 +262,23 @@ class Reports extends Component {
                     <tr>
                         <th style={{width: "15%"}}>Дата</th>
                         <th style={{width: "15%"}}>{this.state.grouping === "project" ? "Сотрудник" : "Проект"}</th>
-                        <th style={{width: "40%"}}>Отчет</th>
+                        <th style={{width: "20%"}}>Отчет</th>
+                        <th style={{width: "20%"}}>Комментарий</th>
                         <th style={{width: "15%"}}>Часы</th>
-                        <th style={{width: "15%"}} />
+                        <th style={{width: "5%"}} />
                     </tr>
                     </thead>
                     {this.state.grouping === "project" ? this._tableBodyProject() : this._tableBodyEmployee()}
                 </Table>
+                <RejectedReport
+                    show={this.state.showModalReject}
+                    onHide={this.changeStateModalReject}
+                    id_report={this.state.idReport}
+                />
             </div>
         );
     }
-};
+}
 
 const mapStateToProps = ({ reportsList }) => {
     const { allReports, loadingAllReports, errorAllReports } = reportsList;

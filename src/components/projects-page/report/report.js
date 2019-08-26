@@ -1,34 +1,44 @@
 import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import {Form, Button, Modal} from "react-bootstrap";
+import {addReport} from "../../../actions/reports";
+import { connect } from 'react-redux';
 
-export default class Report extends Component {
+class Report extends Component {
 
     state = {
-        time: '',
-        report: ''
+        timeWork: '',
+        report: '',
+        timeStudy: '',
+        idProject: ''
     };
 
-    onTimeChange = (e) => {
+    componentDidUpdate(prevProps) {
+        if(prevProps.id_project !== this.props.id_project) this.setState({idProject: this.props.id_project})
+    }
+
+    onInputChange = (e) => {
         this.setState({
-            time: e.target.value
+            [e.target.name]: e.target.value
         });
-    };
-
-    onReportChange = (e) => {
-        this.setState({
-            report: e.target.value
-        })
     };
 
     onSubmit = (e) => {
         e.preventDefault();
-        const { time, report } = this.state;
-        console.log(time, report);
-        this.setState({ time: '', report: '' });
+        let date = new Date();
+        let dd = date.getDate();
+        if (dd < 10) dd = '0' + dd;
+        let mm = date.getMonth() + 1;
+        if (mm < 10) mm = '0' + mm;
+        let yyyy = date.getFullYear();
+        let formData = this.state;
+        formData.date = dd + '.' + mm + '.' + yyyy;
+        this.props.addReport(formData);
+        this.setState({
+            timeWork: '',
+            report: '',
+            timeStudy: ''
+        });
         this.props.onHide();
-        /*const cb = this.props.onItemAdded || (() => {});
-        cb(label);*/
     };
 
     render() {
@@ -45,31 +55,55 @@ export default class Report extends Component {
                         Отчет
                     </Modal.Title>
                 </Modal.Header>
-                <form onSubmit={this.onSubmit}>
+                <Form onSubmit={this.onSubmit}>
                     <Modal.Body>
                         <fieldset>
-                            <div className="form-group">
-                                <label htmlFor="timeFact">Фактическое время</label>
-                                <input className="form-control" name="timeFact" aria-describedby="describe"
-                                       placeholder="Сколько времени вы потратили?" type="text" required
-                                       value={this.state.time}
-                                       onChange={this.onTimeChange}/>
-                                <small id="describe" className="form-text text-muted">Будьте честны.</small>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="report">Ваш отчет</label>
-                                <textarea className="form-control" name="report" rows="20" placeholder="Сегодня я..." required
-                                          value={this.state.report}
-                                          onChange={this.onReportChange}/>
-                            </div>
+                            <Form.Control
+                                required type="hidden"
+                                name="idProject"
+                                value={this.state.idProject}
+                            />
+                            <Form.Group>
+                                <Form.Label>Время работы</Form.Label>
+                                <Form.Control
+                                    required
+                                    onChange={this.onInputChange}
+                                    type="number"
+                                    name="timeWork"
+                                    value={this.state.timeWork}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Время обучения</Form.Label>
+                                <Form.Control
+                                    required
+                                    onChange={this.onInputChange}
+                                    type="number"
+                                    name="timeStudy"
+                                    value={this.state.timeStudy}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Ваш отчет</Form.Label>
+                                <Form.Control
+                                    as="textarea" rows="20"
+                                    placeholder="Сегодня я..."
+                                    required
+                                    onChange={this.onInputChange}
+                                    name="report"
+                                    value={this.state.report}
+                                />
+                            </Form.Group>
                         </fieldset>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.props.onHide}>Отмена</Button>
                         <Button type="submit">Отправить</Button>
                     </Modal.Footer>
-                </form>
+                </Form>
             </Modal>
         );
     }
-};
+}
+
+export default connect(null, {addReport})(Report);

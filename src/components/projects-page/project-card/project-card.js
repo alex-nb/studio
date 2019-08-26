@@ -6,7 +6,6 @@ import './project-card.css';
 import Report from '../report';
 import Participant from './participant';
 import ReportsHistory from '../reports-history';
-import CloseProject from "../close-project";
 import PeopleList from "../people-list";
 
 
@@ -14,8 +13,8 @@ class ProjectCard extends Component {
     state = {
         showModalReport: false,
         showModalReportsHistory: false,
-        showModalCloseProject: false,
-        showModalParticipant: false
+        showModalParticipant: false,
+        idProject: ''
     };
 
     changeStateModalReportsHistory = () => {
@@ -26,8 +25,11 @@ class ProjectCard extends Component {
         this.setState({ showModalReport: !this.state.showModalReport });
     };
 
-    changeStateModalCloseProject = () => {
-        this.setState({ showModalCloseProject: !this.state.showModalCloseProject });
+    showModalReport = (id) => {
+        this.setState({
+            idProject: id,
+            showModalReport: true
+        });
     };
 
     changeStateModalParticipant = () => {
@@ -70,12 +72,11 @@ class ProjectCard extends Component {
     };
 
     _processProjectInfo() {
+        const { _id } = this.props.project;
         return (
             <Fragment>
-                <span onClick={() => this.changeStateModalCloseProject()}>
-                    <i className="fas fa-check-circle fa-card pointer"/>
-                </span>
-                <span onClick={() => this.changeStateModalReport()}>
+                <Link to={`/projects/close/${_id}`}><i className="fas fa-check-circle fa-card pointer"/></Link>
+                <span onClick={() => this.showModalReport(_id)}>
                     <i className="fas fa-plus-circle fa-card pointer"/>
                 </span>
                 <br />
@@ -85,13 +86,13 @@ class ProjectCard extends Component {
 
     _notCloseProjectInfo() {
         const { _id } = this.props.project;
-        return <Link to={`/projects/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>;
+        return <Link to={`/projects/edit/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>;
     };
 
     render() {
         const {
             costTotal, status,
-            participants, reports, deadline,
+            reports, deadline,
             title, dateStart
         } = this.props.project;
 
@@ -113,17 +114,12 @@ class ProjectCard extends Component {
                 <Report
                     show={this.state.showModalReport}
                     onHide={this.changeStateModalReport}
+                    id_project={this.state.idProject}
                 />
                 <ReportsHistory
                     show={this.state.showModalReportsHistory}
                     onHide={this.changeStateModalReportsHistory}
                     reports={reports}
-                />
-                <CloseProject
-                    show={this.state.showModalCloseProject}
-                    onHide={this.changeStateModalCloseProject}
-                    participants={participants}
-                    deadline={deadline}
                 />
                 <Participant
                     show={this.state.showModalParticipant}

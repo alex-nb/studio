@@ -1,21 +1,30 @@
-import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import {Form, Row, Col} from "react-bootstrap";
+import React, {Component, Fragment} from 'react';
+import {connect} from "react-redux";
+import moment from "moment";
+import {Form,Button, Row, Col} from "react-bootstrap";
+import { getCurrentProject } from '../../../actions/projects';
+import Spinner from "../../layout/spinner";
+import ErrorMessage from "../../layout/error-message";
 
-export default class CloseProject extends Component {
+import './close-project.css';
+
+class CloseProject extends Component {
 
     state = {
         summ: {},
     };
 
+    componentDidMount() {
+        this.props.getCurrentProject(this.props.projectId);
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(Object.keys(this.state.summ).length === 0 && this.state.participants) {
-            const participants = this.state.participants;
+        if(Object.keys(this.state.summ).length === 0 && this.props.project.participants) {
+            const participants = this.props.project.participants;
             if(participants.length > 0) {
                 participants.map((people) => {
-                    this.setState(nextState => ({
-                        summ: {...nextState.summ, [people.idEmployee._id]: {
+                    this.setState(prevState => ({
+                        summ: {...prevState.summ, [people._id]: {
                                 premium: 0,
                                 fine: 0
                             }
@@ -30,11 +39,12 @@ export default class CloseProject extends Component {
     onInputChange = (e) => {
         const value = e.target.value;
         const name = e.target.name;
-        const param = e.target.title;
+        let type = name.split("-")[0];
+        let employeeId = name.split("-")[1];
         this.setState( prevState => ({ summ:
-                    {...prevState.summ, [name] : {
-                            ...prevState.summ[name],
-                            [param] : value
+                    {...prevState.summ, [employeeId] : {
+                            ...prevState.summ[employeeId],
+                            [type] : value
                         }
                     }
             })
@@ -44,34 +54,71 @@ export default class CloseProject extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         console.log( this.state );
-        this.props.onHide();
+    };
+
+    difference = (dateStr) => {
+        if (!dateStr) return {text: "Дата дедлайна не определена"};
+        const {premium, fine} = this.props.project;
+        const [day, month, year] = dateStr.split(".");
+        const dateStart = new Date(year, month - 1, day);
+        const dateEnd = moment();
+        const diff = dateEnd.diff(dateStart, 'days');
+        if (diff<0) return {text: `Проект завершен раньше на ${Math.abs(diff)} ${this.num2str(Math.abs(diff))}`, diff: Math.abs(diff), premium: premium ? Math.abs(diff)*Number(premium) : 0};
+        if (diff===0) return {text: "Проект завершен вовремя"};
+        if (diff>0) return {text: `Проект завершен позже на ${diff} ${this.num2str(diff)}`, diff: diff, fine: fine ? diff*Number(fine) : 0};
+    };
+
+    num2str = (n) => {
+        const text_forms = ['день', 'дня', 'дней'];
+        n = Math.abs(n) % 100;
+        let n1 = n % 10;
+        if (n > 10 && n < 20) return text_forms[2];
+        if (n1 > 1 && n1 < 5) return text_forms[1];
+        if (n1 === 1) return text_forms[0];
+        return text_forms[2];
     };
 
     _participantsList() {
-        if (this.props.participants && Object.keys(this.state.summ).length !== 0) {
-            return this.props.participants.map((people) => {
+        const {participants} = this.props.project;
+        if (participants && Object.keys(this.state.summ).length !== 0) {
+            return participants.map((people) => {
                 return (
-                    <Form.Group key={people.idEmployee._id} as={Row}>
-                        <Form.Label column sm="1"><img alt={people.idEmployee.name} className="employee-img" src={people.idEmployee.img} title={people.nameEmployee}/></Form.Label>
-                        <Col sm="5">
-                            <Form.Control
-                                required type="number" placeholder="Сумма премии"
-                                name={people.idEmployee._id}
-                                value={this.state.summ[people.idEmployee._id].premium}
-                                onChange={this.onInputChange}
-                                title='premium'
-                            />
-                        </Col>
-                        <Col sm="5">
-                            <Form.Control
-                                required type="number" placeholder="Сумма штрафа"
-                                name={people.idEmployee._id}
-                                value={this.state.summ[people.idEmployee._id].fine}
-                                onChange={this.onInputChange}
-                                title='fine'
-                            />
-                        </Col>
-                    </Form.Group>
+                    <Fragment key={people._id}>
+                        <small className="dept"> {people.nameDept} </small>
+                        <Form.Group as={Row}>
+                            <Form.Label column sm="2">
+                                <img alt={people.idEmployee.name}
+                                     className="employee-img"
+                                     src={people.idEmployee.img}
+                                     title={people.idEmployee.name}/>
+                                <Form.Text className="text-muted">
+                                    {people.revenue} Y
+                                </Form.Text>
+                            </Form.Label>
+                            <Col sm="5">
+                                <Form.Control
+                                    required type="number"
+                                    name={`premium-${people._id}`}
+                                    value={this.state.summ[people._id].premium}
+                                    onChange={this.onInputChange}
+                                />
+                                <Form.Text className="text-muted">
+                                    Премия
+                                </Form.Text>
+                            </Col>
+                            <Col sm="5">
+                                <Form.Control
+                                    required type="number"
+                                    name={`fine-${people._id}`}
+                                    value={this.state.summ[people._id].fine}
+                                    onChange={this.onInputChange}
+                                />
+                                <Form.Text className="text-muted">
+                                    Штраф
+                                </Form.Text>
+                            </Col>
+                        </Form.Group>
+                    </Fragment>
                 );
             });
         }
@@ -79,31 +126,35 @@ export default class CloseProject extends Component {
     };
 
     render() {
+        const { project, loadingProject, errorProject } = this.props;
+        if (loadingProject) return <div className="col-md-10 float-right"><Spinner/></div>;
+        if (errorProject) return <div className="col-md-10 float-right"><ErrorMessage/></div>;
 
+        const difference = this.difference(project.deadline);
         return (
-            <Modal
-                {...this.props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                backdrop="static"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Закрытие проекта
-                    </Modal.Title>
-                </Modal.Header>
+            <div className="col-md-10 float-right">
                 <Form onSubmit={this.onSubmit}>
-                    <Modal.Body>
-                        Дедлайн: {this.props.deadline}
-                        {this._participantsList()}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.props.onHide}>Отмена</Button>
-                        <Button type="submit">Отправить</Button>
-                    </Modal.Footer>
+                    <legend>Закрытие проекта «{project.title}» </legend>
+                    <p>Дедлайн: <b className="font-weight-bold">{project.deadline}</b></p>
+                    <p>Общая стоимость проекта: <b className="font-weight-bold">{project.costTotal}</b></p>
+                    <p>Назначенная сумма штрафа: <b className="font-weight-bold">{project.fine}</b></p>
+                    <p>Назначенная сумма премии: <b className="font-weight-bold">{project.premium}</b></p>
+                    <p className="font-weight-bold">{difference.text}</p>
+                    {difference.premium ? <p>Сумма премии: <b className="font-weight-bold">{difference.premium}</b></p> : null}
+                    {difference.fine ?  <p>Сумма штрафа: <b className="font-weight-bold">{difference.fine}</b></p> : null}
+                    {this._participantsList()}
+                    <Button type="submit" variant="primary">Сохранить</Button>
                 </Form>
-            </Modal>
+            </div>
         );
     }
+}
+
+const mapStateToProps = ({projectsList }) => {
+    const { project, loadingProject, errorProject } = projectsList;
+    return {
+        project, loadingProject, errorProject
+    };
 };
+
+export default connect(mapStateToProps, { getCurrentProject })(CloseProject);

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {fetchTransaction} from '../../actions/transactions';
 import {fetchExpenditure} from '../../actions/expenditure';
+import {fetchAllEmployeesList} from '../../actions/employees';
 
 import './finance.css';
 import Spinner from "../layout/spinner";
@@ -16,9 +17,11 @@ class Transaction extends Component {
     state = {
         showModalEditForm: false,
         id: '',
+        type: '',
         date: '',
         title: '',
         whom: '',
+        employee: '',
         summ: '',
         expenditure: ''
     };
@@ -26,6 +29,7 @@ class Transaction extends Component {
     componentDidMount() {
         this.props.fetchTransaction();
         this.props.fetchExpenditure();
+        this.props.fetchAllEmployeesList();
     }
 
     changeStateModalEditForm = () => {
@@ -36,8 +40,10 @@ class Transaction extends Component {
         this.setState({
             id: transaction.id,
             date: transaction.date,
+            type: transaction.type,
             title: transaction.title,
             whom: transaction.whom,
+            employee: transaction.employee,
             summ: transaction.summ,
             expenditure: transaction.expenditure,
             showModalEditForm: true
@@ -56,18 +62,21 @@ class Transaction extends Component {
             return (
                 <tr key={trans._id}>
                     <td>{date}</td>
+                    <td>{trans.type==="expense" ? "Расход" : "Доход"}</td>
                     <td>{trans.title}</td>
                     <td>{whom}</td>
                     <td>{trans.summ}</td>
-                    <td>{trans.expenditure.title}</td>
+                    <td>{trans.expenditure ? trans.expenditure.title : ""}</td>
                     <td>
                         <Button variant="secondary" onClick= { () => this.showModalEditForm({
                             id: trans._id,
                             date: trans.createdAt,
+                            type: trans.type,
                             title: trans.title,
-                            whom: whom,
+                            whom: trans.whom ? trans.whom : '',
+                            employee: trans.idEmployee ? trans.idEmployee._id : '',
                             summ: trans.summ,
-                            expenditure: trans.expenditure.title
+                            expenditure: trans.expenditure ? trans.expenditure.title : ""
                         })}>
                             <i className="fas fa-edit fa-actions"/>
                         </Button>
@@ -80,24 +89,34 @@ class Transaction extends Component {
     render() {
         const {
             loadingTransaction, errorTransaction,
-            expenditure, loadingExpenditure, errorExpenditure
+            expenditure, loadingExpenditure, errorExpenditure,
+            allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList
         } = this.props;
 
-        if (loadingTransaction || loadingExpenditure)  return (<div className="col-md-10 float-right"><Spinner/></div>);
-
-        if (errorTransaction || errorExpenditure) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
+        if (loadingTransaction || loadingExpenditure || loadingAllEmployeesList)  return (<div className="col-md-10 float-right"><Spinner/></div>);
+        if (errorTransaction || errorExpenditure || errorAllEmployeesList) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return(
             <div className="col-md-10 float-right">
-                <Button variant="secondary" onClick={() => this.changeStateModalEditForm()}>Добавить</Button>
+                <Button variant="secondary" onClick= { () => this.showModalEditForm({
+                    id: '',
+                    type: '',
+                    date: '',
+                    title: '',
+                    whom: '',
+                    employee: '',
+                    summ: '',
+                    expenditure: ''
+                })}>Добавить</Button>
                 <table className="table table-hover table-sm">
                     <thead className="thead-dark">
                     <tr>
-                        <th style={{width: "15%"}}>Дата</th>
+                        <th style={{width: "10%"}}>Дата</th>
+                        <th style={{width: "10%"}}>Тип</th>
                         <th style={{width: "20%"}}>Название</th>
-                        <th style={{width: "25%"}}>Кому</th>
+                        <th style={{width: "25%"}}>Кому/От кого</th>
                         <th style={{width: "15%"}}>Сумма</th>
-                        <th style={{width: "20%"}}>Статья</th>
+                        <th style={{width: "15%"}}>Статья</th>
                         <th style={{width: "5%"}} />
                     </tr>
                     </thead>
@@ -109,22 +128,30 @@ class Transaction extends Component {
                     show={this.state.showModalEditForm}
                     onHide={this.changeStateModalEditForm}
                     id={this.state.id}
+                    type={this.state.type}
                     date={this.state.date}
                     title={this.state.title}
                     whom={this.state.whom}
+                    employee={this.state.employee}
                     summ={this.state.summ}
                     expenditure={this.state.expenditure}
                     all_expenditure={expenditure}
+                    all_employees={allEmployeesList}
                 />
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ transactionsList, expenditureList }) => {
+const mapStateToProps = ({ transactionsList, expenditureList, employeesList }) => {
     const { transaction, loadingTransaction, errorTransaction } = transactionsList;
     const {  expenditure, loadingExpenditure, errorExpenditure } = expenditureList;
-    return { transaction, loadingTransaction, errorTransaction, expenditure, loadingExpenditure, errorExpenditure };
+    const { allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList } = employeesList;
+    return {
+        transaction, loadingTransaction, errorTransaction,
+        expenditure, loadingExpenditure, errorExpenditure,
+        allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList
+    };
 };
 
-export default connect(mapStateToProps, {fetchTransaction, fetchExpenditure})(Transaction);
+export default connect(mapStateToProps, {fetchTransaction, fetchExpenditure, fetchAllEmployeesList})(Transaction);

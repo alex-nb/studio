@@ -59,7 +59,8 @@ class Expenditure extends Component {
                             <a onClick={() => this.showModalEditForm({
                                 id_ex: exp._id,
                                 name_ex: exp.title,
-                                type: exp.type
+                                type: exp.type,
+                                parent_exp: '0'
                             })}>
                                 {exp.title} ({exp.type})</a>
                             <span>{exp.count}</span>
@@ -87,7 +88,12 @@ class Expenditure extends Component {
 
         return (
             <div className="col-md-10 float-right">
-                <Button variant="secondary" onClick={this.changeStateModalEditForm}>Добавить</Button>
+                <Button variant="secondary" onClick={() => this.showModalEditForm({
+                    id_ex: '',
+                    name_ex: '',
+                    type: '',
+                    parent_exp: '0'
+                })}>Добавить</Button>
                 <ul className="category-list">
                     {this._expendituresList()}
                 </ul>

@@ -1,5 +1,5 @@
-import { projectsPageTypes } from './types';
-import { projectsPageAPI } from './api-endpoints';
+import {projectsPageTypes, reportsPageTypes} from './types';
+import {projectsPageAPI} from './api-endpoints';
 
 import axios from 'axios';
 
@@ -70,5 +70,29 @@ export const fetchAllProjects = () => async dispatch => {
     } catch (err) {
         console.error('Get new projects. '+err);
         dispatch(projectsNewError(err));
+    }
+};
+
+export const updateProject = (formData, history) => async dispatch => {
+    console.log(formData);
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const res = await axios.post(projectsPageAPI.UPDATE_PROJECT, formData, config);
+        dispatch({
+            type: projectsPageAPI.UPDATE_PROJECT,
+            payload: res.data
+        });
+        history.push('/projects');
+        //dispatch(setAlert('Post Created', 'success'));
+    } catch (err) {
+        console.error('Update project. '+err);
+        dispatch({
+            type: projectsPageAPI.UPDATE_PROJECT_FAILURE,
+            payload: err
+        });
     }
 };

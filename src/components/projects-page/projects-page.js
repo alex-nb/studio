@@ -10,16 +10,45 @@ import ProjectCard from "./project-card";
 
 class ProjectsPage extends Component {
 
+    state = {
+      costPrNew: 0,
+      costPrProcess: 0,
+      costPrClose: 0,
+    };
+
     componentDidMount() {
         this.props.fetchAllProjects();
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.projectsNew !== this.props.projectsNew && this.state.costPrNew===0) {
+            this.props.projectsNew.map((project) => {
+                this.setState(prevState => ({
+                    costPrNew: project.costTotal ? Number(project.costTotal)+prevState.costPrNew : prevState.costPrNew
+                }));
+            });
+        }
+        if (prevProps.projectsProcess !== this.props.projectsProcess && this.state.costPrProcess===0) {
+            this.props.projectsProcess.map((project) => {
+                this.setState(prevState => ({
+                    costPrProcess: project.costTotal ? Number(project.costTotal)+prevState.costPrProcess : prevState.costPrProcess
+                }));
+            });
+        }
+        if (prevProps.projectsClose !== this.props.projectsClose && this.state.costPrClose===0) {
+            this.props.projectsClose.map((project) => {
+                this.setState(prevState => ({
+                    costPrClose: project.costTotal ? Number(project.costTotal)+prevState.costPrClose : prevState.costPrClose
+                }));
+            });
+        }
+    }
 
     _projectsNewCards() {
         const { projectsNew, loadingNew, errorProjectsNew } = this.props;
         if (loadingNew) return  <Spinner/>;
         if (errorProjectsNew) return  <ErrorMessage/>;
-        return  projectsNew.map((project) => {
+        return projectsNew.map((project) => {
             return <ProjectCard key={project._id} project={project}/>;
         });
     }
@@ -30,7 +59,7 @@ class ProjectsPage extends Component {
         } = this.props;
         if (loadingProcess) return  <Spinner/>;
         if (errorProjectsProcess) return  <ErrorMessage/>;
-        return  projectsProcess.map((project) => {
+        return projectsProcess.map((project) => {
             return <ProjectCard key={project._id} project={project} reports={project.reports}/>;
         });
     }
@@ -41,7 +70,7 @@ class ProjectsPage extends Component {
         } = this.props;
         if (loadingClose) return  <Spinner/>;
         if (errorProjectsClose) return  <ErrorMessage/>;
-        return  projectsClose.map((project) => {
+        return projectsClose.map((project) => {
             return <ProjectCard key={project._id} project={project} reports={project.reports}/>;
         });
     }
@@ -54,7 +83,7 @@ class ProjectsPage extends Component {
         };
         return(
             <div className="col-md-10 float-right">
-                <Projects projects={projects} />
+                <Projects projects={projects} totalCosts={this.state}/>
             </div>
         );
     }
