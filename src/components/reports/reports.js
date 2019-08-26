@@ -178,7 +178,6 @@ class Reports extends Component {
 
     render() {
         const { loadingAllReports, errorAllReports } = this.props;
-        //console.log(this._tableBodyEmployee());
         if (loadingAllReports) return (<div className="col-md-10 float-right"><Spinner/></div>);
         if (errorAllReports) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
