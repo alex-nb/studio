@@ -1,4 +1,4 @@
-import { projectsPageTypes } from '../actions/types';
+import {projectsPageTypes} from '../actions/types';
 
 const initialState = {
     projectsNew: [],
@@ -81,6 +81,35 @@ export default function (state = initialState, action) {
                 projectsClose: [],
                 loadingClose: false,
                 errorProjectsClose: action.payload
+            };
+
+        case projectsPageTypes.UPDATE_PROJECT:
+            return state;
+
+        case projectsPageTypes.UPDATE_PROJECT_FAILURE:
+            return state;
+
+        case projectsPageTypes.CLOSE_PROJECT:
+            return state;
+
+        case projectsPageTypes.CLOSE_PROJECT_FAILURE:
+            return state;
+
+        case projectsPageTypes.ADD_REPORT:
+            return {
+                ...state,
+                projectsProcess: state.projectsProcess.map(project =>
+                    project._id === action.payload._id ? action.payload : project
+                ),
+                loadingProcess: false,
+                errorProjectsProcess: null
+            };
+
+        case projectsPageTypes.ADD_REPORT_FAILURE:
+            return {
+                ...state,
+                loadingProcess: false,
+                errorProjectsProcess: action.payload
             };
 
         default:

@@ -1,4 +1,4 @@
-import {projectsPageTypes, reportsPageTypes} from './types';
+import {projectsPageTypes} from './types';
 import {projectsPageAPI} from './api-endpoints';
 
 import axios from 'axios';
@@ -73,8 +73,28 @@ export const fetchAllProjects = () => async dispatch => {
     }
 };
 
+export const addReport = formData => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const res = await axios.post(projectsPageAPI.ADD_REPORT, formData, config);
+        dispatch({
+            type: projectsPageTypes.ADD_REPORT,
+            payload: res.data.project
+        });
+    } catch (err) {
+        console.error('Add report. '+err);
+        dispatch({
+            type: projectsPageTypes.ADD_REPORT_FAILURE,
+            payload: err
+        });
+    }
+};
+
 export const updateProject = (formData, history) => async dispatch => {
-    console.log(formData);
     try {
         const config = {
             headers: {
@@ -83,15 +103,37 @@ export const updateProject = (formData, history) => async dispatch => {
         };
         const res = await axios.post(projectsPageAPI.UPDATE_PROJECT, formData, config);
         dispatch({
-            type: projectsPageAPI.UPDATE_PROJECT,
-            payload: res.data
+            type: projectsPageTypes.UPDATE_PROJECT,
+            payload: res.data.project
         });
         history.push('/projects');
-        //dispatch(setAlert('Post Created', 'success'));
     } catch (err) {
         console.error('Update project. '+err);
         dispatch({
-            type: projectsPageAPI.UPDATE_PROJECT_FAILURE,
+            type: projectsPageTypes.UPDATE_PROJECT_FAILURE,
+            payload: err
+        });
+    }
+};
+
+export const closeProject = (formData, history) => async  dispatch => {
+    console.log(formData);
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const res = await axios.post(projectsPageAPI.CLOSE_PROJECT, formData, config);
+        dispatch({
+            type: projectsPageTypes.CLOSE_PROJECT,
+            payload: res.data.project
+        });
+        history.push('/projects');
+    } catch (err) {
+        console.error('Close project. '+err);
+        dispatch({
+            type: projectsPageTypes.CLOSE_PROJECT_FAILURE,
             payload: err
         });
     }

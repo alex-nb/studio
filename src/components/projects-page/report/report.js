@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Form, Button, Modal} from "react-bootstrap";
-import {addReport} from "../../../actions/reports";
+import {addReport} from "../../../actions/projects";
 import { connect } from 'react-redux';
 
 class Report extends Component {

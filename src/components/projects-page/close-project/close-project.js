@@ -1,8 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import moment from "moment";
+import {withRouter} from "react-router-dom";
 import {Form,Button, Row, Col} from "react-bootstrap";
-import { getCurrentProject } from '../../../actions/projects';
+import { getCurrentProject, closeProject } from '../../../actions/projects';
 import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
 
@@ -12,6 +13,8 @@ class CloseProject extends Component {
 
     state = {
         summ: {},
+        id: this.props.projectId,
+        dateEnd: moment().format("DD.MM.YYYY")
     };
 
     componentDidMount() {
@@ -22,15 +25,15 @@ class CloseProject extends Component {
         if(Object.keys(this.state.summ).length === 0 && this.props.project.participants) {
             const participants = this.props.project.participants;
             if(participants.length > 0) {
-                participants.map((people) => {
+                participants.forEach((people) => {
                     this.setState(prevState => ({
                         summ: {...prevState.summ, [people._id]: {
                                 premium: 0,
-                                fine: 0
+                                fine: 0,
+                                idDept: people.idDept
                             }
                         },
                     }));
-                    return null;
                 });
             }
         }
@@ -53,14 +56,13 @@ class CloseProject extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log( this.state );
+        this.props.closeProject(this.state, this.props.history);
     };
 
     difference = (dateStr) => {
         if (!dateStr) return {text: "Дата дедлайна не определена"};
         const {premium, fine} = this.props.project;
-        const [day, month, year] = dateStr.split(".");
-        const dateStart = new Date(year, month - 1, day);
+        const dateStart = moment(dateStr, "DD.MM.YYYY");
         const dateEnd = moment();
         const diff = dateEnd.diff(dateStart, 'days');
         if (diff<0) return {text: `Проект завершен раньше на ${Math.abs(diff)} ${this.num2str(Math.abs(diff))}`, diff: Math.abs(diff), premium: premium ? Math.abs(diff)*Number(premium) : 0};
@@ -134,7 +136,7 @@ class CloseProject extends Component {
         return (
             <div className="col-md-10 float-right">
                 <Form onSubmit={this.onSubmit}>
-                    <legend>Закрытие проекта «{project.title}» </legend>
+                    <legend>Завершение проекта «{project.title}» </legend>
                     <p>Дедлайн: <b className="font-weight-bold">{project.deadline}</b></p>
                     <p>Общая стоимость проекта: <b className="font-weight-bold">{project.costTotal}</b></p>
                     <p>Назначенная сумма штрафа: <b className="font-weight-bold">{project.fine}</b></p>
@@ -157,4 +159,4 @@ const mapStateToProps = ({projectsList }) => {
     };
 };
 
-export default connect(mapStateToProps, { getCurrentProject })(CloseProject);
+export default connect(mapStateToProps, { getCurrentProject, closeProject })(withRouter(CloseProject));

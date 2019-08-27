@@ -26,20 +26,6 @@ export default function (state = initialState, action) {
                 errorAllReports: action.payload
             };
 
-        case reportsPageTypes.ADD_REPORT:
-            return {
-                ...state,
-                allReports: [action.payload, ...state.allReports],
-                loadingAllReports: false,
-            };
-
-        case reportsPageTypes.ADD_REPORT_FAILURE:
-            return {
-                ...state,
-                loadingAllReports: false,
-                errorAddReport: action.payload
-            };
-
         default:
             return state;
     }

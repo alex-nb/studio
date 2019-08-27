@@ -22,21 +22,21 @@ class ProjectsPage extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.projectsNew !== this.props.projectsNew && this.state.costPrNew===0) {
-            this.props.projectsNew.map((project) => {
+            this.props.projectsNew.forEach((project) => {
                 this.setState(prevState => ({
                     costPrNew: project.costTotal ? Number(project.costTotal)+prevState.costPrNew : prevState.costPrNew
                 }));
             });
         }
         if (prevProps.projectsProcess !== this.props.projectsProcess && this.state.costPrProcess===0) {
-            this.props.projectsProcess.map((project) => {
+            this.props.projectsProcess.forEach((project) => {
                 this.setState(prevState => ({
                     costPrProcess: project.costTotal ? Number(project.costTotal)+prevState.costPrProcess : prevState.costPrProcess
                 }));
             });
         }
         if (prevProps.projectsClose !== this.props.projectsClose && this.state.costPrClose===0) {
-            this.props.projectsClose.map((project) => {
+            this.props.projectsClose.forEach((project) => {
                 this.setState(prevState => ({
                     costPrClose: project.costTotal ? Number(project.costTotal)+prevState.costPrClose : prevState.costPrClose
                 }));

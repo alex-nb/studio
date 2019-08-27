@@ -115,8 +115,8 @@ class Reports extends Component {
         let reports = [];
         let tableBody = [];
 
-        this.props.allReports.map((project) => {
-            project.reports.map((report) => {
+        this.props.allReports.forEach((project) => {
+            project.reports.forEach((report) => {
                 reports[report.idEmployee._id] =
                     reports[report.idEmployee._id] ?
                         reports[report.idEmployee._id] :

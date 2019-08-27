@@ -29,7 +29,9 @@ export const projectsPageAPI = {
     GET_CLOSE_PROJECTS : '/projects/close',
     GET_ALL_PROJECTS : '/projects',
     GET_PROJECT : '/projects/',
-    UPDATE_PROJECT: '/projects'
+    UPDATE_PROJECT: '/projects',
+    CLOSE_PROJECT: '/projects/close',
+    ADD_REPORT: '/reports'
 };
 
 
@@ -37,8 +39,7 @@ export const projectsPageAPI = {
 /*   Reports page */
 
 export const reportsPageAPI = {
-    GET_ALL_REPORTS : '/reports',
-    ADD_REPORT: '/reports'
+    GET_ALL_REPORTS : '/reports'
 };
 
 

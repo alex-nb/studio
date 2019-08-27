@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import {Form, Col, Button} from "react-bootstrap";
 import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 
 import { fetchCompanyStructure } from "../../../actions/employees";
 import { getCurrentProject, updateProject } from '../../../actions/projects';
@@ -167,8 +168,7 @@ class EditProject extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
-        //updateProject(this.state, this.props.history);
+        this.props.updateProject(this.state, this.props.history);
     };
 
     _chooseEmployee() {
@@ -351,4 +351,4 @@ const mapStateToProps = ({ employeesList, projectsList }) => {
     };
 };
 
-export default connect(mapStateToProps, { fetchCompanyStructure, getCurrentProject, updateProject })(EditProject);
+export default connect(mapStateToProps, { fetchCompanyStructure, getCurrentProject, updateProject })(withRouter(EditProject));
