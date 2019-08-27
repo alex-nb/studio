@@ -117,7 +117,6 @@ export const updateProject = (formData, history) => async dispatch => {
 };
 
 export const closeProject = (formData, history) => async  dispatch => {
-    console.log(formData);
     try {
         const config = {
             headers: {

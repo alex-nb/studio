@@ -60,7 +60,7 @@ class EditProject extends Component {
                     project &&
                     project.infoDepartments &&
                     project.infoDepartments.length > 0) {
-                    infoDepartment = project.infoDepartments.filter(department => department.idDept === deptId);
+                    infoDepartment = project.infoDepartments.find(department => department.idDept === deptId);
                 }
                 if (!loadingProject &&
                     project &&
@@ -74,9 +74,9 @@ class EditProject extends Component {
                                 return {[participant.idEmployee._id]: participant.revenue ? participant.revenue : 0};
                             })
                             : [] },
-                    cost: {...prevState.cost, [deptId]: infoDepartment.length > 0 && infoDepartment[0].cost ? infoDepartment[0].cost :'0'},
-                    hours: {...prevState.hours,[deptId]: infoDepartment.length > 0 && infoDepartment[0].hoursPlan ? infoDepartment[0].hoursPlan :'0'},
-                    rate: {...prevState.rate,[deptId]: infoDepartment.length > 0 && infoDepartment[0].rate ? infoDepartment[0].rate :'0'},
+                    cost: {...prevState.cost, [deptId]: infoDepartment && infoDepartment.cost ? infoDepartment.cost :'0'},
+                    hours: {...prevState.hours,[deptId]: infoDepartment && infoDepartment.hoursPlan ? infoDepartment.hoursPlan :'0'},
+                    rate: {...prevState.rate,[deptId]: infoDepartment && infoDepartment.rate ? infoDepartment.rate :'0'},
                     getDepartmentOrder: true
                 }));
             }
@@ -133,9 +133,9 @@ class EditProject extends Component {
         const idDept = e.target.name;
         let employeesState = this.state.employees[idDept];
         if (e.target.type === "checkbox") {
-            const employee = employeesState.filter(employees => idEmp in employees);
-            if (employee.length === 0) employeesState.push({[idEmp]: 0});
-            else employeesState.splice(employeesState.indexOf(employee[0]), 1);
+            const employee = employeesState.find(employees => idEmp in employees);
+            if (!employee) employeesState.push({[idEmp]: 0});
+            else employeesState.splice(employeesState.indexOf(employee), 1);
             this.setState( prevState => ({ employees:
                         {...prevState.employees, [idDept]: employeesState }
                 })
@@ -155,8 +155,8 @@ class EditProject extends Component {
         const idDept = name.split("-")[0];
         const idEmp = name.split("-")[1];
         let employeesState = this.state.employees[idDept];
-        const employee = employeesState.filter(employees => idEmp in employees);
-        employeesState[employeesState.indexOf(employee[0])][idEmp] = value;
+        const employee = employeesState.find(employees => idEmp in employees);
+        employeesState[employeesState.indexOf(employee)][idEmp] = value;
         this.setState( prevState => ({
             employees: {
                 ...prevState.employees,
@@ -168,7 +168,7 @@ class EditProject extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        this.props.updateProject(this.state, this.props.history);
+        this.props.updateProject (this.state, this.props.history);
     };
 
     _chooseEmployee() {
@@ -180,9 +180,9 @@ class EditProject extends Component {
 
             const employeesDept = (type && departments[dept].employeesIds) ? departments[dept].employeesIds.map((empId) => {
                 const employeesInState = this.state.employees[dept] ?
-                    this.state.employees[dept].filter(employee => employees[empId].idBase in employee)
+                    this.state.employees[dept].find(employee => employees[empId].idBase in employee)
                     : [];
-                const revenue = employeesInState[0] && employeesInState[0][employees[empId].idBase] ? employeesInState[0][employees[empId].idBase] : 0;
+                const revenue = employeesInState && employeesInState[employees[empId].idBase] ? employeesInState[employees[empId].idBase] : 0;
                 return (
                     <Form.Row key={employees[empId].id}>
                         <Form.Group as={Col} md="1">
@@ -192,7 +192,7 @@ class EditProject extends Component {
                                     name={dept}
                                     value={employees[empId].idBase}
                                     onChange={this.onCheckboxChange}
-                                    checked={ employeesInState.length > 0 }
+                                    checked={!!employeesInState}
                                 />
                                 <img alt={employees[empId].name} className="employee-img" src={employees[empId].img} title={employees[empId].name}/>
                             </Form.Check.Label>
@@ -203,7 +203,7 @@ class EditProject extends Component {
                         <Form.Group as={Col} md="2">
                             <Form.Control
                                 type="number"
-                                disabled={!employeesInState.length > 0}
+                                disabled={!employeesInState}
                                 name={`${dept}-${employees[empId].idBase}`}
                                 value={revenue}
                                 onChange={this.changeRevenue}

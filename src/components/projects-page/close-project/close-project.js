@@ -28,6 +28,7 @@ class CloseProject extends Component {
                 participants.forEach((people) => {
                     this.setState(prevState => ({
                         summ: {...prevState.summ, [people._id]: {
+                                revenue: people.revenue,
                                 premium: 0,
                                 fine: 0,
                                 idDept: people.idDept

@@ -84,16 +84,36 @@ export default function (state = initialState, action) {
             };
 
         case projectsPageTypes.UPDATE_PROJECT:
-            return state;
+            return {
+                ...state,
+                project: action.payload,
+                loadingProject: false,
+                errorProject: null
+            };
 
         case projectsPageTypes.UPDATE_PROJECT_FAILURE:
-            return state;
+            return {
+                ...state,
+                project: {},
+                loadingProject: false,
+                errorProject: action.payload
+            };
 
         case projectsPageTypes.CLOSE_PROJECT:
-            return state;
+            return {
+                ...state,
+                project: action.payload,
+                loadingProject: false,
+                errorProject: null
+            };
 
         case projectsPageTypes.CLOSE_PROJECT_FAILURE:
-            return state;
+            return {
+                ...state,
+                project: {},
+                loadingProject: false,
+                errorProject: action.payload
+            };
 
         case projectsPageTypes.ADD_REPORT:
             return {
