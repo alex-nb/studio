@@ -13,10 +13,10 @@ class Expenditure extends Component {
 
     state = {
         showModalEditForm: false,
-        id_ex: '',
-        name_ex: '',
+        id: '',
+        name: '',
         type: '',
-        parent_exp: '0'
+        parent: '0'
     };
 
     componentDidMount() {
@@ -29,10 +29,10 @@ class Expenditure extends Component {
 
     showModalEditForm = (expenditure) => {
         this.setState({
-            id_ex: expenditure.id_ex,
-            name_ex: expenditure.name_ex,
+            id: expenditure.id,
+            name: expenditure.name,
             type: expenditure.type,
-            parent_exp: expenditure.parent_exp ? expenditure.parent_exp : null,
+            parent: expenditure.parent ? expenditure.parent : null,
             showModalEditForm: true
         });
     };
@@ -46,10 +46,10 @@ class Expenditure extends Component {
                         return (
                             <li key={expChild._id}>
                                 <a onClick={() => this.showModalEditForm({
-                                    id_ex: expChild._id,
-                                    name_ex: expChild.title,
+                                    id: expChild._id,
+                                    name: expChild.title,
                                     type: expChild.type,
-                                    parent_exp: expChild.idExpParent
+                                    parent: expChild.idExpParent
                                 })}>
                                     {expChild.title} ({expChild.type})</a>
                                 <span>{expChild.count}</span></li>);
@@ -57,10 +57,10 @@ class Expenditure extends Component {
                     return (
                         <li key={exp._id}>
                             <a onClick={() => this.showModalEditForm({
-                                id_ex: exp._id,
-                                name_ex: exp.title,
+                                id: exp._id,
+                                name: exp.title,
                                 type: exp.type,
-                                parent_exp: '0'
+                                parent: '0'
                             })}>
                                 {exp.title} ({exp.type})</a>
                             <span>{exp.count}</span>
@@ -89,10 +89,10 @@ class Expenditure extends Component {
         return (
             <div className="col-md-10 float-right">
                 <Button variant="secondary" onClick={() => this.showModalEditForm({
-                    id_ex: '',
-                    name_ex: '',
+                    id: '',
+                    name: '',
                     type: '',
-                    parent_exp: '0'
+                    parent: '0'
                 })}>Добавить</Button>
                 <ul className="category-list">
                     {this._expendituresList()}
@@ -100,10 +100,10 @@ class Expenditure extends Component {
                 <EditExpenditure
                     show={this.state.showModalEditForm}
                     onHide={this.changeStateModalEditForm}
-                    name_ex={this.state.name_ex}
-                    id_ex={this.state.id_ex}
+                    name={this.state.name}
+                    id={this.state.id}
                     type={this.state.type}
-                    parent_exp={this.state.parent_exp}
+                    parent={this.state.parent}
                     expenditures={expenditure.filter(exp => !exp.idExpParent || exp.idExpParent === '')}
                 />
             </div>

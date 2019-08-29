@@ -14,7 +14,7 @@ class LeftMenu extends Component {
     };
 
     isActive(value) {
-        return ((value===this.state.selected) ?'active':'');
+        return ((value===this.state.selected) ? 'active':'');
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -24,7 +24,7 @@ class LeftMenu extends Component {
     render() {
         return (
             <ListGroup className="col-md-2">
-                <ListGroup.Item as={Link} to="/projects/" eventKey="projects" >
+                <ListGroup.Item className={this.isActive('projects')} as={Link} to="/projects/" eventKey="projects" >
                     Проекты
                 </ListGroup.Item>
                 <ListGroup.Item className={this.isActive('employees')} as={Link} to="/employees" eventKey="employees" >

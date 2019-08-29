@@ -23,7 +23,10 @@ class Routes extends Component {
             <Switch>
                 <Route path="/login" exact component={LoginPage}/>
                 <Route path="/signup" exact component={SignupPage}/>
-                <PrivateRoute path="/" exact component={Welcome}/>
+                <PrivateRoute path="/" exact component={() => {
+                    this.props.changeSelected('');
+                    return <Welcome/>;
+                }}/>
                 <PrivateRoute path="/projects" exact component={() => {
                     this.props.changeSelected('projects');
                     return <ProjectsPage />;

@@ -1,5 +1,5 @@
-import { transactionsPageTypes } from './types';
-import { transactionsPageAPI } from './api-endpoints';
+import {transactionsPageTypes} from './types';
+import {transactionsPageAPI} from './api-endpoints';
 
 import axios from 'axios';
 
@@ -20,5 +20,27 @@ export const fetchTransaction = () => async dispatch => {
     } catch (err) {
         console.error('Get transactions list. '+err);
         dispatch(transactionError(err));
+    }
+};
+
+export const updateTransaction = (formData) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const res = await axios.post(transactionsPageAPI.UPDATE_TRANSACTION, formData, config);
+        dispatch({
+            type: transactionsPageTypes.UPDATE_TRANSACTION,
+            payload: res.data.transaction
+        });
+    }
+    catch (err) {
+        console.error('Update transaction. '+err);
+        dispatch({
+            type: transactionsPageTypes.UPDATE_TRANSACTION_FAILURE,
+            payload: err
+        });
     }
 };

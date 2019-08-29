@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
+import {connect} from "react-redux";
+import {updateTransaction} from "../../actions/transactions";
 
 
-export default class EditTransaction extends Component {
+class EditTransaction extends Component {
 
     state = {
         id: '',
         type: 'income',
-        date: '',
         title: '',
         whom: '',
         summ: '',
-        expenditure: '',
+        exp_id: '',
         employee: ''
     };
 
@@ -21,7 +22,7 @@ export default class EditTransaction extends Component {
         if(prevProps.type !== this.props.type) this.setState({type: this.props.type});
         if(prevProps.whom !== this.props.whom) this.setState({whom: this.props.whom});
         if(prevProps.summ !== this.props.summ) this.setState({summ: this.props.summ});
-        if(prevProps.expenditure !== this.props.expenditure) this.setState({expenditure: this.props.expenditure});
+        if(prevProps.exp_id !== this.props.exp_id) this.setState({exp_id: this.props.exp_id});
         if(prevProps.employee !== this.props.employee) this.setState({employee: this.props.employee});
         if(prevProps.date !== this.props.date) {
             let date;
@@ -34,6 +35,9 @@ export default class EditTransaction extends Component {
             date = [date.getFullYear(), month, day].join('-');
             this.setState({date: date});
         }
+        if(prevState.type !== this.state.type) {
+            this.setState({exp_id: '', employee: ''});
+        }
     }
 
     onChange = (e) => {
@@ -45,6 +49,7 @@ export default class EditTransaction extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
+        this.props.updateTransaction(this.state);
         this.props.onHide();
     };
 
@@ -52,7 +57,7 @@ export default class EditTransaction extends Component {
         let all_expenditure = null;
         if (this.props.all_expenditure) {
             all_expenditure = this.props.all_expenditure.map((expend) => {
-                return (<option key={expend._id}>{expend.title}</option>);
+                return (<option key={expend._id} value={expend._id}>{expend.title}</option>);
             });
         }
         return (
@@ -60,10 +65,11 @@ export default class EditTransaction extends Component {
                 <Form.Label>Статья</Form.Label>
                 <Form.Control as="select"
                               required
-                              name="expenditure"
-                              value={this.state.expenditure}
+                              name="exp_id"
+                              value={this.state.exp_id}
                               onChange={this.onChange}
                 >
+                    <option/>
                     {all_expenditure}
                 </Form.Control>
             </Form.Group>
@@ -81,12 +87,11 @@ export default class EditTransaction extends Component {
             <Form.Group>
                 <Form.Label>Сотрудник</Form.Label>
                 <Form.Control as="select"
-                              required
                               name="employee"
                               value={this.state.employee}
                               onChange={this.onChange}
                 >
-                    <option></option>
+                    <option/>
                     {all_employees}
                 </Form.Control>
             </Form.Group>
@@ -94,6 +99,7 @@ export default class EditTransaction extends Component {
     };
 
     render() {
+        console.log(this.state);
         return (
             <Modal
                 {...this.props}
@@ -114,15 +120,6 @@ export default class EditTransaction extends Component {
                             name="id"
                             value={this.state.id}
                         />
-                        <Form.Group>
-                            <Form.Label>Дата</Form.Label>
-                            <Form.Control
-                                required type="date"
-                                name="date"
-                                value={this.state.date}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
                         <Form.Group>
                             <Form.Label>Тип операции</Form.Label>
                             <Form.Control as="select"
@@ -173,4 +170,6 @@ export default class EditTransaction extends Component {
             </Modal>
         );
     }
-};
+}
+
+export default connect(null, {updateTransaction})(EditTransaction);

@@ -5,7 +5,6 @@ import Button from 'react-bootstrap/Button';
 
 const BalanceHistory = (props) => {
     const {balanceHistory, ...modalProps} = props;
-
     return (
         <Modal
             {...modalProps}
@@ -25,17 +24,19 @@ const BalanceHistory = (props) => {
                         <th scope="col">Дата</th>
                         <th scope="col">Выдано</th>
                         <th scope="col">Начислено</th>
-                        <th scope="col">Баланс</th>
+                        <th scope="col">Наименование</th>
                     </tr>
                     </thead>
                     <tbody>
-                        {balanceHistory.map((record) => {
+                        {balanceHistory && balanceHistory.map((record) => {
+                            let date = new Date(record.createdAt);
+                            date = ("0" + date.getDate()).slice(-2)+"."+("0" + (date.getMonth() + 1)).slice(-2)+"."+date.getFullYear();
                             return (
-                                <tr key={record.id}>
-                                    <th scope="row">{record.date}</th>
-                                    <td>{record.spending}</td>
-                                    <td>{record.arrival}</td>
-                                    <td>{record.balance}</td>
+                                <tr key={record._id}>
+                                    <th scope="row">{date}</th>
+                                    <td>{record.type==="expense" ? record.summ : null}</td>
+                                    <td>{record.type==="income" ? record.summ : null}</td>
+                                    <td>{record.title}</td>
                                 </tr>
                             );
                         })}

@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
+import {updateExpenditure} from "../../actions/expenditure";
+import {connect} from "react-redux";
 
-
-export default class EditExpenditure extends Component {
+class EditExpenditure extends Component {
 
     state = {
-        name_ex: '',
-        id_ex: '',
-        type: '',
-        parent_exp: ''
+        name: '',
+        id: '',
+        type: 'орех',
+        parent: ''
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.name_ex !== this.props.name_ex) this.setState({name_ex: this.props.name_ex});
-        if(prevProps.id_ex !== this.props.id_ex) this.setState({id_ex: this.props.id_ex});
+        if(prevProps.name !== this.props.name) this.setState({name: this.props.name});
+        if(prevProps.id !== this.props.id) this.setState({id: this.props.id});
         if(prevProps.type !== this.props.type) this.setState({type: this.props.type});
-        if(prevProps.parent_exp !== this.props.parent_exp) this.setState({parent_exp: this.props.parent_exp});
+        if(prevProps.parent !== this.props.parent) this.setState({parent: this.props.parent});
     }
 
     onChange = (e) => {
@@ -26,7 +27,7 @@ export default class EditExpenditure extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        this.props.updateExpenditure(this.state);
         this.props.onHide();
     };
 
@@ -57,15 +58,15 @@ export default class EditExpenditure extends Component {
                     <Modal.Body>
                         <Form.Control
                             required type="hidden"
-                            name="id_ex"
-                            value={this.state.id_ex}
+                            name="id"
+                            value={this.state.id}
                         />
                         <Form.Group>
                             <Form.Label>Название</Form.Label>
                             <Form.Control
                                 required type="text" placeholder="Название статьи"
-                                name="name_ex"
-                                value={this.state.name_ex}
+                                name="name"
+                                value={this.state.name}
                                 onChange={this.onChange}
                             />
                         </Form.Group>
@@ -84,8 +85,8 @@ export default class EditExpenditure extends Component {
                         <Form.Group>
                             <Form.Label>Родительская статья</Form.Label>
                             <Form.Control as="select"
-                                          name="parentExp"
-                                          value={this.state.parent_exp}
+                                          name="parent"
+                                          value={this.state.parent}
                                           onChange={this.onChange}
                             >
                                 <option value="0"/>
@@ -101,4 +102,6 @@ export default class EditExpenditure extends Component {
             </Modal>
         );
     }
-};
+}
+
+export default connect(null, {updateExpenditure})(EditExpenditure);

@@ -1,35 +1,27 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import {createRequest} from "../../actions/requests";
+import {connect} from "react-redux";
 
-
-export default class AskMoney extends Component {
+class AskMoney extends Component {
 
     state = {
         money: '',
         time: ''
     };
 
-    onTimeChange = (e) => {
+    onChange = (e) => {
         this.setState({
-            time: e.target.value
+            [e.target.name]: e.target.value
         });
-    };
-
-    onMoneyChange = (e) => {
-        this.setState({
-            money: e.target.value
-        })
     };
 
     onSubmit = (e) => {
         e.preventDefault();
-        const { time, money } = this.state;
-        console.log(time, money);
+        this.props.createRequest(this.state);
         this.setState({ time: '', money: '' });
         this.props.onHide();
-        /*const cb = this.props.onItemAdded || (() => {});
-        cb(label);*/
     };
 
     render() {
@@ -54,14 +46,14 @@ export default class AskMoney extends Component {
                                 <input className="form-control" name="time" aria-describedby="describe"
                                        type="date" required
                                        value={this.state.time}
-                                       onChange={this.onTimeChange}/>
+                                       onChange={this.onChange}/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="money">Сколько денег</label>
                                 <input className="form-control" name="money" aria-describedby="describe"
                                        type="text" required
                                        value={this.state.money}
-                                       onChange={this.onMoneyChange}/>
+                                       onChange={this.onChange}/>
                             </div>
                         </fieldset>
                     </Modal.Body>
@@ -73,4 +65,6 @@ export default class AskMoney extends Component {
             </Modal>
         );
     }
-};
+}
+
+export default connect(null, {createRequest})(AskMoney);

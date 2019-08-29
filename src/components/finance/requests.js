@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import {fetchRequestsMoney} from '../../actions/requests';
+import {fetchRequestsMoney, setAnswerRequest} from '../../actions/requests';
 
 import './finance.css';
 
@@ -30,10 +30,19 @@ class Requests extends Component {
                     <td>{request.dateUntil}</td>
                     <td>{request.sum}</td>
                     <td>
-                        <ButtonGroup size="sm">
-                            <Button variant="success">Выдано</Button>
-                            <Button variant="danger">Отказано</Button>
-                        </ButtonGroup>
+                        {request.status ==='granted' ?
+                            <Button variant="success" disabled><i className="fas fa-check fa-actions"/></Button> :
+                            request.status === 'denied' ?
+                                <Button variant="danger" disabled><i className="fas fa-times fa-actions"/></Button> :
+                                <ButtonGroup size="sm">
+                                    <Button variant="success" onClick={() => {
+                                        this.props.setAnswerRequest({id: request._id, status: "granted"})
+                                    }}>Выдано</Button>
+                                    <Button variant="danger" onClick={() => {
+                                        this.props.setAnswerRequest({id: request._id, status: "denied"})
+                                    }}>Отказано</Button>
+                                </ButtonGroup>
+                        }
                     </td>
                 </tr>
             );
@@ -74,4 +83,4 @@ const mapStateToProps = ({ requestsList }) => {
 };
 
 
-export default connect(mapStateToProps, {fetchRequestsMoney})(Requests);
+export default connect(mapStateToProps, {fetchRequestsMoney, setAnswerRequest})(Requests);

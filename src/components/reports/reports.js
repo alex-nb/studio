@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ButtonGroup, Button, Collapse, Form, Table, Row,Col } from "react-bootstrap";
 import { connect } from 'react-redux';
-import {fetchAllReports} from '../../actions/reports';
+import {fetchAllReports, updateReport} from '../../actions/reports';
 import RejectedReport from "./rejected-report";
 
 import './reports.css';
@@ -61,7 +61,7 @@ class Reports extends Component {
                         <td/>
                         <td/>
                         <td/>
-                        <td title="план./факт. (не принятые)">
+                        <td title="факт./план. (не принятые)">
                             {project.hoursFact}/{project.hoursPlan} ({project.hoursBad ? project.hoursBad : 0})
                         </td>
                         <td/>
@@ -77,8 +77,12 @@ class Reports extends Component {
                                     report.idReport.status === 'neutral' ?
                                         <Button variant="primary" disabled><i className="fas fa-minus fa-actions"/></Button> :
                                         <ButtonGroup size="sm">
-                                            <Button variant="success"><i className="fas fa-check fa-actions"/></Button>
-                                            <Button variant="primary"><i className="fas fa-minus fa-actions"/></Button>
+                                            <Button variant="success" onClick={() => {
+                                                this.props.updateReport({id: report.idReport._id, action: "accept"})
+                                            }}><i className="fas fa-check fa-actions"/></Button>
+                                            <Button variant="primary" onClick={() => {
+                                                this.props.updateReport({id: report.idReport._id, action: "mark"})
+                                            }}><i className="fas fa-minus fa-actions"/></Button>
                                             <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
                                                 <i className="fas fa-times fa-actions"/>
                                             </Button>
@@ -136,14 +140,14 @@ class Reports extends Component {
                 reports[report.idEmployee._id].allHoursWork = report.idReport.hoursWork ?
                     reports[report.idEmployee._id].allHoursWork+Number(report.idReport.hoursWork)
                     : reports[report.idEmployee._id].allHoursWork;
-                reports[report.idEmployee._id].allAcceptedHoursWork = report.idReport.allAcceptedHoursWork ?
-                    reports[report.idEmployee._id].allAcceptedHoursWork+Number(report.idReport.allAcceptedHoursWork)
+                reports[report.idEmployee._id].allAcceptedHoursWork = report.idReport.acceptedHoursWork ?
+                    reports[report.idEmployee._id].allAcceptedHoursWork+Number(report.idReport.acceptedHoursWork)
                     : reports[report.idEmployee._id].allAcceptedHoursWork;
-                reports[report.idEmployee._id].allHoursStudy = report.idReport.allHoursStudy ?
-                    reports[report.idEmployee._id].allHoursStudy+Number(report.idReport.allHoursStudy)
+                reports[report.idEmployee._id].allHoursStudy = report.idReport.hoursStudy ?
+                    reports[report.idEmployee._id].allHoursStudy+Number(report.idReport.hoursStudy)
                     : reports[report.idEmployee._id].allHoursStudy;
-                reports[report.idEmployee._id].allAcceptedHoursStudy = report.idReport.allAcceptedHoursStudy ?
-                    reports[report.idEmployee._id].allAcceptedHoursStudy+Number(report.idReport.allAcceptedHoursStudy)
+                reports[report.idEmployee._id].allAcceptedHoursStudy = report.idReport.acceptedHoursStudy ?
+                    reports[report.idEmployee._id].allAcceptedHoursStudy+Number(report.idReport.acceptedHoursStudy)
                     : reports[report.idEmployee._id].allAcceptedHoursStudy;
 
                 reports[report.idEmployee._id].reports.push({
@@ -206,9 +210,13 @@ class Reports extends Component {
                                 report.idReport.status === 'neutral' ?
                                     <Button variant="primary" disabled><i className="fas fa-minus fa-actions"/></Button> :
                                     <ButtonGroup size="sm">
-                                        <Button variant="success"><i className="fas fa-check fa-actions"/></Button>
-                                        <Button variant="primary"><i className="fas fa-minus fa-actions"/></Button>
-                                        <Button variant="danger" onClick={() => this.showModalReject(report.idReport._id)}>
+                                        <Button variant="success" onClick={() => {
+                                            this.props.updateReport({id: report.idReport._id, action: "accept"})
+                                        }}><i className="fas fa-check fa-actions"/></Button>
+                                        <Button variant="primary" onClick={() => {
+                                            this.props.updateReport({id: report.idReport._id, action: "mark"})
+                                        }}><i className="fas fa-minus fa-actions"/></Button>
+                                        <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
                                             <i className="fas fa-times fa-actions"/>
                                         </Button>
                                     </ButtonGroup>;
@@ -285,4 +293,4 @@ const mapStateToProps = ({ reportsList }) => {
     return { allReports, loadingAllReports, errorAllReports };
 };
 
-export default connect(mapStateToProps, {fetchAllReports})(Reports);
+export default connect(mapStateToProps, {fetchAllReports, updateReport})(Reports);

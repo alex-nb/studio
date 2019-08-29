@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
+import {updateReport} from '../../actions/reports';
+import {connect} from "react-redux";
 
-export default class RejectedReport extends Component {
+class RejectedReport extends Component {
     state = {
         acceptedHoursWork: 0,
         acceptedHoursStudy: 0,
         reason: '',
-        idReport: ''
+        id: '',
+        action: 'reject'
     };
 
     componentDidUpdate(prevProps) {
-        if(prevProps.id_report !== this.props.id_report) this.setState({idReport: this.props.id_report})
+        if(prevProps.id_report !== this.props.id_report) this.setState({id: this.props.id_report})
     }
 
     onChange = (e) => {
@@ -22,6 +25,7 @@ export default class RejectedReport extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         console.log(this.state);
+        this.props.updateReport(this.state);
         this.props.onHide();
     };
 
@@ -43,8 +47,8 @@ export default class RejectedReport extends Component {
                     <Modal.Body>
                         <Form.Control
                             required type="hidden"
-                            name="idReport"
-                            value={this.state.idReport}
+                            name="id"
+                            value={this.state.id}
                         />
                         <Form.Group>
                             <Form.Label>Количество принятых часов работы</Form.Label>
@@ -68,6 +72,7 @@ export default class RejectedReport extends Component {
                             <Form.Label>Причина</Form.Label>
                             <Form.Control
                                 as="textarea" rows="10"
+                                required
                                 onChange={this.onChange}
                                 name="reason"
                                 value={this.state.reason}
@@ -83,3 +88,5 @@ export default class RejectedReport extends Component {
         )
     }
 }
+
+export default connect(null, {updateReport})(RejectedReport);

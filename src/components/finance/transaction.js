@@ -23,7 +23,7 @@ class Transaction extends Component {
         whom: '',
         employee: '',
         summ: '',
-        expenditure: ''
+        exp_id: ''
     };
 
     componentDidMount() {
@@ -45,7 +45,7 @@ class Transaction extends Component {
             whom: transaction.whom,
             employee: transaction.employee,
             summ: transaction.summ,
-            expenditure: transaction.expenditure,
+            exp_id: transaction.exp_id,
             showModalEditForm: true
         });
     };
@@ -70,13 +70,12 @@ class Transaction extends Component {
                     <td>
                         <Button variant="secondary" onClick= { () => this.showModalEditForm({
                             id: trans._id,
-                            date: trans.createdAt,
                             type: trans.type,
                             title: trans.title,
                             whom: trans.whom ? trans.whom : '',
                             employee: trans.idEmployee ? trans.idEmployee._id : '',
                             summ: trans.summ,
-                            expenditure: trans.expenditure ? trans.expenditure.title : ""
+                            exp_id: trans.expenditure ? trans.expenditure.idExp : ""
                         })}>
                             <i className="fas fa-edit fa-actions"/>
                         </Button>
@@ -101,12 +100,11 @@ class Transaction extends Component {
                 <Button variant="secondary" onClick= { () => this.showModalEditForm({
                     id: '',
                     type: '',
-                    date: '',
                     title: '',
                     whom: '',
                     employee: '',
                     summ: '',
-                    expenditure: ''
+                    exp_id: ''
                 })}>Добавить</Button>
                 <table className="table table-hover table-sm">
                     <thead className="thead-dark">
@@ -129,12 +127,11 @@ class Transaction extends Component {
                     onHide={this.changeStateModalEditForm}
                     id={this.state.id}
                     type={this.state.type}
-                    date={this.state.date}
                     title={this.state.title}
                     whom={this.state.whom}
                     employee={this.state.employee}
                     summ={this.state.summ}
-                    expenditure={this.state.expenditure}
+                    exp_id={this.state.exp_id}
                     all_expenditure={expenditure}
                     all_employees={allEmployeesList}
                 />

@@ -18,7 +18,8 @@ export const employeesPageAPI = {
 
 
 export const expendituresPageAPI = {
-    GET_EXPENDITURE : '/finance/expenditure'
+    GET_EXPENDITURE : '/finance/expenditure',
+    UPDATE_EXPENDITURE: '/finance/expenditure',
 };
 
 /*   Projects page */
@@ -39,26 +40,30 @@ export const projectsPageAPI = {
 /*   Reports page */
 
 export const reportsPageAPI = {
-    GET_ALL_REPORTS : '/reports'
+    GET_ALL_REPORTS : '/reports',
+    UPDATE_REPORT: '/reports/update',
 };
 
 
 /*   Requests money page */
 
 export const requestsMoneyPageAPI = {
-    GET_REQUESTS_MONEY : '/finance/request'
+    GET_REQUESTS_MONEY : '/finance/request',
+    SET_ANSWER_REQUEST: '/finance/request/answer',
+    CREATE_REQUEST_MONEY: '/finance/request'
 };
 
 
 /*   Transactions page */
 
 export const transactionsPageAPI = {
-    GET_TRANSACTIONS : '/finance/transaction'
+    GET_TRANSACTIONS : '/finance/transaction',
+    UPDATE_TRANSACTION : '/finance/transaction'
 };
 
 
 /*   Header */
 
 export const headerPageAPI = {
-    GET_PERSONAL_INFO : ''
+    GET_PERSONAL_INFO : '/employees/person'
 };
