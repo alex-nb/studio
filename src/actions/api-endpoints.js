@@ -10,7 +10,8 @@ export const authAPI = {
 
 export const employeesPageAPI = {
     GET_DEPARTMENTS_STRUCTURE : '/employees/departments',
-    GET_ALL_EMPLOYEES : '/employees'
+    GET_ALL_EMPLOYEES : '/employees',
+    ADD_EMPLOYEE: '/employees'
 };
 
 

@@ -18,22 +18,6 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
-        /*case 'EMPLOYEE_NEW_ADD':
-            console.log("reducer EMPLOYEE_NEW_ADD");
-            console.log(action.payload);
-            const newEmployee = {
-                id: 8,
-                name: `${action.payload.lastName} ${action.payload.firstName} ${action.payload.secondName}`,
-            };
-            console.log(newEmployee);
-            return {
-                ...state,
-                allEmployeesList: [
-                    ...state.allEmployeesList,
-                    newEmployee
-                ],
-            };*/
-
         case employeesPageTypes.EMPLOYEES_GET:
             return {
                 ...state,
@@ -96,6 +80,45 @@ export default function (state = initialState, action) {
                 allEmployeesList: [],
                 loadingAllEmployeesList: false,
                 errorAllEmployeesList: action.payload
+            };
+
+        case employeesPageTypes.ADD_EMPLOYEE:
+            const {_id, employees} = action.payload;
+            const employee = employees.pop();
+            console.log(employee);
+            console.log(_id);
+            const i = Object.keys(state.employees).length+1;
+            console.log(i);
+            console.log(state);
+            console.log(action.payload);
+
+            return {
+                ...state,
+                departments: {
+                  ...state.departments,
+                  [_id]: {
+                      ...state.departments[_id],
+                      employeesIds: [
+                          ...state.departments[_id].employeesIds,
+                          i
+                      ]
+                  }
+                },
+                employees: {
+                    ...state.employees,
+                    [i]: {
+                        id: i,
+                        name: employee.idEmp.name,
+                        idBase: employee.idEmp._id,
+                        img: employee.idEmp.img
+                    }
+                }
+            };
+
+        case employeesPageTypes.ADD_EMPLOYEE_FAILURE:
+            return {
+                ...state,
+                errorEmployees: action.payload
             };
 
         default:

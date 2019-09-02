@@ -139,7 +139,6 @@ export const closeProject = (formData, history) => async  dispatch => {
 };
 
 export const startProject = (id) => async dispatch => {
-    console.log(id);
     try {
         const config = {
             headers: {

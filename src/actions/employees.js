@@ -1,5 +1,5 @@
-import { employeesPageTypes } from './types';
-import { employeesPageAPI } from './api-endpoints';
+import {employeesPageTypes} from './types';
+import {employeesPageAPI} from './api-endpoints';
 
 import axios from "axios";
 
@@ -57,16 +57,16 @@ export const fetchAllEmployeesList = () => async dispatch => {
 };
 
 export const fetchCompanyStructure = () => async dispatch => {
+    console.log('fetch');
     try {
         const res = await axios.get(employeesPageAPI.GET_DEPARTMENTS_STRUCTURE);
         let employees = {}, departments = {}, departmentsOrder = [];
-        let i=1;
         await res.data.departmentsStructure.map(async dept => {
             let listEmployees = [];
             departmentsOrder[dept.orderNum-1] = dept._id;
             if (dept.employees && dept.employees.length !== 0) {
                 await dept.employees.map(emp => {
-                    //const imgPath = '../'+emp.idEmp.img;
+                    let i = Object.keys(employees).length+1;
                     employees = {
                         ...employees,
                         [i]: {
@@ -77,7 +77,6 @@ export const fetchCompanyStructure = () => async dispatch => {
                         }
                     };
                     listEmployees.push(i);
-                    i++;
                     return null;
                 });
             }
@@ -105,5 +104,26 @@ export const fetchCompanyStructure = () => async dispatch => {
     } catch (err) {
         console.error('Get all employees list. '+err);
         dispatch(allEmployeesListError(err));
+    }
+};
+
+export const addEmployee = (formData) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const res = await axios.post(employeesPageAPI.ADD_EMPLOYEE, formData, config);
+        dispatch({
+            type: employeesPageTypes.ADD_EMPLOYEE,
+            payload: res.data.department
+        });
+    } catch (err) {
+        console.error('Add employee. '+err);
+        dispatch({
+            type: employeesPageTypes.ADD_EMPLOYEE_FAILURE,
+            payload: err
+        });
     }
 };

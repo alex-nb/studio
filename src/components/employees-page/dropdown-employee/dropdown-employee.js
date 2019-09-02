@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { FormControl, Dropdown } from 'react-bootstrap';
-
+import {addEmployee} from "../../../actions/employees";
+import {connect} from "react-redux";
 import './dropdown-employee.css';
 import {Link} from "react-router-dom";
 
@@ -69,8 +70,9 @@ class CustomMenu extends Component {
     }
 }
 
-export default class DropdownEmployee extends Component {
+class DropdownEmployee extends Component {
     render () {
+        const {allEmployees, dept, addEmployee} = this.props;
         return (
             <Dropdown>
                 <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
@@ -78,8 +80,11 @@ export default class DropdownEmployee extends Component {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu as={CustomMenu}>
-                    {this.props.allEmployees.map(
-                        (employee) => (<Dropdown.Item key={employee._id} eventKey={employee._id} >{employee.name}</Dropdown.Item>)
+                    {allEmployees.map(
+                        (employee) => (<Dropdown.Item key={employee._id} eventKey={employee._id} onClick={() => {
+                            addEmployee({idEmp: employee._id, idDept:dept});
+                        }}
+                        >{employee.name}</Dropdown.Item>)
                     )}
                     <Dropdown.Divider> </Dropdown.Divider>
                     <Dropdown.Item as={Link} to="/create_employee" eventKey="0" >New</Dropdown.Item>
@@ -89,3 +94,4 @@ export default class DropdownEmployee extends Component {
     };
 }
 
+export default connect(null, {addEmployee})(DropdownEmployee);

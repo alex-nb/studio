@@ -27,6 +27,8 @@ export default class DragDropList extends Component {
             const newDepartmentOrder = Array.from(this.state.departmentOrder);
             newDepartmentOrder.splice(source.index, 1);
             newDepartmentOrder.splice(destination.index, 0, draggableId);
+//---------------------------------------------------------------------------------------------------------ИЗМЕНЕНИЕ ПОРЯДКА ОТДЕЛОВ
+            console.log(newDepartmentOrder);
 
             const newState = {
               ...this.state,
@@ -68,6 +70,8 @@ export default class DragDropList extends Component {
             ...start,
             employeesIds: startEmployeesIds
         };
+//---------------------------------------------------------------------------------------------------------ИЗМЕНЕНИЕ ОТДЕЛА ИЗ
+        console.log(newStart);
 
         const finishEmployeesIds = Array.from(finish.employeesIds);
         const draggableIdBase = this.state.employees[draggableId].idBase;
@@ -79,6 +83,8 @@ export default class DragDropList extends Component {
             ...finish,
             employeesIds: finishEmployeesIds
         };
+//---------------------------------------------------------------------------------------------------------ИЗМЕНЕНИЕ ОТДЕЛА В
+        console.log(newFinish);
 
         const newState = {
             ...this.state,
@@ -106,10 +112,7 @@ export default class DragDropList extends Component {
                             ref={provided.innerRef}
                         >
                             {departmentOrder.map((deptId, index) => {
-                                //console.log(departments);
-                                //console.log(deptId);
                                 const dept = departments[deptId];
-                                //console.log(dept);
                                 return (<InnerListDepartment
                                     key={dept.id}
                                     dept={dept}

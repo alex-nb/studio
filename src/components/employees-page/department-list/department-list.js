@@ -14,7 +14,7 @@ const DepartmentList = ({ dept, index, employees, onDelete, allEmployees }) => {
                      ref={provided.innerRef}
                 >
                     <h3 {...provided.dragHandleProps}>{dept.title}
-                        <DropdownEmployee allEmployees={allEmployees}/>
+                        <DropdownEmployee allEmployees={allEmployees} dept={dept.id}/>
                     </h3>
                     <Droppable
                         droppableId={dept.id}
