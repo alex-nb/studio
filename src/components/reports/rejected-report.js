@@ -24,7 +24,6 @@ class RejectedReport extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
         this.props.updateReport(this.state);
         this.props.onHide();
     };

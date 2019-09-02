@@ -58,7 +58,7 @@ class Transaction extends Component {
             if (month.length < 2) month = '0' + month;
             if (day.length < 2) day = '0' + day;
             date = [day, month, date.getFullYear()].join('.');
-            const whom = trans.whom ? trans.whom : trans.idEmployee.name;
+            const whom = trans.idEmployee ? trans.idEmployee.name : trans.whom ? trans.whom : '';
             return (
                 <tr key={trans._id}>
                     <td>{date}</td>

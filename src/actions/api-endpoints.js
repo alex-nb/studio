@@ -32,7 +32,8 @@ export const projectsPageAPI = {
     GET_PROJECT : '/projects/',
     UPDATE_PROJECT: '/projects',
     CLOSE_PROJECT: '/projects/close',
-    ADD_REPORT: '/reports'
+    ADD_REPORT: '/reports',
+    START_PROJECT: '/projects/start'
 };
 
 

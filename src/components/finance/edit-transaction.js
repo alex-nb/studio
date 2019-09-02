@@ -19,7 +19,9 @@ class EditTransaction extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if(prevProps.id !== this.props.id) this.setState({id: this.props.id});
         if(prevProps.title !== this.props.title) this.setState({title: this.props.title});
-        if(prevProps.type !== this.props.type) this.setState({type: this.props.type});
+        if(prevProps.type !== this.props.type) {
+            this.setState({type: this.props.type, exp_id: '', employee: ''});
+        }
         if(prevProps.whom !== this.props.whom) this.setState({whom: this.props.whom});
         if(prevProps.summ !== this.props.summ) this.setState({summ: this.props.summ});
         if(prevProps.exp_id !== this.props.exp_id) this.setState({exp_id: this.props.exp_id});
@@ -35,20 +37,21 @@ class EditTransaction extends Component {
             date = [date.getFullYear(), month, day].join('-');
             this.setState({date: date});
         }
-        if(prevState.type !== this.state.type) {
-            this.setState({exp_id: '', employee: ''});
-        }
     }
 
     onChange = (e) => {
-        this.setState({
+        if (e.target.value === "income") this.setState({
+            [e.target.name]: e.target.value,
+            exp_id: '',
+            employee: ''
+        });
+        else this.setState({
             [e.target.name]: e.target.value
         });
     };
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
         this.props.updateTransaction(this.state);
         this.props.onHide();
     };
@@ -99,7 +102,6 @@ class EditTransaction extends Component {
     };
 
     render() {
-        console.log(this.state);
         return (
             <Modal
                 {...this.props}

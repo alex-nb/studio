@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import { Link } from 'react-router-dom';
-
+import { startProject } from '../../../actions/projects';
+import { connect } from 'react-redux';
 import './project-card.css';
 
 import Report from '../report';
@@ -59,6 +60,19 @@ class ProjectCard extends Component {
         });
     };
 
+    _newProjectInfo(id) {
+        return (
+            <span className="pointer" onClick={() => {
+                if(window.confirm("Перевести проект в статус 'Текущие'?")) {
+                    this.props.startProject(id);
+                }
+
+            }}>
+                <i className="fas fa-play-circle fa-card pointer"/>
+            </span>
+        );
+    };
+
     _notNewProjectInfo() {
         return (
             <Fragment>
@@ -67,6 +81,7 @@ class ProjectCard extends Component {
                 <span onClick={() => this.changeStateModalReportsHistory()} className="pointer">
                     Отчеты
                 </span>
+                <br />
             </Fragment>
         );
     };
@@ -79,7 +94,6 @@ class ProjectCard extends Component {
                 <span onClick={() => this.showModalReport(_id)}>
                     <i className="fas fa-plus-circle fa-card pointer"/>
                 </span>
-                <br />
             </Fragment>
         );
     };
@@ -93,7 +107,7 @@ class ProjectCard extends Component {
         const {
             costTotal, status,
             reports, deadline,
-            title, dateStart
+            title, dateStart, _id
         } = this.props.project;
 
         return(
@@ -107,8 +121,9 @@ class ProjectCard extends Component {
                         <strong>Стоимость:</strong> <span title="Общая стоимость">{costTotal} Y </span>
                         <hr/>
                         {status !== 'new' && this._notNewProjectInfo()}
-                        {status !== 'close' && this._notCloseProjectInfo()}
+                        {status === 'new' && this._newProjectInfo(_id)}
                         {status === 'process' && this._processProjectInfo()}
+                        {status !== 'close' && this._notCloseProjectInfo()}
                     </div>
                 </div>
                 <Report
@@ -130,5 +145,4 @@ class ProjectCard extends Component {
         );
     }
 }
-
-export default ProjectCard;
+export default connect(null, {startProject})(ProjectCard);

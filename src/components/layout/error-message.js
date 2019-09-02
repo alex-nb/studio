@@ -4,7 +4,7 @@ const ErrorMessage = () => {
     return (
         <div>
             <span>
-                Something has gone wrong. Check it!
+                Error :(
             </span>
         </div>
     );

@@ -132,6 +132,25 @@ export default function (state = initialState, action) {
                 errorProjectsProcess: action.payload
             };
 
+        case projectsPageTypes.START_PROJECT:
+            return {
+                ...state,
+                projectsProcess: [
+                    ...state.projectsProcess,
+                    action.payload
+                ],
+                projectsNew: state.projectsNew.filter(project => project._id !== action.payload._id),
+                loadingProject: false,
+                errorProject: null
+            };
+
+        case projectsPageTypes.START_PROJECT_FAILURE:
+            return {
+                ...state,
+                loadingProject: false,
+                errorProject: action.payload
+            };
+
         default:
             return state;
     }

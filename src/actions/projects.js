@@ -137,3 +137,25 @@ export const closeProject = (formData, history) => async  dispatch => {
         });
     }
 };
+
+export const startProject = (id) => async dispatch => {
+    console.log(id);
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const res = await axios.post(projectsPageAPI.START_PROJECT, {id: id}, config);
+        dispatch({
+            type: projectsPageTypes.START_PROJECT,
+            payload: res.data.project
+        });
+    } catch (err) {
+        console.error('Update project. '+err);
+        dispatch({
+            type: projectsPageTypes.START_PROJECT_FAILURE,
+            payload: err
+        });
+    }
+};
