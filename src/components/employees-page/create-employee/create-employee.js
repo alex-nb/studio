@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {Button, Form} from "react-bootstrap";
-//import {employeeNewAdd} from '../../../actions';
+import {addEmployee, getDepartments} from "../../../actions/employees";
 import {connect} from "react-redux";
-
+import Spinner from "../../layout/spinner";
+import ErrorMessage from "../../layout/error-message";
+import {withRouter} from "react-router-dom";
 
 class CreateEmployee extends Component {
     state = {
@@ -10,44 +12,37 @@ class CreateEmployee extends Component {
         lastName: '',
         firstName: '',
         secondName: '',
-        dept: [],
+        dept: '',
         birthday: ''
     };
 
-    onInputChange = (e) => {
+    componentDidMount() {
+        this.props.getDepartments();
+    }
+
+    onChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
     };
 
-    onSelectChange = (e) => {
-        const options = e.target.options;
-        const value = [];
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) value.push(options[i].value);
-        }
-        this.setState({dept: value});
-    };
-
     onSubmit = (e) => {
         e.preventDefault();
-        //const { email, lastName, firstName, secondName, dept, birthday }  = this.state;
-        console.log("on Submit");
-        /*this.setState({
-            email: '',
-            lastName: '',
-            firstName: '',
-            secondName: '',
-            dept: [],
-            birthday: ''
-        });*/
-        //console.log(onAdd);
-        //this.props.onAdd({lastName: lastName, firstName: firstName, secondName: secondName});
-        //this.props.history.push("/employees");
+        this.props.addEmployee(this.state, this.props.history);
     };
 
+    _departmentsList() {
+        if (this.props.onlyDepartment) {
+            return  this.props.onlyDepartment.map((dept) => {
+                return (<option key={dept.id} value={dept.id}>{dept.title}</option>);
+            });
+        }
+        return null;
+    };
 
     render() {
+        if (this.props.loadingOnlyDepartment) return (<div className="col-md-10 float-right"><Spinner/></div>);
+        if (this.props.errorOnlyDepartment) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         return (
             <div className="col-md-10 float-right">
                 <Form onSubmit={this.onSubmit}>
@@ -58,16 +53,16 @@ class CreateEmployee extends Component {
                             required type="email" placeholder="Email"
                             name="email"
                             value={this.state.email}
-                            onChange={this.onInputChange}
+                            onChange={this.onChange}
                         />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Фамилия</Form.Label>
                         <Form.Control
-                            required type="text" placeholder="Фамилия нового сотрудника"
+                            type="text" placeholder="Фамилия нового сотрудника"
                             name="lastName"
                             value={this.state.lastName}
-                            onChange={this.onInputChange}
+                            onChange={this.onChange}
                         />
                     </Form.Group>
                     <Form.Group>
@@ -76,32 +71,28 @@ class CreateEmployee extends Component {
                             required type="text" placeholder="Имя нового сотрудника"
                             name="firstName"
                             value={this.state.firstName}
-                            onChange={this.onInputChange}
+                            onChange={this.onChange}
                         />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Отчество</Form.Label>
                         <Form.Control
-                            required type="text" placeholder="Отчество нового сотрудника"
+                            type="text" placeholder="Отчество нового сотрудника"
                             name="secondName"
                             value={this.state.secondName}
-                            onChange={this.onInputChange}
+                            onChange={this.onChange}
                         />
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Отдел</Form.Label>
                         <Form.Control as="select"
-                              multiple required
-                              name="dept"
-                              value={this.state.dept}
-                              onChange={this.onSelectChange}
+                          required
+                          name="dept"
+                          value={this.state.dept}
+                          onChange={this.onChange}
                         >
-                            <option>Design</option>
-                            <option>Programming</option>
-                            <option>Typesetting</option>
-                            <option>SEO</option>
-                            <option>Project management</option>
-                            <option>Studio</option>
+                            <option disabled hidden/>
+                            {this._departmentsList()}
                         </Form.Control>
                     </Form.Group>
                     <Form.Group>
@@ -110,7 +101,7 @@ class CreateEmployee extends Component {
                             required type="date"
                             name="birthday"
                             value={this.state.birthday}
-                            onChange={this.onInputChange}
+                            onChange={this.onChange}
                         />
                     </Form.Group>
                     <Button type="submit" variant="primary">Создать</Button>
@@ -120,8 +111,13 @@ class CreateEmployee extends Component {
     }
 }
 
-const mapStateToProps = ({ allEmployeesList }) => {
-    return { allEmployeesList };
+const mapStateToProps = ({ employeesList }) => {
+    const {
+        onlyDepartment, loadingOnlyDepartment, errorOnlyDepartment
+    } = employeesList;
+    return {
+        onlyDepartment, loadingOnlyDepartment, errorOnlyDepartment
+    };
 };
 
-export default connect(mapStateToProps)(CreateEmployee);
+export default connect(mapStateToProps, {addEmployee, getDepartments})(withRouter(CreateEmployee));

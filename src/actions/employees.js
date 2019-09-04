@@ -57,7 +57,6 @@ export const fetchAllEmployeesList = () => async dispatch => {
 };
 
 export const fetchCompanyStructure = () => async dispatch => {
-    console.log('fetch');
     try {
         const res = await axios.get(employeesPageAPI.GET_DEPARTMENTS_STRUCTURE);
         let employees = {}, departments = {}, departmentsOrder = [];
@@ -71,9 +70,9 @@ export const fetchCompanyStructure = () => async dispatch => {
                         ...employees,
                         [i]: {
                             id: i,
-                            name: emp.idEmp.name,
-                            idBase: emp.idEmp._id,
-                            img: emp.idEmp.img
+                            name: emp.name,
+                            idBase: emp._id,
+                            img: emp.img
                         }
                     };
                     listEmployees.push(i);
@@ -107,7 +106,25 @@ export const fetchCompanyStructure = () => async dispatch => {
     }
 };
 
-export const addEmployee = (formData) => async dispatch => {
+export const getDepartments = () => async dispatch => {
+    try {
+        const res = await axios.get(employeesPageAPI.GET_DEPARTMENTS_STRUCTURE);
+        let departments = [];
+        await res.data.departmentsStructure.map(async dept => {
+            departments.push({id: dept._id,
+                title: dept.title});
+        });
+        dispatch({
+            type: employeesPageTypes.ONLY_DEPARTMENT,
+            payload: departments
+        });
+    } catch (err) {
+        console.error('Get departments. '+err);
+        dispatch(departmentsError(err));
+    }
+};
+
+export const addEmployee = (formData, history) => async dispatch => {
     try {
         const config = {
             headers: {
@@ -119,10 +136,48 @@ export const addEmployee = (formData) => async dispatch => {
             type: employeesPageTypes.ADD_EMPLOYEE,
             payload: res.data.department
         });
+        if (history) history.push('/employees');
     } catch (err) {
         console.error('Add employee. '+err);
         dispatch({
             type: employeesPageTypes.ADD_EMPLOYEE_FAILURE,
+            payload: err
+        });
+    }
+};
+
+export const updateDepartments = (departments) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        await axios.post(employeesPageAPI.UPDATE_DEPARTMENTS, departments, config);
+        /*dispatch({
+            type: employeesPageTypes.UPDATE_DEPARTMENTS,
+            payload: res.data.department
+        });*/
+    } catch (err) {
+        console.error('Update departments. '+err);
+        /*dispatch({
+            type: employeesPageTypes.UPDATE_DEPARTMENTS_FAILURE,
+            payload: err
+        });*/
+    }
+};
+
+export const deleteEmployee = (idEmp) => async dispatch => {
+    try {
+        const res = await axios.delete(employeesPageAPI.DELETE_EMPLOYEE+idEmp);
+        dispatch({
+            type: employeesPageTypes.DELETE_EMPLOYEE,
+            payload: res.data.employee
+        });
+    } catch (err) {
+        console.error('Update departments. '+err);
+        dispatch({
+            type: employeesPageTypes.DELETE_EMPLOYEE_FAILURE,
             payload: err
         });
     }

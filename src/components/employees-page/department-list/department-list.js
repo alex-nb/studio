@@ -5,7 +5,7 @@ import DropdownEmployee from "../dropdown-employee";
 
 import './department-list.css';
 
-const DepartmentList = ({ dept, index, employees, onDelete, allEmployees }) => {
+const DepartmentList = ({ dept, index, employees, allEmployees }) => {
     return (
         <Draggable draggableId={dept.id} index={index}>
             {(provided) => (
@@ -27,7 +27,7 @@ const DepartmentList = ({ dept, index, employees, onDelete, allEmployees }) => {
                                 {...provided.droppableProps}
                                 className={snapshot.isDraggingOver ? "employees-list check-list" : "employees-list"}
                             >
-                                <InnerListEmployee employees={employees} onDelete={onDelete} />
+                                <InnerListEmployee employees={employees} />
                                 {provided.placeholder}
                             </div>
                         )}
@@ -40,8 +40,8 @@ const DepartmentList = ({ dept, index, employees, onDelete, allEmployees }) => {
 
 export default class InnerListDepartment extends PureComponent {
     render() {
-        const  {dept, employeeMap, index, onDelete, allEmployees } = this.props;
+        const  {dept, employeeMap, index, allEmployees } = this.props;
         const employees = dept.employeesIds.map(employeeId => employeeMap[employeeId]);
-        return <DepartmentList dept={dept} employees={employees} index={index} onDelete={onDelete} allEmployees = {allEmployees} />;
+        return <DepartmentList dept={dept} employees={employees} index={index} allEmployees = {allEmployees} />;
     };
 }

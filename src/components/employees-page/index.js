@@ -1,3 +1,3 @@
-import EmployeesPage from './employees-page';
+import DragDropList from "./drag-drop-list";
 
-export default EmployeesPage;
+export default DragDropList;

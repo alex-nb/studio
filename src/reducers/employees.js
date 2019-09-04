@@ -3,8 +3,10 @@ import { employeesPageTypes } from '../actions/types';
 const initialState = {
     employees: {},
     departments: {},
-    departmentOrder: {},
+    departmentOrder: [],
     allEmployeesList: [],
+    onlyDepartment: [],
+    loadingOnlyDepartment: true,
     loadingEmployees: true,
     loadingDepartmentOrder: true,
     loadingDepartments: true,
@@ -13,6 +15,7 @@ const initialState = {
     errorDepartments: null,
     errorDepartmentOrder: null,
     errorAllEmployeesList: null,
+    errorOnlyDepartment: null
 };
 
 export default function (state = initialState, action) {
@@ -61,7 +64,7 @@ export default function (state = initialState, action) {
         case employeesPageTypes.DEPARTMENT_ORDER_GET_FAILURE:
             return {
                 ...state,
-                departmentOrder: {},
+                departmentOrder: [],
                 loadingProcess: false,
                 errorDepartmentOrder: action.payload
             };
@@ -82,44 +85,74 @@ export default function (state = initialState, action) {
                 errorAllEmployeesList: action.payload
             };
 
-        case employeesPageTypes.ADD_EMPLOYEE:
-            const {_id, employees} = action.payload;
-            const employee = employees.pop();
-            console.log(employee);
-            console.log(_id);
-            const i = Object.keys(state.employees).length+1;
-            console.log(i);
-            console.log(state);
-            console.log(action.payload);
-
+        case employeesPageTypes.ONLY_DEPARTMENT:
             return {
                 ...state,
-                departments: {
-                  ...state.departments,
-                  [_id]: {
-                      ...state.departments[_id],
-                      employeesIds: [
-                          ...state.departments[_id].employeesIds,
-                          i
-                      ]
-                  }
-                },
-                employees: {
-                    ...state.employees,
-                    [i]: {
-                        id: i,
-                        name: employee.idEmp.name,
-                        idBase: employee.idEmp._id,
-                        img: employee.idEmp.img
-                    }
-                }
+                onlyDepartment: action.payload,
+                loadingOnlyDepartment: false,
+                errorOnlyDepartment: null
             };
+
+        case employeesPageTypes.ONLY_DEPARTMENT_FAILURE:
+            return {
+                ...state,
+                onlyDepartment: [],
+                loadingOnlyDepartment: false,
+                errorOnlyDepartment: action.payload
+            };
+
+
+        case employeesPageTypes.ADD_EMPLOYEE:
+            if (Object.keys(state.employees).length>0 && Object.keys(state.departments).length > 0) {
+                const {_id, employees} = action.payload;
+                const employee = employees.pop();
+                let i = Number(Object.keys(state.employees).find(key =>  state.employees[key].idBase === employee._id && state.departments[_id].employeesIds.indexOf(Number(key)) > -1));
+                if (!i) i = Number(Object.keys(state.employees).length+1);
+
+                return {
+                    ...state,
+                    departments: {
+                        ...state.departments,
+                        [_id]: {
+                            ...state.departments[_id],
+                            employeesIds: state.departments[_id].employeesIds.indexOf(i)>-1 ?
+                                state.departments[_id].employeesIds :
+                                [
+                                    ...state.departments[_id].employeesIds,
+                                    i
+                                ]
+                        }
+                    },
+                    employees: {
+                        ...state.employees,
+                        [i]: {
+                            id: i,
+                            name: employee.name,
+                            idBase: employee._id,
+                            img: employee.img
+                        }
+                    }
+                };
+            }
+            return state;
+
 
         case employeesPageTypes.ADD_EMPLOYEE_FAILURE:
             return {
                 ...state,
                 errorEmployees: action.payload
             };
+
+        case employeesPageTypes.DELETE_EMPLOYEE:
+            const idEmp = action.payload._id;
+            console.log(state);
+            return {
+                ...state,
+                allEmployeesList: state.allEmployeesList.filter(emp=>emp._id!==idEmp),
+            };
+
+        case employeesPageTypes.DELETE_EMPLOYEE_FAILURE:
+            return state;
 
         default:
             return state;

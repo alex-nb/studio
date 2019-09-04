@@ -11,7 +11,9 @@ export const authAPI = {
 export const employeesPageAPI = {
     GET_DEPARTMENTS_STRUCTURE : '/employees/departments',
     GET_ALL_EMPLOYEES : '/employees',
-    ADD_EMPLOYEE: '/employees'
+    ADD_EMPLOYEE: '/employees',
+    UPDATE_DEPARTMENTS: '/employees/departments',
+    DELETE_EMPLOYEE: '/employees/'
 };
 
 
