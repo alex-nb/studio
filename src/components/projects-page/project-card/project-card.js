@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { startProject } from '../../../actions/projects';
 import { connect } from 'react-redux';
 import './project-card.css';
-
 import Report from '../report';
 import Participant from './participant';
 import ReportsHistory from '../reports-history';
 import PeopleList from "../people-list";
+import Can from "../../../utils/can";
 
 
 class ProjectCard extends Component {
@@ -60,16 +60,31 @@ class ProjectCard extends Component {
         });
     };
 
-    _newProjectInfo(id) {
+    _newProjectInfo() {
+        const { _id } = this.props.project;
         return (
-            <span className="pointer" onClick={() => {
-                if(window.confirm("Перевести проект в статус 'Текущие'?")) {
-                    this.props.startProject(id);
-                }
+            <Fragment>
+                <Can
+                    roles={this.props.roles}
+                    perform="projects:start"
+                    yes={() => (<span className="pointer" onClick={() => {
+                        if(window.confirm("Перевести проект в статус 'Текущие'?")) {
+                            this.props.startProject(_id);
+                        }
 
-            }}>
+                    }}>
                 <i className="fas fa-play-circle fa-card pointer"/>
-            </span>
+            </span>)}
+                    no={() => null}
+                />
+                <Can
+                    roles={this.props.roles}
+                    perform="projects:edit:new"
+                    yes={() => (<Link to={`/projects/edit/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>)}
+                    no={() => null}
+                />
+            </Fragment>
+
         );
     };
 
@@ -90,7 +105,18 @@ class ProjectCard extends Component {
         const { _id } = this.props.project;
         return (
             <Fragment>
-                <Link to={`/projects/close/${_id}`}><i className="fas fa-check-circle fa-card pointer"/></Link>
+                <Can
+                    roles={this.props.roles}
+                    perform="projects:close"
+                    yes={() => (<Link to={`/projects/close/${_id}`}><i className="fas fa-check-circle fa-card pointer"/></Link>)}
+                    no={() => null}
+                />
+                <Can
+                    roles={this.props.roles}
+                    perform="projects:edit:process"
+                    yes={() => (<Link to={`/projects/edit/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>)}
+                    no={() => null}
+                />
                 <span onClick={() => this.showModalReport(_id)}>
                     <i className="fas fa-plus-circle fa-card pointer"/>
                 </span>
@@ -98,18 +124,12 @@ class ProjectCard extends Component {
         );
     };
 
-    _notCloseProjectInfo() {
-        const { _id } = this.props.project;
-        return <Link to={`/projects/edit/${_id}`}><i className="fas fa-edit fa-card pointer"/></Link>;
-    };
-
     render() {
         const {
             costTotal, status,
             reports, deadline,
-            title, dateStart, _id
+            title, dateStart
         } = this.props.project;
-
         return(
             <div className="mini-card card bg-light mb-3">
                 <div className="card-header">
@@ -121,9 +141,8 @@ class ProjectCard extends Component {
                         <strong>Стоимость:</strong> <span title="Общая стоимость">{costTotal} Y </span>
                         <hr/>
                         {status !== 'new' && this._notNewProjectInfo()}
-                        {status === 'new' && this._newProjectInfo(_id)}
+                        {status === 'new' && this._newProjectInfo()}
                         {status === 'process' && this._processProjectInfo()}
-                        {status !== 'close' && this._notCloseProjectInfo()}
                     </div>
                 </div>
                 <Report
@@ -145,4 +164,9 @@ class ProjectCard extends Component {
         );
     }
 }
-export default connect(null, {startProject})(ProjectCard);
+
+const mapStateToProps = ({ auth }) => {
+    const { roles } = auth;
+    return { roles };
+};
+export default connect(mapStateToProps, {startProject})(ProjectCard);

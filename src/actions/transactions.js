@@ -2,6 +2,7 @@ import {transactionsPageTypes} from './types';
 import {transactionsPageAPI} from './api-endpoints';
 
 import axios from 'axios';
+import {setAlert} from "./alert";
 
 const transactionLoaded = (transaction) => ({
     type: transactionsPageTypes.TRANSACTION_GET,
@@ -19,6 +20,10 @@ export const fetchTransaction = () => async dispatch => {
         dispatch(transactionLoaded(res.data.transactions));
     } catch (err) {
         console.error('Get transactions list. '+err);
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
         dispatch(transactionError(err));
     }
 };
@@ -37,10 +42,13 @@ export const updateTransaction = (formData) => async dispatch => {
         });
     }
     catch (err) {
-        console.error('Update transaction. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: transactionsPageTypes.UPDATE_TRANSACTION_FAILURE,
             payload: err
-        });
+        });*/
     }
 };

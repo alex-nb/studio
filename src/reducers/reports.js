@@ -36,6 +36,8 @@ export default function (state = initialState, action) {
                         project.reports[index].idReport = report;
                         project.hoursFact = project.hoursFact+Number(report.hoursStudy)+Number(report.hoursWork);
                         project.hoursBad = project.hoursBad+(Number(report.hoursStudy)+Number(report.hoursWork))-(Number(report.acceptedHoursStudy)+Number(report.acceptedHoursWork));
+                        project.hoursBadWork = project.hoursBadWork+Number(report.hoursWork)-Number(report.acceptedHoursWork);
+                        project.hoursBadStudy = project.hoursBadStudy+Number(report.hoursStudy)-Number(report.acceptedHoursStudy);
                     }
                     return project;
                 }),

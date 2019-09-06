@@ -1,8 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import Collapse from 'react-bootstrap/Collapse'
 import Button from 'react-bootstrap/Button';
-
 import './projects.css';
+import Can from "../../../utils/can";
+
 export default class Projects extends Component {
     state = {
         tabProjectsNew: true,
@@ -51,11 +52,16 @@ export default class Projects extends Component {
     }
 
     render() {
-        const { projects, totalCosts } = this.props;
+        const { projects, totalCosts, roles } = this.props;
         const { tabProjectsProcess, tabProjectsClose } = this.state;
         return(
             <Fragment>
-                {projects.new && this._tabNewProjects()}
+                <Can
+                    roles={roles}
+                    perform="projects:new"
+                    yes={() => projects.new && this._tabNewProjects()}
+                    no={() => null}
+                />
 
                 <Button
                     block variant="outline-primary"

@@ -7,6 +7,7 @@ import Projects from "./projects/projects";
 import Spinner from "../layout/spinner";
 import ErrorMessage from "../layout/error-message";
 import ProjectCard from "./project-card";
+import Can from "../../utils/can";
 
 class ProjectsPage extends Component {
 
@@ -48,9 +49,15 @@ class ProjectsPage extends Component {
         const { projectsNew, loadingNew, errorProjectsNew } = this.props;
         if (loadingNew) return  <Spinner/>;
         if (errorProjectsNew) return  <ErrorMessage/>;
-        return projectsNew.map((project) => {
-            return <ProjectCard key={project._id} project={project}/>;
-        });
+        return (
+            <Can
+                roles={this.props.roles}
+                perform="projects:new"
+                yes={() => projectsNew.map((project) => {
+                    return <ProjectCard key={project._id} project={project}/>;
+                })}
+                no={() => null}
+            />);
     }
 
     _projectsProcessCards() {
@@ -83,25 +90,26 @@ class ProjectsPage extends Component {
         };
         return(
             <div className="col-md-10 float-right">
-                <Projects projects={projects} totalCosts={this.state}/>
+                <Projects projects={projects} totalCosts={this.state} roles={this.props.roles}/>
             </div>
         );
     }
 }
 
 
-const mapStateToProps = ({ projectsList }) => {
+const mapStateToProps = ({ projectsList, auth }) => {
     const {
         projectsClose, projectsProcess, projectsNew,
         loadingProcess, loadingClose, loadingNew,
         errorProjectsProcess, errorProjectsClose, errorProjectsNew,
         studioProject
     } = projectsList;
+    const { roles } = auth;
     return {
         projectsClose, projectsProcess, projectsNew,
         loadingProcess, loadingClose, loadingNew,
         errorProjectsProcess, errorProjectsClose, errorProjectsNew,
-        studioProject
+        studioProject, roles
     };
 };
 

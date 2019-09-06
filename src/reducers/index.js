@@ -9,6 +9,7 @@ import requestsList from './requests';
 import transactionsList from './transactions';
 import auth from './auth';
 import commonInfo from './common-info';
+import alert from './alert';
 
 export default combineReducers({
     employeesList,
@@ -19,5 +20,6 @@ export default combineReducers({
     requestsList,
     transactionsList,
     auth,
-    commonInfo
+    commonInfo,
+    alert
 });

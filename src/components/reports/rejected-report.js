@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
 import {updateReport} from '../../actions/reports';
 import {connect} from "react-redux";
+import Can from "../../utils/can";
 
 class RejectedReport extends Component {
     state = {
@@ -30,62 +31,75 @@ class RejectedReport extends Component {
 
     render() {
         return (
-            <Modal
-                {...this.props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                backdrop="static"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Отклонение отчета
-                    </Modal.Title>
-                </Modal.Header>
-                <Form onSubmit={this.onSubmit}>
-                    <Modal.Body>
-                        <Form.Control
-                            required type="hidden"
-                            name="id"
-                            value={this.state.id}
-                        />
-                        <Form.Group>
-                            <Form.Label>Количество принятых часов работы</Form.Label>
-                            <Form.Control
-                                required type="number"
-                                name="acceptedHoursWork"
-                                value={this.state.acceptedHoursWork}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Количество принятых часов обучения</Form.Label>
-                            <Form.Control
-                                required type="number"
-                                name="acceptedHoursStudy"
-                                value={this.state.acceptedHoursStudy}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Причина</Form.Label>
-                            <Form.Control
-                                as="textarea" rows="10"
-                                required
-                                onChange={this.onChange}
-                                name="reason"
-                                value={this.state.reason}
-                            />
-                        </Form.Group>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.props.onHide}>Отмена</Button>
-                        <Button type="submit">Сохранить</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
+            <Can
+                roles={this.props.roles}
+                perform="reports:answer"
+                yes={() => (
+                    <Modal
+                        {...this.props}
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        backdrop="static"
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title-vcenter">
+                                Отклонение отчета
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Form onSubmit={this.onSubmit}>
+                            <Modal.Body>
+                                <Form.Control
+                                    required type="hidden"
+                                    name="id"
+                                    value={this.state.id}
+                                />
+                                <Form.Group>
+                                    <Form.Label>Количество принятых часов работы</Form.Label>
+                                    <Form.Control
+                                        required type="number"
+                                        name="acceptedHoursWork"
+                                        value={this.state.acceptedHoursWork}
+                                        onChange={this.onChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Количество принятых часов обучения</Form.Label>
+                                    <Form.Control
+                                        required type="number"
+                                        name="acceptedHoursStudy"
+                                        value={this.state.acceptedHoursStudy}
+                                        onChange={this.onChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Причина</Form.Label>
+                                    <Form.Control
+                                        as="textarea" rows="10"
+                                        required
+                                        onChange={this.onChange}
+                                        name="reason"
+                                        value={this.state.reason}
+                                    />
+                                </Form.Group>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button onClick={this.props.onHide}>Отмена</Button>
+                                <Button type="submit">Сохранить</Button>
+                            </Modal.Footer>
+                        </Form>
+                    </Modal>
+                )}
+                no={() => null}
+            />
+
         )
     }
 }
 
-export default connect(null, {updateReport})(RejectedReport);
+const mapStateToProps = ({ auth }) => {
+    const { roles } = auth;
+    return { roles };
+};
+
+export default connect(mapStateToProps, {updateReport})(RejectedReport);

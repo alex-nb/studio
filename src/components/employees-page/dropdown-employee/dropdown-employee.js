@@ -87,7 +87,7 @@ class DropdownEmployee extends Component {
                         >{employee.name}</Dropdown.Item>)
                     )}
                     <Dropdown.Divider> </Dropdown.Divider>
-                    <Dropdown.Item as={Link} to="/create_employee" eventKey="0" >New</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/employees/create" eventKey="0" >New</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         );

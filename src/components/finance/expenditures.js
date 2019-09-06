@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import EditExpenditure from './edit-expenditure';
 import { Button } from 'react-bootstrap';
-
 import { connect } from 'react-redux';
 import {fetchExpenditure} from '../../actions/expenditure';
-
-import './finance.css';
 import Spinner from "../layout/spinner";
 import ErrorMessage from "../layout/error-message";
+import './finance.css';
+import Can from "../../utils/can";
 
-class Expenditure extends Component {
+class Expenditures extends Component {
 
     state = {
         showModalEditForm: false,
@@ -87,34 +86,41 @@ class Expenditure extends Component {
         if (errorExpenditure) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return (
-            <div className="col-md-10 float-right">
-                <Button variant="secondary" onClick={() => this.showModalEditForm({
-                    id: '',
-                    name: '',
-                    type: '',
-                    parent: '0'
-                })}>Добавить</Button>
-                <ul className="category-list">
-                    {this._expendituresList()}
-                </ul>
-                <EditExpenditure
-                    show={this.state.showModalEditForm}
-                    onHide={this.changeStateModalEditForm}
-                    name={this.state.name}
-                    id={this.state.id}
-                    type={this.state.type}
-                    parent={this.state.parent}
-                    expenditures={expenditure.filter(exp => !exp.idExpParent || exp.idExpParent === '')}
-                />
-            </div>
-
+            <Can
+                roles={this.props.roles}
+                perform="expenditures:visit"
+                yes={() => (
+                    <div className="col-md-10 float-right">
+                        <Button variant="secondary" onClick={() => this.showModalEditForm({
+                            id: '',
+                            name: '',
+                            type: '',
+                            parent: '0'
+                        })}>Добавить</Button>
+                        <ul className="category-list">
+                            {this._expendituresList()}
+                        </ul>
+                        <EditExpenditure
+                            show={this.state.showModalEditForm}
+                            onHide={this.changeStateModalEditForm}
+                            name={this.state.name}
+                            id={this.state.id}
+                            type={this.state.type}
+                            parent={this.state.parent}
+                            expenditures={expenditure.filter(exp => !exp.idExpParent || exp.idExpParent === '')}
+                        />
+                    </div>
+                )}
+                no={() => (<div className="col-md-10 float-right"><h3>Извините, доступ запрещен.</h3></div>)}
+            />
         );
     }
 }
 
-const mapStateToProps = ({ expenditureList }) => {
+const mapStateToProps = ({ expenditureList, auth }) => {
     const { expenditure, loadingExpenditure, errorExpenditure } = expenditureList;
-    return { expenditure, loadingExpenditure, errorExpenditure };
+    const { roles } = auth;
+    return { expenditure, loadingExpenditure, errorExpenditure, roles };
 };
 
-export default connect(mapStateToProps, {fetchExpenditure})(Expenditure);
+export default connect(mapStateToProps, {fetchExpenditure})(Expenditures);

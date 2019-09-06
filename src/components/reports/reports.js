@@ -8,6 +8,7 @@ import './reports.css';
 
 import Spinner from "../layout/spinner";
 import ErrorMessage from "../layout/error-message";
+import Can from "../../utils/can";
 
 
 class Reports extends Component {
@@ -61,8 +62,11 @@ class Reports extends Component {
                         <td/>
                         <td/>
                         <td/>
-                        <td title="факт./план. (не принятые)">
-                            {project.hoursFact}/{project.hoursPlan} ({project.hoursBad ? project.hoursBad : 0})
+                        <td title="факт./план. || не принятые (работа; обучение)">
+                            {project.hoursFact ? project.hoursFact : 0}/{project.hoursPlan ? project.hoursPlan : 0}
+                            <br/>
+                            {project.hoursBad ? project.hoursBad : 0}
+                            ({project.hoursBadWork ? project.hoursBadWork : 0}; {project.hoursBadStudy ? project.hoursBadStudy : 0})
                         </td>
                         <td/>
                     </tr>
@@ -70,43 +74,55 @@ class Reports extends Component {
                     <Collapse in={tabsProjects[newStateName]}>
                         <tbody id={`group-of-rows-${project._id}`} className="collapse">
                         {project.reports.map((report) => {
-                            const status = report.idReport.status ==='accepted' ?
-                                <Button variant="success" disabled><i className="fas fa-check fa-actions"/></Button> :
-                                report.idReport.status === 'rejected' ?
-                                    <Button variant="danger" disabled><i className="fas fa-times fa-actions"/></Button> :
-                                    report.idReport.status === 'neutral' ?
-                                        <Button variant="primary" disabled><i className="fas fa-minus fa-actions"/></Button> :
-                                        <ButtonGroup size="sm">
-                                            <Button variant="success" onClick={() => {
-                                                this.props.updateReport({id: report.idReport._id, action: "accept"})
-                                            }}><i className="fas fa-check fa-actions"/></Button>
-                                            <Button variant="primary" onClick={() => {
-                                                this.props.updateReport({id: report.idReport._id, action: "mark"})
-                                            }}><i className="fas fa-minus fa-actions"/></Button>
-                                            <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
-                                                <i className="fas fa-times fa-actions"/>
-                                            </Button>
-                                        </ButtonGroup>;
-                            return (
-                                <tr key={report.idReport._id}>
-                                    <td>{report.idReport.date}</td>
-                                    <td>{report.idEmployee.name}</td>
-                                    <td>{report.idReport.report}</td>
-                                    <td>{report.idReport.reason ? report.idReport.reason : ""}</td>
-                                    <td>
-                                        {report.idReport.hoursWork ? `Работа: ${report.idReport.hoursWork}` : ""}
-                                        <br/>
-                                        {report.idReport.acceptedHoursWork ? `(принято: ${report.idReport.acceptedHoursWork})` : ""}
-                                        <br/>
-                                        {report.idReport.hoursStudy ? `Обучение: ${report.idReport.hoursStudy}` : ""}
-                                        <br/>
-                                        {report.idReport.acceptedHoursStudy ? `(принято: ${report.idReport.acceptedHoursStudy})` : ""}
-                                    </td>
-                                    <td>
-                                        {status}
-                                    </td>
-                                </tr>
-                            );
+                            if (report.idReport && report.idEmployee) {
+                                const status = (
+                                    <Can
+                                        roles={this.props.roles}
+                                        perform="reports:answer"
+                                        yes={() => {
+                                            return report.idReport.status ==='accepted' ?
+                                                <Button variant="success" disabled><i className="fas fa-check fa-actions"/></Button> :
+                                                report.idReport.status === 'rejected' ?
+                                                    <Button variant="danger" disabled><i className="fas fa-times fa-actions"/></Button> :
+                                                    report.idReport.status === 'neutral' ?
+                                                        <Button variant="primary" disabled><i className="fas fa-minus fa-actions"/></Button> :
+                                                        <ButtonGroup size="sm">
+                                                            <Button variant="success" onClick={() => {
+                                                                this.props.updateReport({id: report.idReport._id, action: "accept"})
+                                                            }}><i className="fas fa-check fa-actions"/></Button>
+                                                            <Button variant="primary" onClick={() => {
+                                                                this.props.updateReport({id: report.idReport._id, action: "mark"})
+                                                            }}><i className="fas fa-minus fa-actions"/></Button>
+                                                            <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
+                                                                <i className="fas fa-times fa-actions"/>
+                                                            </Button>
+                                                        </ButtonGroup>;
+                                        }}
+                                        no={() => null}
+                                    />
+                                );
+                                return (
+                                    <tr key={report.idReport._id}>
+                                        <td>{report.idReport.date}</td>
+                                        <td>{report.idEmployee.name}</td>
+                                        <td>{report.idReport.report}</td>
+                                        <td>{report.idReport.reason ? report.idReport.reason : ""}</td>
+                                        <td>
+                                            {report.idReport.hoursWork ? `Работа: ${report.idReport.hoursWork}` : ""}
+                                            <br/>
+                                            {report.idReport.acceptedHoursWork ? `(принято: ${report.idReport.acceptedHoursWork})` : ""}
+                                            <br/>
+                                            {report.idReport.hoursStudy ? `Обучение: ${report.idReport.hoursStudy}` : ""}
+                                            <br/>
+                                            {report.idReport.acceptedHoursStudy ? `(принято: ${report.idReport.acceptedHoursStudy})` : ""}
+                                        </td>
+                                        <td>
+                                            {status}
+                                        </td>
+                                    </tr>
+                                );
+                            }
+                            return null;
                         })}
                         </tbody>
                     </Collapse>
@@ -203,23 +219,32 @@ class Reports extends Component {
                 <Collapse in={tabsProjects[newStateName]}>
                     <tbody id={`group-of-rows-${reports[employee]._id}`} className="collapse">
                     {reports[employee].reports.map((report) => {
-                        const status = report.idReport.status ==='accepted' ?
-                            <Button variant="success" disabled><i className="fas fa-check fa-actions"/></Button> :
-                            report.idReport.status === 'rejected' ?
-                                <Button variant="danger" disabled><i className="fas fa-times fa-actions"/></Button> :
-                                report.idReport.status === 'neutral' ?
-                                    <Button variant="primary" disabled><i className="fas fa-minus fa-actions"/></Button> :
-                                    <ButtonGroup size="sm">
-                                        <Button variant="success" onClick={() => {
-                                            this.props.updateReport({id: report.idReport._id, action: "accept"})
-                                        }}><i className="fas fa-check fa-actions"/></Button>
-                                        <Button variant="primary" onClick={() => {
-                                            this.props.updateReport({id: report.idReport._id, action: "mark"})
-                                        }}><i className="fas fa-minus fa-actions"/></Button>
-                                        <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
-                                            <i className="fas fa-times fa-actions"/>
-                                        </Button>
-                                    </ButtonGroup>;
+                        const status = (
+                            <Can
+                                roles={this.props.roles}
+                                perform="reports:answer"
+                                yes={() => {
+                                    return report.idReport.status ==='accepted' ?
+                                        <Button variant="success" disabled><i className="fas fa-check fa-actions"/></Button> :
+                                        report.idReport.status === 'rejected' ?
+                                            <Button variant="danger" disabled><i className="fas fa-times fa-actions"/></Button> :
+                                            report.idReport.status === 'neutral' ?
+                                                <Button variant="primary" disabled><i className="fas fa-minus fa-actions"/></Button> :
+                                                <ButtonGroup size="sm">
+                                                    <Button variant="success" onClick={() => {
+                                                        this.props.updateReport({id: report.idReport._id, action: "accept"})
+                                                    }}><i className="fas fa-check fa-actions"/></Button>
+                                                    <Button variant="primary" onClick={() => {
+                                                        this.props.updateReport({id: report.idReport._id, action: "mark"})
+                                                    }}><i className="fas fa-minus fa-actions"/></Button>
+                                                    <Button variant="danger"  onClick={() => this.showModalReject(report.idReport._id)}>
+                                                        <i className="fas fa-times fa-actions"/>
+                                                    </Button>
+                                                </ButtonGroup>;
+                                }}
+                                no={() => null}
+                            />
+                        );
                         return (
                             <tr key={report.idReport._id}>
                                 <td>{report.idReport.date}</td>
@@ -256,15 +281,22 @@ class Reports extends Component {
 
         return(
             <div className="col-md-10 float-right">
-                <Form.Group as={Row}>
-                    <Form.Label column sm="2" className="text">Группировка</Form.Label>
-                    <Col sm="3">
-                        <Form.Control as="select" onChange={this.onChangeTypeGrouping}>
-                            <option value="project">по проекту</option>
-                            <option value="employee">по сотруднику</option>
-                        </Form.Control>
-                    </Col>
-                </Form.Group>
+                <Can
+                    roles={this.props.roles}
+                    perform="reports:group"
+                    yes={() => (
+                        <Form.Group as={Row}>
+                            <Form.Label column sm="2" className="text">Группировка</Form.Label>
+                            <Col sm="3">
+                                <Form.Control as="select" onChange={this.onChangeTypeGrouping}>
+                                    <option value="project">по проекту</option>
+                                    <option value="employee">по сотруднику</option>
+                                </Form.Control>
+                            </Col>
+                        </Form.Group>
+                    )}
+                    no={() => null}
+                />
                 <Table bordered hover size="sm">
                     <thead className="thead-dark">
                     <tr>
@@ -288,9 +320,10 @@ class Reports extends Component {
     }
 }
 
-const mapStateToProps = ({ reportsList }) => {
+const mapStateToProps = ({ reportsList, auth }) => {
     const { allReports, loadingAllReports, errorAllReports } = reportsList;
-    return { allReports, loadingAllReports, errorAllReports };
+    const { roles } = auth;
+    return { allReports, loadingAllReports, errorAllReports, roles };
 };
 
 export default connect(mapStateToProps, {fetchAllReports, updateReport})(Reports);

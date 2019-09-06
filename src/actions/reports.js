@@ -2,6 +2,7 @@ import {reportsPageTypes} from './types';
 import {reportsPageAPI} from './api-endpoints';
 
 import axios from 'axios';
+import {setAlert} from "./alert";
 
 
 const allReportsLoaded = (listAllReports) => ({
@@ -37,10 +38,13 @@ export const updateReport = (formData) => async dispatch => {
             payload: res.data.report
         });
     } catch (err) {
-        console.error('Update report. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: reportsPageTypes.UPDATE_REPORT_FAILURE,
             payload: err
-        });
+        });*/
     }
 };

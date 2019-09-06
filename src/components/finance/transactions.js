@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-
 import { connect } from 'react-redux';
 import {fetchTransaction} from '../../actions/transactions';
 import {fetchExpenditure} from '../../actions/expenditure';
 import {fetchAllEmployeesList} from '../../actions/employees';
-
-import './finance.css';
 import Spinner from "../layout/spinner";
 import ErrorMessage from "../layout/error-message";
 import {Button} from "react-bootstrap";
 import EditTransaction from "./edit-transaction";
+import './finance.css';
+import Can from "../../utils/can";
 
 
-class Transaction extends Component {
+class Transactions extends Component {
 
     state = {
         showModalEditForm: false,
@@ -96,59 +95,68 @@ class Transaction extends Component {
         if (errorTransaction || errorExpenditure || errorAllEmployeesList) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return(
-            <div className="col-md-10 float-right">
-                <Button variant="secondary" onClick= { () => this.showModalEditForm({
-                    id: '',
-                    type: '',
-                    title: '',
-                    whom: '',
-                    employee: '',
-                    summ: '',
-                    exp_id: ''
-                })}>Добавить</Button>
-                <table className="table table-hover table-sm">
-                    <thead className="thead-dark">
-                    <tr>
-                        <th style={{width: "10%"}}>Дата</th>
-                        <th style={{width: "10%"}}>Тип</th>
-                        <th style={{width: "20%"}}>Название</th>
-                        <th style={{width: "25%"}}>Кому/От кого</th>
-                        <th style={{width: "15%"}}>Сумма</th>
-                        <th style={{width: "15%"}}>Статья</th>
-                        <th style={{width: "5%"}} />
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {this._tableBody()}
-                    </tbody>
-                </table>
-                <EditTransaction
-                    show={this.state.showModalEditForm}
-                    onHide={this.changeStateModalEditForm}
-                    id={this.state.id}
-                    type={this.state.type}
-                    title={this.state.title}
-                    whom={this.state.whom}
-                    employee={this.state.employee}
-                    summ={this.state.summ}
-                    exp_id={this.state.exp_id}
-                    all_expenditure={expenditure}
-                    all_employees={allEmployeesList}
-                />
-            </div>
+            <Can
+                roles={this.props.roles}
+                perform="transactions:visit"
+                yes={() => (
+                    <div className="col-md-10 float-right">
+                        <Button variant="secondary" onClick= { () => this.showModalEditForm({
+                            id: '',
+                            type: '',
+                            title: '',
+                            whom: '',
+                            employee: '',
+                            summ: '',
+                            exp_id: ''
+                        })}>Добавить</Button>
+                        <table className="table table-hover table-sm">
+                            <thead className="thead-dark">
+                            <tr>
+                                <th style={{width: "10%"}}>Дата</th>
+                                <th style={{width: "10%"}}>Тип</th>
+                                <th style={{width: "20%"}}>Название</th>
+                                <th style={{width: "25%"}}>Кому/От кого</th>
+                                <th style={{width: "15%"}}>Сумма</th>
+                                <th style={{width: "15%"}}>Статья</th>
+                                <th style={{width: "5%"}} />
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {this._tableBody()}
+                            </tbody>
+                        </table>
+                        <EditTransaction
+                            show={this.state.showModalEditForm}
+                            onHide={this.changeStateModalEditForm}
+                            id={this.state.id}
+                            type={this.state.type}
+                            title={this.state.title}
+                            whom={this.state.whom}
+                            employee={this.state.employee}
+                            summ={this.state.summ}
+                            exp_id={this.state.exp_id}
+                            all_expenditure={expenditure}
+                            all_employees={allEmployeesList}
+                        />
+                    </div>
+                )}
+                no={() => (<div className="col-md-10 float-right"><h3>Извините, доступ запрещен.</h3></div>)}
+            />
         );
     }
 }
 
-const mapStateToProps = ({ transactionsList, expenditureList, employeesList }) => {
+const mapStateToProps = ({ transactionsList, expenditureList, employeesList, auth }) => {
     const { transaction, loadingTransaction, errorTransaction } = transactionsList;
     const {  expenditure, loadingExpenditure, errorExpenditure } = expenditureList;
     const { allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList } = employeesList;
+    const { roles } = auth;
     return {
         transaction, loadingTransaction, errorTransaction,
         expenditure, loadingExpenditure, errorExpenditure,
-        allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList
+        allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList,
+        roles
     };
 };
 
-export default connect(mapStateToProps, {fetchTransaction, fetchExpenditure, fetchAllEmployeesList})(Transaction);
+export default connect(mapStateToProps, {fetchTransaction, fetchExpenditure, fetchAllEmployeesList})(Transactions);

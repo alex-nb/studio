@@ -1,13 +1,15 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
 import moment from "moment";
-import {withRouter} from "react-router-dom";
+import { withRouter} from "react-router-dom";
 import {Form,Button, Row, Col} from "react-bootstrap";
 import { getCurrentProject, closeProject } from '../../../actions/projects';
 import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
 
 import './close-project.css';
+
+import Can from "../../../utils/can";
 
 class CloseProject extends Component {
 
@@ -135,28 +137,37 @@ class CloseProject extends Component {
 
         const difference = this.difference(project.deadline);
         return (
-            <div className="col-md-10 float-right">
-                <Form onSubmit={this.onSubmit}>
-                    <legend>Завершение проекта «{project.title}» </legend>
-                    <p>Дедлайн: <b className="font-weight-bold">{project.deadline}</b></p>
-                    <p>Общая стоимость проекта: <b className="font-weight-bold">{project.costTotal}</b></p>
-                    <p>Назначенная сумма штрафа: <b className="font-weight-bold">{project.fine}</b></p>
-                    <p>Назначенная сумма премии: <b className="font-weight-bold">{project.premium}</b></p>
-                    <p className="font-weight-bold">{difference.text}</p>
-                    {difference.premium ? <p>Сумма премии: <b className="font-weight-bold">{difference.premium}</b></p> : null}
-                    {difference.fine ?  <p>Сумма штрафа: <b className="font-weight-bold">{difference.fine}</b></p> : null}
-                    {this._participantsList()}
-                    <Button type="submit" variant="primary">Сохранить</Button>
-                </Form>
-            </div>
+            <Can
+                roles={this.props.roles}
+                perform="projects:close"
+                yes={() => (
+                    <div className="col-md-10 float-right">
+                        <Form onSubmit={this.onSubmit}>
+                            <legend>Завершение проекта «{project.title}» </legend>
+                            <p>Дедлайн: <b className="font-weight-bold">{project.deadline}</b></p>
+                            <p>Общая стоимость проекта: <b className="font-weight-bold">{project.costTotal}</b></p>
+                            <p>Назначенная сумма штрафа: <b className="font-weight-bold">{project.fine}</b></p>
+                            <p>Назначенная сумма премии: <b className="font-weight-bold">{project.premium}</b></p>
+                            <p className="font-weight-bold">{difference.text}</p>
+                            {difference.premium ? <p>Сумма премии: <b className="font-weight-bold">{difference.premium}</b></p> : null}
+                            {difference.fine ?  <p>Сумма штрафа: <b className="font-weight-bold">{difference.fine}</b></p> : null}
+                            {this._participantsList()}
+                            <Button type="submit" variant="primary">Сохранить</Button>
+                        </Form>
+                    </div>
+                )}
+                no={() => (<div className="col-md-10 float-right"><h3>Извините, доступ запрещен.</h3></div>)}
+            />
+
         );
     }
 }
 
-const mapStateToProps = ({projectsList }) => {
+const mapStateToProps = ({projectsList, auth }) => {
     const { project, loadingProject, errorProject } = projectsList;
+    const { roles } = auth;
     return {
-        project, loadingProject, errorProject
+        project, loadingProject, errorProject, roles
     };
 };
 

@@ -5,6 +5,7 @@ const initialState = {
     isAuth: !!localStorage.getItem('token'),
     authLoading: false,
     userId: localStorage.getItem('userId'),
+    roles: localStorage.getItem('roles'),
     error: null
 };
 
@@ -21,6 +22,7 @@ export default function (state = initialState, action) {
                 ...state,
                 ...action.payload,
                 isAuth: true,
+                roles: localStorage.getItem('roles'),
                 authLoading: false
             };
         case authTypes.REGISTER_FAIL:

@@ -5,16 +5,19 @@ import Button from 'react-bootstrap/Button';
 const ReportsHistory = (props) => {
     const {reports, ...modalProps} = props;
     const tbody = reports ? reports.map((report) => {
-        const classRow = report.idReport.status ==='accepted' ? "table-success" : report.idReport.status === 'rejected' ? "table-danger" : "table-secondary";
-        return (
-            <tr key={report.idReport._id} className={classRow}>
-                <th scope="row">{report.idEmployee.name}</th>
-                <th>{report.idReport.date}</th>
-                <td>{report.idReport.report}</td>
-                <td title="работа/обучение">{report.idReport.hoursWork}/{report.idReport.hoursStudy}</td>
-                <td>{report.idReport.status ==='accepted' ? "Принято!" : report.idReport.status === 'rejected' ? "Врушка!" : "Нейтрально"}</td>
-            </tr>
-        );
+        if (report.idReport && report.idEmployee) {
+            const classRow = report.idReport.status ==='accepted' ? "table-success" : report.idReport.status === 'rejected' ? "table-danger" : "table-secondary";
+            return (
+                <tr key={report.idReport._id} className={classRow}>
+                    <th scope="row">{report.idEmployee.name}</th>
+                    <th>{report.idReport.date}</th>
+                    <td>{report.idReport.report}</td>
+                    <td title="работа/обучение">{report.idReport.hoursWork}/{report.idReport.hoursStudy}</td>
+                    <td>{report.idReport.status ==='accepted' ? "Принято!" : report.idReport.status === 'rejected' ? "Врушка!" : "Нейтрально"}</td>
+                </tr>
+            );
+        }
+        return null;
     }) : null;
 
     return (

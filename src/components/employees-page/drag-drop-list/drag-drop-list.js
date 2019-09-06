@@ -133,8 +133,6 @@ class DragDropList extends Component {
             departmentOrder, departments, employees, allEmployeesList
         } = this.state;
 
-        console.log(departments, employees, allEmployeesList);
-
         return (
             <div className="col-md-10 float-right">
                 <DragDropContext onDragEnd={this.onDragEnd}>

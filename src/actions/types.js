@@ -14,7 +14,9 @@ export const authTypes = {
 /*   Common info */
 
 export const commonInfoTypes = {
-    CHANGE_SELECTED_MENU: 'CHANGE_SELECTED_MENU'
+    CHANGE_SELECTED_MENU: 'CHANGE_SELECTED_MENU',
+    SET_ALERT: 'SET_ALERT',
+    REMOVE_ALERT: 'REMOVE_ALERT'
 };
 
 

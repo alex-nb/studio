@@ -2,6 +2,7 @@ import {expendituresPageTypes} from './types';
 import {expendituresPageAPI} from './api-endpoints';
 
 import axios from 'axios';
+import {setAlert} from "./alert";
 
 const expenditureLoaded = (expenditure) => {
     return {
@@ -23,6 +24,10 @@ export const fetchExpenditure = () => async dispatch => {
         dispatch(expenditureLoaded(res.data.expenditures));
     } catch (err) {
         console.error('Get expenditures list. '+err);
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
         dispatch(expenditureError(err));
     }
 };
@@ -41,10 +46,13 @@ export const updateExpenditure = (formData) => async dispatch => {
         });
     }
     catch (err) {
-        console.error('Update expenditure. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: expendituresPageTypes.UPDATE_EXPENDITURE_FAILURE,
             payload: err
-        });
+        });*/
     }
 };

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import {Form, Col, Button} from "react-bootstrap";
 import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import { withRouter} from "react-router-dom";
 
 import { fetchCompanyStructure } from "../../../actions/employees";
 import { getCurrentProject, updateProject } from '../../../actions/projects';
@@ -10,6 +10,8 @@ import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
 
 import './edit-project.css';
+
+import Can from "../../../utils/can";
 
 
 class EditProject extends Component {
@@ -280,71 +282,80 @@ class EditProject extends Component {
             return <div className="col-md-10 float-right"><ErrorMessage/></div>;
 
         return (
-            <div className="col-md-10 float-right">
-                <Form onSubmit={this.onSubmit}>
-                    <legend>Редактирование проекта «{this.props.project.title}» </legend>
-                    {this._chooseEmployee()}
-                    <Form.Group>
-                        <Form.Label>Общая сумма проекта</Form.Label>
-                        <Form.Control
-                            readOnly required
-                            type="number"
-                            name="totalSum"
-                            value={this.state.totalSum}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Дата начала</Form.Label>
-                        <Form.Control
-                            required type="date"
-                            name="dateStart"
-                            value={this.state.dateStart}
-                            onChange={this.onInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Дата дедлайна</Form.Label>
-                        <Form.Control
-                            required type="date"
-                            name="dateEnd"
-                            value={this.state.dateEnd}
-                            onChange={this.onInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Премия (на 1 день досрочной сдачи)</Form.Label>
-                        <Form.Control
-                            required type="number"
-                            name="premium"
-                            value={this.state.premium}
-                            onChange={this.onInputChange}
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Штраф (на 1 день срыва срока)</Form.Label>
-                        <Form.Control
-                            required type="number"
-                            name="fine"
-                            value={this.state.fine}
-                            onChange={this.onInputChange}
-                        />
-                    </Form.Group>
-                    <Button type="submit" variant="primary">Сохранить</Button>
-                </Form>
-            </div>
+            <Can
+                roles={this.props.roles}
+                perform="projects:edit"
+                yes={() => (
+                    <div className="col-md-10 float-right">
+                        <Form onSubmit={this.onSubmit}>
+                            <legend>Редактирование проекта «{this.props.project.title}» </legend>
+                            {this._chooseEmployee()}
+                            <Form.Group>
+                                <Form.Label>Общая сумма проекта</Form.Label>
+                                <Form.Control
+                                    readOnly required
+                                    type="number"
+                                    name="totalSum"
+                                    value={this.state.totalSum}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Дата начала</Form.Label>
+                                <Form.Control
+                                    required type="date"
+                                    name="dateStart"
+                                    value={this.state.dateStart}
+                                    onChange={this.onInputChange}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Дата дедлайна</Form.Label>
+                                <Form.Control
+                                    required type="date"
+                                    name="dateEnd"
+                                    value={this.state.dateEnd}
+                                    onChange={this.onInputChange}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Премия (на 1 день досрочной сдачи)</Form.Label>
+                                <Form.Control
+                                    required type="number"
+                                    name="premium"
+                                    value={this.state.premium}
+                                    onChange={this.onInputChange}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Штраф (на 1 день срыва срока)</Form.Label>
+                                <Form.Control
+                                    required type="number"
+                                    name="fine"
+                                    value={this.state.fine}
+                                    onChange={this.onInputChange}
+                                />
+                            </Form.Group>
+                            <Button type="submit" variant="primary">Сохранить</Button>
+                        </Form>
+                    </div>
+                )}
+                no={() => (<div className="col-md-10 float-right"><h3>Извините, доступ запрещен.</h3></div>)}
+            />
+
         );
     }
 }
 
-const mapStateToProps = ({ employeesList, projectsList }) => {
+const mapStateToProps = ({ employeesList, projectsList, auth }) => {
     const {
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
         errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
     } = employeesList;
     const { project, loadingProject, errorProject } = projectsList;
+    const { roles } = auth;
     return {
-        project, loadingProject, errorProject,
+        project, loadingProject, errorProject, roles,
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
         errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList

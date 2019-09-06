@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
 import {connect} from "react-redux";
 import {updateTransaction} from "../../actions/transactions";
+import Can from "../../utils/can";
 
 
 class EditTransaction extends Component {
@@ -103,75 +104,87 @@ class EditTransaction extends Component {
 
     render() {
         return (
-            <Modal
-                {...this.props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                backdrop="static"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Операция
-                    </Modal.Title>
-                </Modal.Header>
-                <Form onSubmit={this.onSubmit}>
-                    <Modal.Body>
-                        <Form.Control
-                            required type="hidden"
-                            name="id"
-                            value={this.state.id}
-                        />
-                        <Form.Group>
-                            <Form.Label>Тип операции</Form.Label>
-                            <Form.Control as="select"
-                                          required
-                                          name="type"
-                                          value={this.state.type}
-                                          onChange={this.onChange}
-                            >
-                                <option value="income">доход</option>
-                                <option value="expense">расход</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Название</Form.Label>
-                            <Form.Control
-                                required type="text" placeholder="Название операции"
-                                name="title"
-                                value={this.state.title}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Кому/От кого</Form.Label>
-                            <Form.Control
-                                type="text" placeholder="Кому/От кого"
-                                name="whom"
-                                value={this.state.whom}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
-                        {this.state.type==="expense" ? this._selectEmployee() : ""}
-                        <Form.Group>
-                            <Form.Label>Сумма</Form.Label>
-                            <Form.Control
-                                required type="number" placeholder="Сумма"
-                                name="summ"
-                                value={this.state.summ}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
-                        {this.state.type==="expense" ? this._selectExpenditure() : ""}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.props.onHide}>Отмена</Button>
-                        <Button type="submit">Сохранить</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
+            <Can
+                roles={this.props.roles}
+                perform="transactions:edit"
+                yes={() => (
+                    <Modal
+                        {...this.props}
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        backdrop="static"
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title-vcenter">
+                                Операция
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Form onSubmit={this.onSubmit}>
+                            <Modal.Body>
+                                <Form.Control
+                                    required type="hidden"
+                                    name="id"
+                                    value={this.state.id}
+                                />
+                                <Form.Group>
+                                    <Form.Label>Тип операции</Form.Label>
+                                    <Form.Control as="select"
+                                                  required
+                                                  name="type"
+                                                  value={this.state.type}
+                                                  onChange={this.onChange}
+                                    >
+                                        <option value="income">доход</option>
+                                        <option value="expense">расход</option>
+                                    </Form.Control>
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Название</Form.Label>
+                                    <Form.Control
+                                        required type="text" placeholder="Название операции"
+                                        name="title"
+                                        value={this.state.title}
+                                        onChange={this.onChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Кому/От кого</Form.Label>
+                                    <Form.Control
+                                        type="text" placeholder="Кому/От кого"
+                                        name="whom"
+                                        value={this.state.whom}
+                                        onChange={this.onChange}
+                                    />
+                                </Form.Group>
+                                {this.state.type==="expense" ? this._selectEmployee() : ""}
+                                <Form.Group>
+                                    <Form.Label>Сумма</Form.Label>
+                                    <Form.Control
+                                        required type="number" placeholder="Сумма"
+                                        name="summ"
+                                        value={this.state.summ}
+                                        onChange={this.onChange}
+                                    />
+                                </Form.Group>
+                                {this.state.type==="expense" ? this._selectExpenditure() : ""}
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button onClick={this.props.onHide}>Отмена</Button>
+                                <Button type="submit">Сохранить</Button>
+                            </Modal.Footer>
+                        </Form>
+                    </Modal>
+                )}
+                no={() => null}
+            />
         );
     }
 }
 
-export default connect(null, {updateTransaction})(EditTransaction);
+const mapStateToProps = ({ auth }) => {
+    const { roles } = auth;
+    return { roles };
+};
+
+export default connect(mapStateToProps, {updateTransaction})(EditTransaction);

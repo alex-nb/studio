@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Modal, Button, Form} from 'react-bootstrap';
 import {updateExpenditure} from "../../actions/expenditure";
 import {connect} from "react-redux";
+import Can from "../../utils/can";
 
 class EditExpenditure extends Component {
 
@@ -42,66 +43,78 @@ class EditExpenditure extends Component {
 
     render() {
         return (
-            <Modal
-                {...this.props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                backdrop="static"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Статья расходов
-                    </Modal.Title>
-                </Modal.Header>
-                <Form onSubmit={this.onSubmit}>
-                    <Modal.Body>
-                        <Form.Control
-                            required type="hidden"
-                            name="id"
-                            value={this.state.id}
-                        />
-                        <Form.Group>
-                            <Form.Label>Название</Form.Label>
-                            <Form.Control
-                                required type="text" placeholder="Название статьи"
-                                name="name"
-                                value={this.state.name}
-                                onChange={this.onChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Тип</Form.Label>
-                            <Form.Control as="select"
-                                          required
-                                          name="type"
-                                          value={this.state.type}
-                                          onChange={this.onChange}
-                            >
-                                <option>орех</option>
-                                <option>сорех</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Родительская статья</Form.Label>
-                            <Form.Control as="select"
-                                          name="parent"
-                                          value={this.state.parent}
-                                          onChange={this.onChange}
-                            >
-                                <option value="0"/>
-                                {this._expendituresList()}
-                            </Form.Control>
-                        </Form.Group>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.props.onHide}>Отмена</Button>
-                        <Button type="submit">Сохранить</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
+            <Can
+                roles={this.props.roles}
+                perform="expenditures:edit"
+                yes={() => (
+                    <Modal
+                        {...this.props}
+                        size="lg"
+                        aria-labelledby="contained-modal-title-vcenter"
+                        centered
+                        backdrop="static"
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title id="contained-modal-title-vcenter">
+                                Статья расходов
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Form onSubmit={this.onSubmit}>
+                            <Modal.Body>
+                                <Form.Control
+                                    required type="hidden"
+                                    name="id"
+                                    value={this.state.id}
+                                />
+                                <Form.Group>
+                                    <Form.Label>Название</Form.Label>
+                                    <Form.Control
+                                        required type="text" placeholder="Название статьи"
+                                        name="name"
+                                        value={this.state.name}
+                                        onChange={this.onChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Тип</Form.Label>
+                                    <Form.Control as="select"
+                                                  required
+                                                  name="type"
+                                                  value={this.state.type}
+                                                  onChange={this.onChange}
+                                    >
+                                        <option>орех</option>
+                                        <option>сорех</option>
+                                    </Form.Control>
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Label>Родительская статья</Form.Label>
+                                    <Form.Control as="select"
+                                                  name="parent"
+                                                  value={this.state.parent}
+                                                  onChange={this.onChange}
+                                    >
+                                        <option value="0"/>
+                                        {this._expendituresList()}
+                                    </Form.Control>
+                                </Form.Group>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button onClick={this.props.onHide}>Отмена</Button>
+                                <Button type="submit">Сохранить</Button>
+                            </Modal.Footer>
+                        </Form>
+                    </Modal>
+                )}
+                no={() => null}
+            />
         );
     }
 }
 
-export default connect(null, {updateExpenditure})(EditExpenditure);
+const mapStateToProps = ({ auth }) => {
+    const { roles } = auth;
+    return { roles };
+};
+
+export default connect(mapStateToProps, {updateExpenditure})(EditExpenditure);

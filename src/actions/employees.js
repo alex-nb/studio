@@ -2,6 +2,7 @@ import {employeesPageTypes} from './types';
 import {employeesPageAPI} from './api-endpoints';
 
 import axios from "axios";
+import {setAlert} from "./alert";
 
 
 const employeesLoaded = (listEmployees) => {
@@ -138,11 +139,14 @@ export const addEmployee = (formData, history) => async dispatch => {
         });
         if (history) history.push('/employees');
     } catch (err) {
-        console.error('Add employee. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: employeesPageTypes.ADD_EMPLOYEE_FAILURE,
             payload: err
-        });
+        });*/
     }
 };
 
@@ -159,7 +163,10 @@ export const updateDepartments = (departments) => async dispatch => {
             payload: res.data.department
         });*/
     } catch (err) {
-        console.error('Update departments. '+err);
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
         /*dispatch({
             type: employeesPageTypes.UPDATE_DEPARTMENTS_FAILURE,
             payload: err
@@ -174,11 +181,15 @@ export const deleteEmployee = (idEmp) => async dispatch => {
             type: employeesPageTypes.DELETE_EMPLOYEE,
             payload: res.data.employee
         });
+        dispatch(setAlert('Сотрудник удален', 'success'));
     } catch (err) {
-        console.error('Update departments. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: employeesPageTypes.DELETE_EMPLOYEE_FAILURE,
             payload: err
-        });
+        });*/
     }
 };

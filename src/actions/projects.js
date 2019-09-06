@@ -1,6 +1,6 @@
 import {projectsPageTypes} from './types';
 import {projectsPageAPI} from './api-endpoints';
-
+import { setAlert } from './alert';
 import axios from 'axios';
 
 const projectLoaded = (project) => ({
@@ -45,6 +45,10 @@ export const getCurrentProject = (id) => async dispatch => {
         dispatch(projectLoaded(res.data.project));
     } catch (err) {
         console.error('Get project '+id+'. '+err);
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
         dispatch(projectError(err));
     }
 };
@@ -69,6 +73,10 @@ export const fetchAllProjects = () => async dispatch => {
         dispatch(projectsNewLoaded(res.data.projects));
     } catch (err) {
         console.error('Get new projects. '+err);
+        /*const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }*/
         dispatch(projectsNewError(err));
     }
 };
@@ -85,12 +93,16 @@ export const addReport = formData => async dispatch => {
             type: projectsPageTypes.ADD_REPORT,
             payload: res.data.project
         });
+        dispatch(setAlert('Отчет добавлен', 'success'));
     } catch (err) {
-        console.error('Add report. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: projectsPageTypes.ADD_REPORT_FAILURE,
             payload: err
-        });
+        });*/
     }
 };
 
@@ -108,11 +120,14 @@ export const updateProject = (formData, history) => async dispatch => {
         });
         history.push('/projects');
     } catch (err) {
-        console.error('Update project. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: projectsPageTypes.UPDATE_PROJECT_FAILURE,
             payload: err
-        });
+        });*/
     }
 };
 
@@ -130,11 +145,14 @@ export const closeProject = (formData, history) => async  dispatch => {
         });
         history.push('/projects');
     } catch (err) {
-        console.error('Close project. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: projectsPageTypes.CLOSE_PROJECT_FAILURE,
             payload: err
-        });
+        });*/
     }
 };
 
@@ -151,10 +169,13 @@ export const startProject = (id) => async dispatch => {
             payload: res.data.project
         });
     } catch (err) {
-        console.error('Update project. '+err);
-        dispatch({
+        const errors = err.response.data.errors;
+        if (errors) {
+            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        }
+        /*dispatch({
             type: projectsPageTypes.START_PROJECT_FAILURE,
             payload: err
-        });
+        });*/
     }
 };

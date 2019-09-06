@@ -1,5 +1,5 @@
-import Expenditure from "./expenditure";
+import Expenditures from "./expenditures";
 import Requests from "./requests";
-import Transaction from "./transaction";
+import Transactions from "./transactions";
 
-export {Expenditure, Requests, Transaction};
+export {Expenditures, Requests, Transactions};
