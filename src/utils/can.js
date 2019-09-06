@@ -3,6 +3,7 @@ import rules from "./rbac-rules";
 const check = (rules, roles, action) => {
     let result = false;
     const arrayRoles = JSON.parse(roles);
+    if (!arrayRoles) return result;
     arrayRoles.some(role => {
         const permissions = rules[role];
         if (!permissions) {
