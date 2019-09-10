@@ -9,6 +9,7 @@ const initialState = {
     loadingNew: true,
     loadingProcess: true,
     loadingClose: true,
+    loadingUpdateProject: false,
     errorProject: null,
     errorProjectsNew: null,
     errorProjectsProcess: null,
@@ -19,7 +20,7 @@ export default function (state = initialState, action) {
 
     switch (action.type) {
 
-        case projectsPageTypes.GET_CURRENT_PROJECT:
+        case projectsPageTypes.CURRENT_PROJECT_GET:
             return {
                 ...state,
                 project: action.payload,
@@ -27,7 +28,13 @@ export default function (state = initialState, action) {
                 errorProject: null
             };
 
-        case projectsPageTypes.GET_CURRENT_PROJECT_FAILURE:
+        case projectsPageTypes.PROJECT_LOAD:
+            return {
+                ...state,
+                loadingUpdateProject: true,
+            };
+
+        case projectsPageTypes.CURRENT_PROJECT_GET_FAILURE:
             return {
                 ...state,
                 project: {},
@@ -83,39 +90,33 @@ export default function (state = initialState, action) {
                 errorProjectsClose: action.payload
             };
 
-        case projectsPageTypes.UPDATE_PROJECT:
-            return {
-                ...state,
-                project: action.payload,
-                loadingProject: false,
-                errorProject: null
-            };
-
-        case projectsPageTypes.UPDATE_PROJECT_FAILURE:
+        case projectsPageTypes.PROJECT_UPDATE:
             return {
                 ...state,
                 project: {},
-                loadingProject: false,
-                errorProject: action.payload
+                loadingUpdateProject: false
             };
 
-        case projectsPageTypes.CLOSE_PROJECT:
+        case projectsPageTypes.PROJECT_UPDATE_FAILURE:
             return {
                 ...state,
-                project: action.payload,
-                loadingProject: false,
-                errorProject: null
+                loadingUpdateProject: false
             };
 
-        case projectsPageTypes.CLOSE_PROJECT_FAILURE:
+        case projectsPageTypes.PROJECT_CLOSE:
             return {
                 ...state,
                 project: {},
-                loadingProject: false,
-                errorProject: action.payload
+                loadingUpdateProject: false
             };
 
-        case projectsPageTypes.ADD_REPORT:
+        case projectsPageTypes.PROJECT_CLOSE_FAILURE:
+            return {
+                ...state,
+                loadingUpdateProject: false
+            };
+
+        case projectsPageTypes.REPORT_ADD:
             return {
                 ...state,
                 projectsProcess: state.projectsProcess.map(project =>
@@ -125,14 +126,14 @@ export default function (state = initialState, action) {
                 errorProjectsProcess: null
             };
 
-        case projectsPageTypes.ADD_REPORT_FAILURE:
+        case projectsPageTypes.REPORT_ADD_FAILURE:
             return {
                 ...state,
                 loadingProcess: false,
                 errorProjectsProcess: action.payload
             };
 
-        case projectsPageTypes.START_PROJECT:
+        case projectsPageTypes.PROJECT_START:
             return {
                 ...state,
                 projectsProcess: [
@@ -144,11 +145,18 @@ export default function (state = initialState, action) {
                 errorProject: null
             };
 
-        case projectsPageTypes.START_PROJECT_FAILURE:
+        case projectsPageTypes.PROJECT_START_FAILURE:
             return {
                 ...state,
                 loadingProject: false,
                 errorProject: action.payload
+            };
+
+        case projectsPageTypes.CREATE_PROJECT_FAILURE:
+        case projectsPageTypes.CREATE_PROJECT:
+            return {
+                ...state,
+                loadingUpdateProject: false
             };
 
         default:

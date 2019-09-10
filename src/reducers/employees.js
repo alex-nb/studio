@@ -8,6 +8,7 @@ const initialState = {
     onlyDepartment: [],
     loadingOnlyDepartment: true,
     loadingEmployees: true,
+    loadingEmployee: false,
     loadingDepartmentOrder: true,
     loadingDepartments: true,
     loadingAllEmployeesList: true,
@@ -21,6 +22,12 @@ const initialState = {
 export default function (state = initialState, action) {
 
     switch (action.type) {
+        case employeesPageTypes.EMPLOYEE_LOAD:
+            return {
+                ...state,
+                loadingEmployee: true,
+            };
+
         case employeesPageTypes.EMPLOYEES_GET:
             return {
                 ...state,
@@ -111,6 +118,7 @@ export default function (state = initialState, action) {
 
                 return {
                     ...state,
+                    loadingEmployee: false,
                     departments: {
                         ...state.departments,
                         [_id]: {
@@ -140,12 +148,11 @@ export default function (state = initialState, action) {
         case employeesPageTypes.ADD_EMPLOYEE_FAILURE:
             return {
                 ...state,
-                errorEmployees: action.payload
+                loadingEmployee: false
             };
 
         case employeesPageTypes.DELETE_EMPLOYEE:
             const idEmp = action.payload._id;
-            console.log(state);
             return {
                 ...state,
                 allEmployeesList: state.allEmployeesList.filter(emp=>emp._id!==idEmp),

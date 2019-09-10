@@ -3,7 +3,9 @@ import {transactionsPageTypes} from '../actions/types';
 const initialState = {
     transaction: [],
     loadingTransaction: true,
-    errorTransaction: null
+    loadingUpdateTransaction: false,
+    errorTransaction: null,
+    errorUpdateTransaction: null
 };
 
 export default function (state = initialState, action) {
@@ -12,6 +14,7 @@ export default function (state = initialState, action) {
 
         case transactionsPageTypes.TRANSACTION_GET:
             return {
+                ...state,
                 transaction: action.payload,
                 loadingTransaction: false,
                 errorTransaction: null
@@ -19,19 +22,27 @@ export default function (state = initialState, action) {
 
         case transactionsPageTypes.TRANSACTION_GET_FAILURE:
             return {
+                ...state,
                 transaction: [],
                 loadingTransaction: false,
                 errorTransaction: action.payload
             };
-        case transactionsPageTypes.UPDATE_TRANSACTION:
+
+        case transactionsPageTypes.TRANSACTION_LOAD:
+            return {
+                ...state,
+                loadingUpdateTransaction: true
+            };
+
+        case transactionsPageTypes.TRANSACTION_UPDATE:
             if (state.transaction.find(transaction => transaction._id===action.payload._id)) {
                 return {
                     transaction: state.transaction.map(transaction => {
                         if (transaction._id===action.payload._id) return action.payload;
                         return transaction;
                     }),
-                    loadingTransaction: false,
-                    errorTransaction: null
+                    loadingUpdateTransaction: false,
+                    errorUpdateTransaction: null
                 };
             }
             return {
@@ -39,15 +50,15 @@ export default function (state = initialState, action) {
                     action.payload,
                     ...state.transaction
                 ],
-                loadingTransaction: false,
-                errorTransaction: null
+                loadingUpdateTransaction: false,
+                errorUpdateTransaction: null
             };
 
-        case transactionsPageTypes.UPDATE_TRANSACTION_FAILURE:
+        case transactionsPageTypes.TRANSACTION_UPDATE_FAILURE:
             return {
                 ...state,
-                loadingTransaction: false,
-                errorTransaction: action.payload
+                loadingUpdateTransaction: false,
+                errorUpdateTransaction: action.payload
             };
 
 

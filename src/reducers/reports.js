@@ -26,7 +26,7 @@ export default function (state = initialState, action) {
                 errorAllReports: action.payload
             };
 
-        case reportsPageTypes.UPDATE_REPORT:
+        case reportsPageTypes.REPORT_UPDATE:
             const report = action.payload;
             return {
                 ...state,
@@ -45,7 +45,7 @@ export default function (state = initialState, action) {
                 errorAllReports: null
             };
 
-        case reportsPageTypes.UPDATE_REPORT_FAILURE:
+        case reportsPageTypes.REPORT_UPDATE_FAILURE:
             return {
                 ...state,
                 loadingAllReports: false,

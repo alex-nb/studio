@@ -30,7 +30,7 @@ class Header extends Component {
                                 <Balance />
                             </Nav.Link>
                             <NavDropdown active title={<i className="far fa-user fa-2x fa-menu"/>} id="collasible-nav-dropdown" alignRight>
-                                <NavDropdown.Item href="#profil">Профиль</NavDropdown.Item>
+                                <NavDropdown.Item href="/profile">Профиль</NavDropdown.Item>
                                 <NavDropdown.Item onClick={this.changeStateModalEditForm}>Запрос ДС</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={this.props.logout}>Выход</NavDropdown.Item>

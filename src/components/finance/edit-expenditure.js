@@ -18,6 +18,11 @@ class EditExpenditure extends Component {
         if(prevProps.id !== this.props.id) this.setState({id: this.props.id});
         if(prevProps.type !== this.props.type) this.setState({type: this.props.type});
         if(prevProps.parent !== this.props.parent) this.setState({parent: this.props.parent});
+        if (prevProps.loadingUpdateExpenditure !== this.props.loadingUpdateExpenditure
+            && !this.props.loadingUpdateExpenditure
+            && this.props.errorUpdateExpenditure === null)  {
+            this.props.onHide();
+        }
     }
 
     onChange = (e) => {
@@ -29,7 +34,6 @@ class EditExpenditure extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         this.props.updateExpenditure(this.state);
-        this.props.onHide();
     };
 
     _expendituresList() {
@@ -42,13 +46,14 @@ class EditExpenditure extends Component {
     };
 
     render() {
+        const { updateExpenditure, loadingUpdateExpenditure, errorUpdateExpenditure, ...props } = this.props;
         return (
             <Can
                 roles={this.props.roles}
                 perform="expenditures:edit"
                 yes={() => (
                     <Modal
-                        {...this.props}
+                        {...props}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered
@@ -101,7 +106,10 @@ class EditExpenditure extends Component {
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button onClick={this.props.onHide}>Отмена</Button>
-                                <Button type="submit">Сохранить</Button>
+                                <Button type="submit"
+                                        disabled={this.props.loadingUpdateExpenditure}>
+                                    {this.props.loadingUpdateExpenditure ? 'Секунду...' : 'Сохранить'}
+                                </Button>
                             </Modal.Footer>
                         </Form>
                     </Modal>
@@ -112,9 +120,10 @@ class EditExpenditure extends Component {
     }
 }
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, expenditureList }) => {
     const { roles } = auth;
-    return { roles };
+    const {loadingUpdateExpenditure, errorUpdateExpenditure} = expenditureList;
+    return { roles, loadingUpdateExpenditure, errorUpdateExpenditure };
 };
 
 export default connect(mapStateToProps, {updateExpenditure})(EditExpenditure);

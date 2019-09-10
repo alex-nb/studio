@@ -76,13 +76,11 @@ class Expenditures extends Component {
     }
 
     render() {
-
         const {
             expenditure, loadingExpenditure, errorExpenditure
         } = this.props;
 
         if (loadingExpenditure) return (<div className="col-md-10 float-right"><Spinner/></div>);
-
         if (errorExpenditure) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
 
         return (

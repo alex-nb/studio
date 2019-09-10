@@ -14,6 +14,8 @@ import Reports from "../reports";
 import { Transactions, Expenditures, Requests } from "../finance";
 import EmployeesPage from "../employees-page";
 import CreateEmployee from "../employees-page/create-employee";
+import CreateProject from "../projects-page/create-project/create-project";
+import PersonalInfo from "../user-account/personal-info";
 
 
 class Routes extends Component {
@@ -28,9 +30,17 @@ class Routes extends Component {
                         this.props.changeSelected('');
                         return <Welcome/>;
                     }}/>
+                    <PrivateRoute path="/profile" component={() => {
+                        this.props.changeSelected('');
+                        return <PersonalInfo/>;
+                    }}/>
                     <PrivateRoute path="/projects" exact component={() => {
                         this.props.changeSelected('projects');
                         return <ProjectsPage />;
+                    }} />
+                    <PrivateRoute path="/projects/create" component={() => {
+                        this.props.changeSelected('projects');
+                        return <CreateProject />;
                     }} />
                     <PrivateRoute path="/projects/edit/:id" component={({ match }) => {
                         const { id } = match.params;

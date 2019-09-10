@@ -3,7 +3,6 @@ import {Button, Form} from "react-bootstrap";
 import {addEmployee, getDepartments} from "../../../actions/employees";
 import {connect} from "react-redux";
 import Spinner from "../../layout/spinner";
-import ErrorMessage from "../../layout/error-message";
 import {withRouter} from "react-router-dom";
 import Can from "../../../utils/can";
 
@@ -43,7 +42,7 @@ class CreateEmployee extends Component {
 
     render() {
         if (this.props.loadingOnlyDepartment) return (<div className="col-md-10 float-right"><Spinner/></div>);
-        if (this.props.errorOnlyDepartment) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
+        //if (this.props.errorOnlyDepartment) return (<div className="col-md-10 float-right"><ErrorMessage/></div>);
         return (
             <Can
                 roles={this.props.roles}
@@ -109,7 +108,10 @@ class CreateEmployee extends Component {
                                     onChange={this.onChange}
                                 />
                             </Form.Group>
-                            <Button type="submit" variant="primary">Создать</Button>
+                            <Button type="submit"  variant="primary"
+                                    disabled={this.props.loadingEmployee}>
+                                {this.props.loadingEmployee ? 'Секунду...' : 'Создать'}
+                            </Button>
                         </Form>
                     </div>
                 )}
@@ -121,11 +123,11 @@ class CreateEmployee extends Component {
 
 const mapStateToProps = ({ employeesList, auth }) => {
     const {
-        onlyDepartment, loadingOnlyDepartment, errorOnlyDepartment
+        onlyDepartment, loadingOnlyDepartment, errorOnlyDepartment, loadingEmployee
     } = employeesList;
     const { roles } = auth;
     return {
-        onlyDepartment, loadingOnlyDepartment, errorOnlyDepartment, roles
+        onlyDepartment, loadingOnlyDepartment, errorOnlyDepartment, roles, loadingEmployee
     };
 };
 

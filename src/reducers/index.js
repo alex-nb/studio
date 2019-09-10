@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 import employeesList from './employees';
-import personal_info from './personal-info';
+import personalInfo from './personal-info';
 import expenditureList from './expenditure';
 import projectsList from './projects';
 import reportsList from './reports';
@@ -13,7 +13,7 @@ import alert from './alert';
 
 export default combineReducers({
     employeesList,
-    personal_info,
+    personalInfo,
     expenditureList,
     projectsList,
     reportsList,

@@ -53,7 +53,6 @@ export const login = (email, password) => async dispatch => {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('userId', res.data.userId);
         localStorage.setItem('roles', JSON.stringify(res.data.roles));
-        console.log(res.data.roles);
         dispatch({
             type: authTypes.LOGIN_SUCCESS,
             payload: res.data
@@ -73,7 +72,6 @@ export const login = (email, password) => async dispatch => {
 
 // Logout
 export const logout = () => dispatch => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    localStorage.clear();
     dispatch({ type: authTypes.LOGOUT });
 };

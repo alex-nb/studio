@@ -36,12 +36,12 @@ const Employee = ({ employee, index, onDelete, roles }) => {
                       className={snapshot.isDragging ? "employee check" : "employee"}
                       title={employee.name}
                 >
-                    <Card.Img src={employee.img} />
+                    <Card.Img src={employee.img} className="employee-img"/>
                     <Can
                         roles={roles}
                         perform="employee:delete"
                         yes={() => (
-                            <Card.ImgOverlay>
+                            <Card.ImgOverlay className="employee-card-img-overlay">
                                 <div className="icon-line">
                                     <i className="fas fa-trash icon-employee" onClick={() => onDelete(employee.idBase, employee.name)}/>
                                 </div>

@@ -38,6 +38,11 @@ class EditTransaction extends Component {
             date = [date.getFullYear(), month, day].join('-');
             this.setState({date: date});
         }
+        if (prevProps.loadingUpdateTransaction !== this.props.loadingUpdateTransaction
+            && !this.props.loadingUpdateTransaction
+            && this.props.errorUpdateTransaction === null)  {
+            this.props.onHide();
+        }
     }
 
     onChange = (e) => {
@@ -54,7 +59,7 @@ class EditTransaction extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         this.props.updateTransaction(this.state);
-        this.props.onHide();
+        //this.props.onHide();
     };
 
     _selectExpenditure() {
@@ -103,13 +108,14 @@ class EditTransaction extends Component {
     };
 
     render() {
+        const { updateTransaction, loadingUpdateTransaction, errorUpdateTransaction, ...props } = this.props;
         return (
             <Can
                 roles={this.props.roles}
                 perform="transactions:edit"
                 yes={() => (
                     <Modal
-                        {...this.props}
+                        {...props}
                         size="lg"
                         aria-labelledby="contained-modal-title-vcenter"
                         centered
@@ -171,7 +177,10 @@ class EditTransaction extends Component {
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button onClick={this.props.onHide}>Отмена</Button>
-                                <Button type="submit">Сохранить</Button>
+                                <Button type="submit"
+                                        disabled={this.props.loadingUpdateTransaction}>
+                                    {this.props.loadingUpdateTransaction ? 'Секунду...' : 'Сохранить'}
+                                </Button>
                             </Modal.Footer>
                         </Form>
                     </Modal>
@@ -182,9 +191,10 @@ class EditTransaction extends Component {
     }
 }
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, transactionsList }) => {
+    const { loadingUpdateTransaction, errorUpdateTransaction } = transactionsList;
     const { roles } = auth;
-    return { roles };
+    return { roles, loadingUpdateTransaction, errorUpdateTransaction };
 };
 
 export default connect(mapStateToProps, {updateTransaction})(EditTransaction);

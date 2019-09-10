@@ -13,3 +13,21 @@
     width: 10%;
     text-align: right;
 }
+
+.pointer {
+    cursor: pointer;
+    color: black;
+    margin-right: 4px;
+}
+
+.project-button:hover i{
+    color: white;
+}
+
+i.fa-list {
+    font-family: fontawesome !important;
+    font-style: normal;
+    color: black;
+    float: left;
+    padding: 0;
+}

@@ -42,9 +42,10 @@ class Report extends Component {
     };
 
     render() {
+        const { addReport, ...props } = this.props
         return (
             <Modal
-                {...this.props}
+                {...props}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered

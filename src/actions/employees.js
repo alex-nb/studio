@@ -1,59 +1,21 @@
 import {employeesPageTypes} from './types';
 import {employeesPageAPI} from './api-endpoints';
-
 import axios from "axios";
 import {setAlert} from "./alert";
-
-
-const employeesLoaded = (listEmployees) => {
-    return {
-        type: employeesPageTypes.EMPLOYEES_GET,
-        payload: listEmployees
-    };
-};
-
-const employeesError = (error) => ({
-    type: employeesPageTypes.EMPLOYEES_GET_FAILURE,
-    payload: error
-});
-
-const departmentsLoaded = (listDepartments) => ({
-    type: employeesPageTypes.DEPARTMENTS_GET,
-    payload: listDepartments
-});
-
-const departmentsError = (error) => ({
-    type: employeesPageTypes.DEPARTMENTS_GET_FAILURE,
-    payload: error
-});
-
-const departmentOrderLoaded = (listDepartmentOrder) => ({
-    type: employeesPageTypes.DEPARTMENT_ORDER_GET,
-    payload: listDepartmentOrder
-});
-
-const departmentOrderError = (error) => ({
-    type: employeesPageTypes.DEPARTMENT_ORDER_GET_FAILURE,
-    payload: error
-});
-
-const allEmployeesListLoaded = (listAllEmployees) => ({
-    type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET,
-    payload: listAllEmployees
-});
-
-const allEmployeesListError = (error) => ({
-    type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET_FAILURE,
-    payload: error
-});
 
 export const fetchAllEmployeesList = () => async dispatch => {
     try {
         const res = await axios.get(employeesPageAPI.GET_ALL_EMPLOYEES);
-        dispatch(allEmployeesListLoaded(res.data.employeesList));
+        dispatch({
+            type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET,
+            payload: res.data.employeesList
+        });
     } catch (err) {
         console.error('Get all employees list. '+err);
-        dispatch(allEmployeesListError(err));
+        dispatch({
+            type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET_FAILURE,
+            payload: err
+        });
     }
 };
 
@@ -89,21 +51,45 @@ export const fetchCompanyStructure = () => async dispatch => {
                 }
             };
         });
-        dispatch(employeesLoaded(employees));
-        dispatch(departmentsLoaded(departments));
-        dispatch(departmentOrderLoaded(departmentsOrder));
+        dispatch({
+            type: employeesPageTypes.EMPLOYEES_GET,
+            payload: employees
+        });
+        dispatch({
+            type: employeesPageTypes.DEPARTMENTS_GET,
+            payload: departments
+        });
+        dispatch({
+            type: employeesPageTypes.DEPARTMENT_ORDER_GET,
+            payload: departmentsOrder
+        });
     } catch (err) {
         console.error('Get departments structure. '+err);
-        dispatch(employeesError(err));
-        dispatch(departmentsError(err));
-        dispatch(departmentOrderError(err));
+        dispatch({
+            type: employeesPageTypes.EMPLOYEES_GET_FAILURE,
+            payload: err
+        });
+        dispatch({
+            type: employeesPageTypes.DEPARTMENTS_GET_FAILURE,
+            payload: err
+        });
+        dispatch({
+            type: employeesPageTypes.DEPARTMENT_ORDER_GET_FAILURE,
+            payload: err
+        });
     }
     try {
         const res = await axios.get(employeesPageAPI.GET_ALL_EMPLOYEES);
-        dispatch(allEmployeesListLoaded(res.data.employeesList));
+        dispatch({
+            type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET,
+            payload: res.data.employeesList
+        });
     } catch (err) {
         console.error('Get all employees list. '+err);
-        dispatch(allEmployeesListError(err));
+        dispatch({
+            type: employeesPageTypes.ALL_EMPLOYEES_LIST_GET_FAILURE,
+            payload: err
+        });
     }
 };
 
@@ -121,11 +107,17 @@ export const getDepartments = () => async dispatch => {
         });
     } catch (err) {
         console.error('Get departments. '+err);
-        dispatch(departmentsError(err));
+        dispatch({
+            type: employeesPageTypes.DEPARTMENTS_GET_FAILURE,
+            payload: err
+        });
     }
 };
 
 export const addEmployee = (formData, history) => async dispatch => {
+    dispatch({
+        type: employeesPageTypes.EMPLOYEE_LOAD
+    });
     try {
         const config = {
             headers: {
@@ -143,10 +135,9 @@ export const addEmployee = (formData, history) => async dispatch => {
         if (errors) {
             errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         }
-        /*dispatch({
-            type: employeesPageTypes.ADD_EMPLOYEE_FAILURE,
-            payload: err
-        });*/
+        dispatch({
+            type: employeesPageTypes.ADD_EMPLOYEE_FAILURE
+        });
     }
 };
 

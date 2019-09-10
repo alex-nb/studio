@@ -1,14 +1,3 @@
-/*.employee {
-    padding: 5px;
-    margin-right: 8px;
-    background-color: white;
-    border: 1px solid lightgrey;
-    border-radius: 8px;
-    position: relative;
-    width: 100px;
-    height: 100px;
-}*/
-
 .employee {
     margin-right: 8px;
     border: none;
@@ -17,13 +6,13 @@
     height: 60px;
 }
 
-.card-img {
+.employee-img {
     width: 60px;
     height: 60px;
     border-radius: 8px;
 }
 
-.card-img-overlay {
+.employee-card-img-overlay {
     border: none;
 }
 

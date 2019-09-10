@@ -21,13 +21,13 @@ class Balance extends Component {
     };
 
     render () {
-        const { personalInfo, balanceHistory, loadingPersonalInfo, errorPersonalInfo } = this.props;
+        const { info, balanceHistory, loadingPersonalInfo, errorPersonalInfo } = this.props;
         if (errorPersonalInfo) return <ErrorMessage/>;
         if (loadingPersonalInfo) return <Spinner/>;
 
         return (
             <Fragment>
-                <span onClick={() => this.changeStateModalBalanceHistory()} title='Личный баланс'>{personalInfo.balance}</span>
+                <span onClick={() => this.changeStateModalBalanceHistory()} title='Личный баланс'>{info.balance}</span>
                 <BalanceHistory
                     show={this.state.showModalBalanceHistory}
                     onHide={this.changeStateModalBalanceHistory}
@@ -38,9 +38,9 @@ class Balance extends Component {
     }
 
 }
-const mapStateToProps = ({ personal_info }) => {
-    const { personalInfo, balanceHistory, loadingPersonalInfo, errorPersonalInfo } = personal_info;
-    return { personalInfo, balanceHistory, loadingPersonalInfo, errorPersonalInfo };
+const mapStateToProps = ({ personalInfo }) => {
+    const { info, balanceHistory, loadingPersonalInfo, errorPersonalInfo } = personalInfo;
+    return { info, balanceHistory, loadingPersonalInfo, errorPersonalInfo };
 };
 
 export default connect(mapStateToProps, {fetchPersonalInfo})(Balance);

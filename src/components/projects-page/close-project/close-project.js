@@ -152,7 +152,10 @@ class CloseProject extends Component {
                             {difference.premium ? <p>Сумма премии: <b className="font-weight-bold">{difference.premium}</b></p> : null}
                             {difference.fine ?  <p>Сумма штрафа: <b className="font-weight-bold">{difference.fine}</b></p> : null}
                             {this._participantsList()}
-                            <Button type="submit" variant="primary">Сохранить</Button>
+                            <Button type="submit"  variant="primary"
+                                    disabled={this.props.loadingUpdateProject}>
+                                {this.props.loadingUpdateProject ? 'Секунду...' : 'Сохранить'}
+                            </Button>
                         </Form>
                     </div>
                 )}
@@ -164,10 +167,10 @@ class CloseProject extends Component {
 }
 
 const mapStateToProps = ({projectsList, auth }) => {
-    const { project, loadingProject, errorProject } = projectsList;
+    const { project, loadingProject, errorProject, loadingUpdateProject } = projectsList;
     const { roles } = auth;
     return {
-        project, loadingProject, errorProject, roles
+        project, loadingProject, errorProject, roles, loadingUpdateProject
     };
 };
 

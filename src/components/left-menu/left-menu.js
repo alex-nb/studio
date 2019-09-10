@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {connect} from "react-redux";
-import ListGroup from 'react-bootstrap/ListGroup';
+import { ListGroup } from 'react-bootstrap';
 import './left-menu.css';
 import Can from "../../utils/can";
 
@@ -25,6 +25,7 @@ class LeftMenu extends Component {
                 <ListGroup.Item className={this.isActive('projects')} as={Link} to="/projects/" eventKey="projects" >
                     Проекты
                 </ListGroup.Item>
+
                 <ListGroup.Item className={this.isActive('reports')} as={Link} to="/reports" eventKey="reports" >
                     Отчеты
                 </ListGroup.Item>

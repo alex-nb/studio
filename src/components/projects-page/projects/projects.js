@@ -3,6 +3,7 @@ import Collapse from 'react-bootstrap/Collapse'
 import Button from 'react-bootstrap/Button';
 import './projects.css';
 import Can from "../../../utils/can";
+import {Link} from "react-router-dom";
 
 export default class Projects extends Component {
     state = {
@@ -39,6 +40,14 @@ export default class Projects extends Component {
                     aria-expanded={tabProjectsNew}
                     className="project-button"
                 >
+                    <Can
+                        roles={this.props.roles}
+                        perform="projects:create"
+                        yes={() => (
+                            <span><Link to={`/projects/create`}><i className="far fa-plus-square fa-list pointer"/></Link></span>
+                        )}
+                        no={() => null}
+                    />
                     Новые проекты
                     <p className="rightstr">{totalCosts.costPrNew} Y</p>
                 </Button>

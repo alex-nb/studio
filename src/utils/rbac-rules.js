@@ -1,6 +1,7 @@
 const rules = {
     pm: {
         static: [
+            "projects:create",
             "projects:new",
             "projects:edit",
             "projects:edit:new",
@@ -12,6 +13,7 @@ const rules = {
     },
     studio: {
         static: [
+            "projects:create",
             "projects:new",
             "projects:edit",
             "projects:edit:new",

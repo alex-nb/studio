@@ -335,7 +335,10 @@ class EditProject extends Component {
                                     onChange={this.onInputChange}
                                 />
                             </Form.Group>
-                            <Button type="submit" variant="primary">Сохранить</Button>
+                            <Button type="submit"  variant="primary"
+                                    disabled={this.props.loadingUpdateProject}>
+                                {this.props.loadingUpdateProject ? 'Секунду...' : 'Сохранить'}
+                            </Button>
                         </Form>
                     </div>
                 )}
@@ -352,10 +355,10 @@ const mapStateToProps = ({ employeesList, projectsList, auth }) => {
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
         errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList
     } = employeesList;
-    const { project, loadingProject, errorProject } = projectsList;
+    const { project, loadingProject, errorProject, loadingUpdateProject } = projectsList;
     const { roles } = auth;
     return {
-        project, loadingProject, errorProject, roles,
+        project, loadingProject, errorProject, roles, loadingUpdateProject,
         departmentOrder, departments, employees, allEmployeesList,
         loadingEmployees, loadingDepartmentOrder, loadingDepartments, loadingAllEmployeesList,
         errorEmployees, errorDepartments, errorDepartmentOrder, onDelete, errorAllEmployeesList

@@ -25,9 +25,10 @@ class AskMoney extends Component {
     };
 
     render() {
+        const {createRequest, ...props} = this.props;
         return (
             <Modal
-                {...this.props}
+                {...props}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
