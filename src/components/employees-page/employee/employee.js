@@ -5,6 +5,7 @@ import {deleteEmployee} from "../../../actions/employees";
 import {connect} from "react-redux";
 import './employee.css';
 import Can from "../../../utils/can";
+import axios from "axios";
 
 class InnerListEmployee extends Component {
 
@@ -36,7 +37,7 @@ const Employee = ({ employee, index, onDelete, roles }) => {
                       className={snapshot.isDragging ? "employee check" : "employee"}
                       title={employee.name}
                 >
-                    <Card.Img src={employee.img} className="employee-img"/>
+                    <Card.Img src={axios.defaults.baseURL+employee.img} className="employee-img"/>
                     <Can
                         roles={roles}
                         perform="employee:delete"

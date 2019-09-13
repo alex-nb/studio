@@ -11,10 +11,12 @@ export const fetchExpenditure = () => async dispatch => {
             payload: res.data.expenditures
         });
     } catch (err) {
-        console.error('Get expenditures list. '+err);
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: expendituresPageTypes.EXPENDITURE_GET_FAILURE,
@@ -40,9 +42,12 @@ export const updateExpenditure = (formData) => async dispatch => {
         });
     }
     catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: expendituresPageTypes.EXPENDITURE_UPDATE_FAILURE,

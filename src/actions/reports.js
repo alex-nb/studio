@@ -32,9 +32,12 @@ export const updateReport = (formData) => async dispatch => {
             payload: res.data.report
         });
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         /*dispatch({
             type: reportsPageTypes.UPDATE_REPORT_FAILURE,

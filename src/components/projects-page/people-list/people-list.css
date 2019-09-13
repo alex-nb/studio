@@ -1,0 +1,15 @@
+.participant {
+    margin-right: 8px;
+    border: none;
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: table-cell;
+    padding-right: 5px;
+}
+
+.participant-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+}

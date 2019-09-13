@@ -6,7 +6,6 @@ import './project-card.css';
 import Report from '../report';
 import Participant from './participant';
 import ReportsHistory from '../reports-history';
-import PeopleList from "../people-list";
 import Can from "../../../utils/can";
 
 
@@ -35,29 +34,6 @@ class ProjectCard extends Component {
 
     changeStateModalParticipant = () => {
         this.setState({ showModalParticipant: !this.state.showModalParticipant });
-    };
-
-    _departmentsInfo() {
-        const { infoDepartments, participants } = this.props.project;
-        if (!infoDepartments) return null;
-        return infoDepartments.map((dept) => {
-            const participantsList =  participants.filter(people => people.idDept===dept.idDept).map((people) => {
-                return <PeopleList
-                    key={`${people.idEmployee._id}-${dept.idDept}`}
-                    name={people.idEmployee.name}
-                />;
-            });
-            return (
-                <Fragment key={dept.idDept}>
-                    {dept.nameDept} : {dept.cost}Y;
-                    <br />
-                    <strong>Часы: </strong> <span title="Фактические">{dept.hoursFact}h</span>/<span title="Планируемые">{dept.hoursPlan}h</span>
-                    <br />
-                    Участники: {participantsList}
-                    <hr/>
-                </Fragment>
-            );
-        });
     };
 
     _newProjectInfo() {
@@ -128,7 +104,8 @@ class ProjectCard extends Component {
         const {
             costTotal, status,
             reports, deadline,
-            title, dateStart
+            title, dateStart,
+            infoDepartments, participants
         } = this.props.project;
         return(
             <div className="mini-card card bg-light mb-3">
@@ -158,7 +135,8 @@ class ProjectCard extends Component {
                 <Participant
                     show={this.state.showModalParticipant}
                     onHide={this.changeStateModalParticipant}
-                    departments={this._departmentsInfo()}
+                    infoDepartments={infoDepartments}
+                    participants={participants}
                 />
             </div>
         );

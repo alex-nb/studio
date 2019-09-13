@@ -69,6 +69,8 @@ export const transactionsPageAPI = {
 
 /*   Header */
 
-export const headerPageAPI = {
-    GET_PERSONAL_INFO : '/employees/person'
+export const userAccountPageAPI = {
+    GET_PERSONAL_INFO : '/employees/person',
+    UPDATE_PERSONAL_INFO: '/employees/person',
+    GET_BALANCE_HISTORY: '/employees/balance'
 };

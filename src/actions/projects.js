@@ -11,10 +11,12 @@ export const getCurrentProject = (id) => async dispatch => {
             payload: res.data.project
         });
     } catch (err) {
-        console.error('Get project '+id+'. '+err);
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: projectsPageTypes.CURRENT_PROJECT_GET_FAILURE,
@@ -83,9 +85,12 @@ export const addReport = formData => async dispatch => {
         });
         dispatch(setAlert('Отчет добавлен', 'success'));
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         /*dispatch({
             type: projectsPageTypes.ADD_REPORT_FAILURE,
@@ -111,9 +116,12 @@ export const updateProject = (formData, history) => async dispatch => {
         });
         history.push('/projects');
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: projectsPageTypes.PROJECT_UPDATE_FAILURE
@@ -138,9 +146,12 @@ export const closeProject = (formData, history) => async  dispatch => {
         });
         history.push('/projects');
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: projectsPageTypes.PROJECT_CLOSE_FAILURE
@@ -161,9 +172,12 @@ export const startProject = (id) => async dispatch => {
             payload: res.data.project
         });
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         /*dispatch({
             type: projectsPageTypes.START_PROJECT_FAILURE,
@@ -189,9 +203,12 @@ export const createProject = (formData, history) => async dispatch => {
         });
         history.push('/projects');
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: projectsPageTypes.CREATE_PROJECT_FAILURE

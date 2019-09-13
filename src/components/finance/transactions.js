@@ -9,7 +9,7 @@ import {Button} from "react-bootstrap";
 import EditTransaction from "./edit-transaction";
 import './finance.css';
 import Can from "../../utils/can";
-
+import Pagination from "react-js-pagination";
 
 class Transactions extends Component {
 
@@ -33,6 +33,10 @@ class Transactions extends Component {
 
     changeStateModalEditForm = () => {
         this.setState({ showModalEditForm: !this.state.showModalEditForm })
+    };
+
+    pageChanged = (pageNumber)=>{
+        this.props.fetchTransaction(pageNumber)
     };
 
     showModalEditForm = (transaction) => {
@@ -125,6 +129,15 @@ class Transactions extends Component {
                             {this._tableBody()}
                             </tbody>
                         </table>
+                        <Pagination
+                            activePage={this.props.pagination.currentPage}
+                            totalItemsCount={this.props.pagination.totalItems}
+                            itemsCountPerPage={this.props.pagination.itemsPerPage}
+                            pageRangeDisplayed={5}
+                            onChange={this.pageChanged}
+                            itemClass="page-item"
+                            linkClass="page-link"
+                        />
                         <EditTransaction
                             show={this.state.showModalEditForm}
                             onHide={this.changeStateModalEditForm}
@@ -147,7 +160,7 @@ class Transactions extends Component {
 }
 
 const mapStateToProps = ({ transactionsList, expenditureList, employeesList, auth }) => {
-    const { transaction, loadingTransaction, errorTransaction } = transactionsList;
+    const { transaction, loadingTransaction, errorTransaction, pagination } = transactionsList;
     const {  expenditure, loadingExpenditure, errorExpenditure } = expenditureList;
     const { allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList } = employeesList;
     const { roles } = auth;
@@ -155,7 +168,7 @@ const mapStateToProps = ({ transactionsList, expenditureList, employeesList, aut
         transaction, loadingTransaction, errorTransaction,
         expenditure, loadingExpenditure, errorExpenditure,
         allEmployeesList, loadingAllEmployeesList, errorAllEmployeesList,
-        roles
+        roles, pagination
     };
 };
 

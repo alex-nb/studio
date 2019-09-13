@@ -2,6 +2,11 @@ import {transactionsPageTypes} from '../actions/types';
 
 const initialState = {
     transaction: [],
+    pagination: {
+        currentPage: 1,
+        totalItems: 1,
+        itemsPerPage: 1,
+    },
     loadingTransaction: true,
     loadingUpdateTransaction: false,
     errorTransaction: null,
@@ -15,7 +20,12 @@ export default function (state = initialState, action) {
         case transactionsPageTypes.TRANSACTION_GET:
             return {
                 ...state,
-                transaction: action.payload,
+                transaction: action.payload.transactions,
+                pagination: {
+                    currentPage: action.payload.currentPage,
+                    totalItems: action.payload.totalItems,
+                    itemsPerPage: action.payload.itemsPerPage,
+                },
                 loadingTransaction: false,
                 errorTransaction: null
             };
@@ -37,6 +47,7 @@ export default function (state = initialState, action) {
         case transactionsPageTypes.TRANSACTION_UPDATE:
             if (state.transaction.find(transaction => transaction._id===action.payload._id)) {
                 return {
+                    ...state,
                     transaction: state.transaction.map(transaction => {
                         if (transaction._id===action.payload._id) return action.payload;
                         return transaction;
@@ -46,6 +57,7 @@ export default function (state = initialState, action) {
                 };
             }
             return {
+                ...state,
                 transaction: [
                     action.payload,
                     ...state.transaction

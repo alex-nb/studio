@@ -6,10 +6,9 @@ import {Form,Button, Row, Col} from "react-bootstrap";
 import { getCurrentProject, closeProject } from '../../../actions/projects';
 import Spinner from "../../layout/spinner";
 import ErrorMessage from "../../layout/error-message";
-
 import './close-project.css';
-
 import Can from "../../../utils/can";
+import axios from "axios";
 
 class CloseProject extends Component {
 
@@ -94,7 +93,7 @@ class CloseProject extends Component {
                             <Form.Label column sm="2">
                                 <img alt={people.idEmployee.name}
                                      className="employee-img"
-                                     src={people.idEmployee.img}
+                                     src={axios.defaults.baseURL+people.idEmployee.img}
                                      title={people.idEmployee.name}/>
                                 <Form.Text className="text-muted">
                                     {people.revenue} Y

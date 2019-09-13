@@ -58,10 +58,12 @@ export const login = (email, password) => async dispatch => {
             payload: res.data
         });
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            console.log(errors);
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: authTypes.LOGIN_FAIL,

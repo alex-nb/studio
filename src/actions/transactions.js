@@ -3,18 +3,20 @@ import {transactionsPageAPI} from './api-endpoints';
 import axios from 'axios';
 import {setAlert} from "./alert";
 
-export const fetchTransaction = () => async dispatch => {
+export const fetchTransaction = (page=1) => async dispatch => {
     try {
-        const res = await axios.get(transactionsPageAPI.GET_TRANSACTIONS);
+        const res = await axios.get(transactionsPageAPI.GET_TRANSACTIONS+'/'+page);
         dispatch({
             type: transactionsPageTypes.TRANSACTION_GET,
-            payload: res.data.transactions
+            payload: res.data
         });
     } catch (err) {
-        console.error('Get transactions list. '+err);
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: transactionsPageTypes.TRANSACTION_GET_FAILURE,
@@ -40,9 +42,12 @@ export const updateTransaction = (formData) => async dispatch => {
         });
     }
     catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: transactionsPageTypes.TRANSACTION_UPDATE_FAILURE,

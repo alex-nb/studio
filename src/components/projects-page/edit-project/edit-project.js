@@ -12,6 +12,7 @@ import ErrorMessage from "../../layout/error-message";
 import './edit-project.css';
 
 import Can from "../../../utils/can";
+import axios from "axios";
 
 
 class EditProject extends Component {
@@ -196,7 +197,7 @@ class EditProject extends Component {
                                     onChange={this.onCheckboxChange}
                                     checked={!!employeesInState}
                                 />
-                                <img alt={employees[empId].name} className="employee-img" src={employees[empId].img} title={employees[empId].name}/>
+                                <img alt={employees[empId].name} className="employee-img" src={axios.defaults.baseURL+employees[empId].img} title={employees[empId].name}/>
                             </Form.Check.Label>
                             <Form.Text className="text-muted">
                                 {employees[empId].name}

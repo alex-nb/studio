@@ -6,12 +6,18 @@ import Spinner from "../layout/spinner";
 import ErrorMessage from "../layout/error-message";
 import {Button, ButtonGroup} from "react-bootstrap";
 import Can from "../../utils/can";
+import Pagination from "react-js-pagination";
 
 
 class Requests extends Component {
+
     componentDidMount() {
         this.props.fetchRequestsMoney();
     }
+
+    pageChanged = (pageNumber)=>{
+        this.props.fetchRequestsMoney(pageNumber)
+    };
 
     _tableBody() {
         return this.props.requestsMoney.map((request) => {
@@ -82,6 +88,15 @@ class Requests extends Component {
                             {this._tableBody()}
                             </tbody>
                         </table>
+                        <Pagination
+                            activePage={this.props.pagination.currentPage}
+                            totalItemsCount={this.props.pagination.totalItems}
+                            itemsCountPerPage={this.props.pagination.itemsPerPage}
+                            pageRangeDisplayed={5}
+                            onChange={this.pageChanged}
+                            itemClass="page-item"
+                            linkClass="page-link"
+                        />
                     </div>
                 )}
                 no={() => (<div className="col-md-10 float-right"><h3>Извините, доступ запрещен.</h3></div>)}
@@ -92,9 +107,9 @@ class Requests extends Component {
 }
 
 const mapStateToProps = ({ requestsList, auth }) => {
-    const { requestsMoney, loadingRequestsMoney, errorRequestsMoney } = requestsList;
+    const { requestsMoney, loadingRequestsMoney, errorRequestsMoney, pagination } = requestsList;
     const { roles } = auth;
-    return { requestsMoney, loadingRequestsMoney, errorRequestsMoney, roles };
+    return { requestsMoney, loadingRequestsMoney, errorRequestsMoney, roles, pagination };
 };
 
 

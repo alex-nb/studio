@@ -21,7 +21,7 @@ class Balance extends Component {
     };
 
     render () {
-        const { info, balanceHistory, loadingPersonalInfo, errorPersonalInfo } = this.props;
+        const { info, loadingPersonalInfo, errorPersonalInfo } = this.props;
         if (errorPersonalInfo) return <ErrorMessage/>;
         if (loadingPersonalInfo) return <Spinner/>;
 
@@ -31,7 +31,6 @@ class Balance extends Component {
                 <BalanceHistory
                     show={this.state.showModalBalanceHistory}
                     onHide={this.changeStateModalBalanceHistory}
-                    balanceHistory={balanceHistory}
                 />
             </Fragment>
         );
@@ -39,8 +38,8 @@ class Balance extends Component {
 
 }
 const mapStateToProps = ({ personalInfo }) => {
-    const { info, balanceHistory, loadingPersonalInfo, errorPersonalInfo } = personalInfo;
-    return { info, balanceHistory, loadingPersonalInfo, errorPersonalInfo };
+    const { info, loadingPersonalInfo, errorPersonalInfo } = personalInfo;
+    return { info, loadingPersonalInfo, errorPersonalInfo };
 };
 
 export default connect(mapStateToProps, {fetchPersonalInfo})(Balance);

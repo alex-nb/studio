@@ -131,9 +131,12 @@ export const addEmployee = (formData, history) => async dispatch => {
         });
         if (history) history.push('/employees');
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         dispatch({
             type: employeesPageTypes.ADD_EMPLOYEE_FAILURE
@@ -154,9 +157,12 @@ export const updateDepartments = (departments) => async dispatch => {
             payload: res.data.department
         });*/
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         /*dispatch({
             type: employeesPageTypes.UPDATE_DEPARTMENTS_FAILURE,
@@ -174,9 +180,12 @@ export const deleteEmployee = (idEmp) => async dispatch => {
         });
         dispatch(setAlert('Сотрудник удален', 'success'));
     } catch (err) {
-        const errors = err.response.data.errors;
-        if (errors) {
-            await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+        console.error(err);
+        if (err.response && err.response.data && err.response.data.errors) {
+            const errors = err.response.data.errors;
+            if (errors) {
+                await errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
         }
         /*dispatch({
             type: employeesPageTypes.DELETE_EMPLOYEE_FAILURE,
